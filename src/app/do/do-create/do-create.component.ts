@@ -215,22 +215,18 @@ export class DoCreateComponent implements OnInit {
 
   updateDate() {
 
-    // let incDate = new Date();
+    let _monthData = { "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04", "May": "05", "Jun": "06", "Jul": "07", "Aug": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12" }
 
-    // let recvdDate = this.receivedDateforDue.getDate();
+    let _added45 = moment(moment(this.receivedDateforDue)).add(45, 'days');
 
-    // //console.log(Date.UTC(recvdDate[2], recvdDate[1], recvdDate[0]))
+    let _rawStr = _added45["_d"].toString().split(" ");
 
-    // let utcSeconds = Date.UTC(recvdDate[0], recvdDate[1], recvdDate[2]);
-    // let d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-    // console.log(new Date(d.setUTCSeconds(utcSeconds)));
+    let _year = _rawStr[3];
+    let _day = _rawStr[2];
+    let _alphaMonth = _rawStr[1];
+    let _month = _monthData[_alphaMonth];
 
-    // this.dueDateUpdate = "2018-01-01"
-
-    var day = moment(this.receivedDateforDue);
-   
-    var added = moment(day).add(45, 'days');
-
+    this.dueDateUpdate = _year + "-" + _month + "-" + _day;
 
   }
 }
