@@ -229,7 +229,7 @@ export class DoCreateComponent implements OnInit {
 
     var day = moment(this.receivedDateforDue);
    
-    var added = moment(day).add(3, 'days');
+    var added = moment(day).add(45, 'days');
 
 
   }
