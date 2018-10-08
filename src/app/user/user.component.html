@@ -1,0 +1,59 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form [formGroup]="userForm" (ngSubmit)="onSubmitUserCreate()">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="username">User Name</label>
+                            <input type="text" class="form-control" id="username" formControlName="username">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" class="form-control" id="firstname" formControlName="firstname">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" formControlName="lastname">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="text" class="form-control" id="password" formControlName="password">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Role">Role</label>
+                            <select class="form-control" id="Role" formControlName="role">
+                                <option value="Office" selected>Office</option>
+                                <option value="Field" >Field</option>
+                                <option value="Party" >Party</option>
+                                <option value="Master">Master</option>
+                                <option value="TruckOwner">Truck Owner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="selectStatus">Select Status</label>
+                            <select class="form-control" id="selectStatus" formControlName="selectStatus">
+                                <option value="Active" selected>Active</option>
+                                <option value="notActive">Not Active</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<user-list-cmp></user-list-cmp>
+

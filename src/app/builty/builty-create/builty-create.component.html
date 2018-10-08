@@ -1,0 +1,224 @@
+<div class="panel panel-default">
+  <div class="panel-body">
+    <form [formGroup]="builtyForm" (ngSubmit)="onSubmitbuilty()">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="quantity">Builty No</label>
+            <input type="number" name="quantity" class="form-control" value="" formControlName = "builtyNo">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="selectDo">DO</label>
+            <select class="form-control" name="selectDo" id="selectDo" formControlName = "doDisplay">
+              <option *ngFor="let do of doList" [value]="do.doId">{{do.doDisplay}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="builtyDate">Builty Date</label>
+            <input type="date" class="form-control" name="builtyDate" id="date" value="" formControlName = "builtyDate">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="otBuiltyCompany">Builty Company</label>
+            <input type="text" name="otBuiltyCompany" class="form-control" value="" formControlName = "otBuiltyCompany">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="otBuiltyNumber">Builty Number</label>
+            <input type="number" name="otBuiltyNumber" class="form-control" value="" formControlName = "otBuiltyNumber">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="vehicleNo">Vehicle No.</label>
+            <select class="form-control" name="vehicleNo" id="vehicleNo" formControlName = "vehicleNo" >
+              <option *ngFor="let do of doList" [value]="do.doId">Vehicle No.</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="number" name="quantity" class="form-control" value="" formControlName = "quantity">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="advance">Advance</label>
+            <input type="number" name="advance" class="form-control" value="" formControlName = "inAdvance">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="outAdvance">Out Advance</label>
+            <input type="number" name="outAdvance" class="form-control" value="" formControlName = "outAdvance">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="diesel">Diesel</label>
+            <input type="number" name="diesel" class="form-control" value="" formControlName = "diesel">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="pumpName">Pump Name</label>
+            <select class="form-control" name="pumpName" id="pumpName" formControlName = "pumpName">
+              <option *ngFor="let do of doList" [value]="do.doId">Pump Name</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="freight">Freight</label>
+            <select class="form-control" name="freight" id="freight" formControlName = "freight">
+              <option *ngFor="let do of doList" [value]="do.doId">Freight</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="totalAdvance">Total Advance</label>
+            <input type="number" name="totalAdvance" class="form-control" value="" formControlName = "totalAdvance">
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="permitNo">Permit No</label>
+            <input type="number" name="permitNo" class="form-control" value="" formControlName = "permitNo" >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="permitBalance">Permit Balance</label>
+            <input type="number" name="permitBalance" class="form-control" value="" formControlName = "permitBalance">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="permitEndDate">Permit End Date</label>
+            <input type="date" name="permitEndDate" class="form-control" value="" formControlName = "permitEndDate">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="igpNo">IGP No</label>
+            <input type="number" name="igpNo" class="form-control" value="" formControlName = "igpNo">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="invoiceNo">Invoice No.</label>
+            <input type="number" name="invoiceNo" class="form-control" value="" formControlName = "invoiceNo" >
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="invoiceValue">Invoice Value</label>
+            <input type="number" name="invoiceValue" class="form-control" value="" formControlName = "invoiceValue">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="driverName">Driver Name</label>
+            <input type="text" name="driverName" class="form-control" value="" formControlName = "driverName">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="driverMobile">Driver Mobile</label>
+            <input type="number" name="driverMobile" class="form-control" value="" formControlName = "driverMobile">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="grossWeight">Gross Weight</label>
+            <input type="number" name="grossWeight" class="form-control" value="" formControlName = "grossWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="tierWeight">Tier Weight</label>
+            <input type="number" name="tierWeight" class="form-control" value="" formControlName = "tierWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="doBalance">Do Balance</label>
+            <input type="number" name="doBalance" class="form-control" value="" formControlName = "doBalance">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="subTransporter">Sub Transporter</label>
+            <select class="form-control" name="subTransporter" id="subTransporter" formControlName = "subTransporter">
+              <option *ngFor="let do of doList" [value]="do.doId">Sub Transporter</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="waybillNo">Waybill No.</label>
+            <input type="text" name="waybillNo" class="form-control" value="" formControlName = "waybillNo">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="tpNo">TP No.</label>
+            <input type="number" name="tpNo" class="form-control" value="" formControlName = "tpNo">
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="receivedDate">Received Date</label>
+            <input type="date" name="receivedDate" value="" class="form-control" readonly formControlName = "receivedDate">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="receivedQuantity">Received Quantity</label>
+            <input type="number" name="receivedQuantity" value="" class="form-control" formControlName = "receivedQuantity">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="netWeight">Net Weight</label>
+            <input type="text" name="netWeight" value="" class="form-control" formControlName = "netWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="refund">Refund</label>
+            <input type="number" name="refund" value="" class="form-control" formControlName = "refund">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="assesibleValue">Assesible Value</label>
+            <input type="number" name="assesibleValue" value="" class="form-control" formControlName = "assesibleValue">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="freightToBePaidBy">Freight ToBe PaidBy</label>
+            <input type="text" name="freightToBePaidBy" value="" class="form-control" formControlName = "freightToBePaidBy">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inAdvanceLimit">In Advance Limit</label>
+            <input type="number" name="inAdvanceLimit" value="" class="form-control" formControlName = "inAdvanceLimit">
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+  </div>

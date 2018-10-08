@@ -1,0 +1,23 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Selected Running DOs</h4>
+    </div>
+     <div class="content table-responsive table-full-width">
+        <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let activeDOProp of activeDoProperties" ><span class="p-txt ">{{ activeDOProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let activeDO of activeDoList">
+                    <td>{{activeDO.doId}}</td>
+                    <td>{{activeDO.collaryName}}</td>
+                    <td>{{activeDO.quantity}}</td>
+                    <td>{{activeDO.areaDoNo}}</td>
+                    <td>{{activeDO.bspDoNo}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Selected Builty Nos</h4>
+    </div>
+    <div class="">
+        <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let builtyProp of builtyListProperties" ><span class="p-txt ">{{ builtyProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let builtys of builtyList">
+                    <td> <input type="number" name="tpNo" class="form-control" value="{{builtys.builtyNo}}" disabled></td>
+                    <td><input type="date" name="tpNo" class="form-control" value="{{builtys.receivedDate}}"></td>
+                    <td><input type="number" name="tpNo" class="form-control" value="{{builtys.receivedQuantity}}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="btn btn-primary">Update</button>
+    </div>
+</div>

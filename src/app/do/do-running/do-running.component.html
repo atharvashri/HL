@@ -1,0 +1,29 @@
+<div class="container-fluid">
+  
+  <div class="row" >
+    <div class="col-xs-2 col-md-push-5 scrollbar">
+      <div class="">
+        <label class="checkboxcontainer">Select All
+          <input type="checkbox" checked="checked" [(ngModel)]="selectedAll" (change)="selectAllCheckbox($event)">
+          <span class="checkmark"></span>
+      </label>
+      </div>
+      <div *ngFor="let activeDO of activeDoList">
+        <label for="{{activeDO.doId}}-check" class="checkboxcontainer">DO ID -> {{activeDO.doId}}
+          <input id="{{activeDO.doId}}-check" type="checkbox" (change) = "updatecheckBoxList(activeDO, $event)" [(ngModel)] ="activeDO.selected">
+          <span class="checkmark"></span>
+        </label>
+      </div>
+      <div>
+      </div>
+    </div>
+  </div>
+   <button type="button" name="Show" class="btn btn-primary" (click)="showAllRunningDo()">Show</button>
+</div>
+<br>
+<div *ngIf="isrunningDoTablevisible; then showTable">
+</div>
+
+<ng-template #showTable>
+  <app-do-running-list [activeDoProperties] = activeDoProperties [activeDoList] = runningDosInTable></app-do-running-list>
+</ng-template>

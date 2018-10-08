@@ -1,0 +1,24 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Added Users</h4>
+    </div>
+     <div class="content table-responsive table-full-width">
+        <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let UserProp of UserProperties" ><span class="p-txt ">{{ UserProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let user of UserList">
+                    <td>{{user.UserName}}</td>
+                    <td>{{user.FirstName}}</td>
+                    <td>{{user.LastName}}</td>
+                    <td>{{user.Role}}</td>
+                    <td>{{user.Status}}</td>
+                    <td><a href="createDo">Update</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
