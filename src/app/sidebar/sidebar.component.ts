@@ -99,14 +99,14 @@ export class SidebarComponent implements OnInit {
             { path: 'createdo', title: 'Create DO', icon: 'ti-panel', class: '' },
             { path: 'runningdo', title: 'Running DO', icon: 'ti-panel', class: '' },
             { path: 'completedo', title: 'Complete DO', icon: 'ti-panel', class: '' },
-            { path: 'register_truck', title: 'Truck Registration', icon: 'ti-panel', class: '' },
+            { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
-            { path: 'builtyreceipt', title: 'builty report', icon: 'ti-panel', class: '' },
+            { path: 'builtyreceipt', title: 'Builty report', icon: 'ti-panel', class: '' },
             { path: 'builtycreate', title: 'Builty Generation', icon: 'ti-panel', class: '' },
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
             { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },
             { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },
-            { path: 'adduser', title: 'Add User', icon: 'ti-user', class: '' },
+            { path: 'adduser', title: 'User Management', icon: 'ti-user', class: '' },
             { path: 'party', title: 'Party', icon: 'ti-panel', class: '' },
         ];
         return masterRoutes;

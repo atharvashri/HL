@@ -4,7 +4,11 @@
     <input type="text" class="form-control" id="pan" required>
   </div>
   <div class="form-group spacer-25">
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary" (click)="open()">Submit</button>
   </div>
 </div>
-<app-truck-update-details></app-truck-update-details>
+
+
+
+
+<app-truck-update-details (modalEvt)="open(content)"></app-truck-update-details>

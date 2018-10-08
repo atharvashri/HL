@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms'
+import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-truck-update-details',
@@ -8,7 +9,7 @@ import { FormBuilder, Validators } from '@angular/forms'
 })
 export class TruckUpdateDetailsComponent implements OnInit {
 
-  constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder) { }
+  constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal) { }
 
   ngOnInit() {
   }
@@ -72,5 +73,8 @@ export class TruckUpdateDetailsComponent implements OnInit {
       }
     });
 
+  }
+  open(content) {
+    this.modalService.open(content);
   }
 }

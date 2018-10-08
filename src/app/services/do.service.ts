@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http'
 
 @Injectable()
 export class DoService {
-    url: string = "localhost"
+    url: string = "http://localhost:8080"
     constructor(public http: HttpClient) {
 
     }
@@ -16,23 +16,27 @@ export class DoService {
         return this.http.post(this.url + '/do', data);
     }
 
-    getActiveDosService() : Observable<any>  {
+    getActiveDosService(): Observable<any> {
         return this.http.get(this.url + '/do/active');
     }
 
-    getAllDosService() : Observable<any>  {
+    getAllDosService(): Observable<any> {
         return this.http.get(this.url + '/do');
     }
 
-    getCompletedDosService() : Observable<any>  {
+    getCompletedDosService(): Observable<any> {
         return this.http.get(this.url + '/do/completed');
     }
 
-    getDoByIDService(id) : Observable<any>  {
+    getDoByIDService(id): Observable<any> {
         return this.http.get(this.url + '${id}');
     }
 
-    updateDoService(data) : Observable<any>  {
+    updateDoService(data): Observable<any> {
         return this.http.put(this.url + '${id}', data);
+    }
+
+    getdoRefData() {
+        return this.http.get(this.url + '/refdata')
     }
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { DoService } from '../../services/do.service'
 
 import { DODetails } from '../../model/do-details.model'
+import * as moment from 'moment';
 
 interface IParty {
   id: number,
@@ -26,10 +27,13 @@ export class DoCreateComponent implements OnInit {
   doDetails: DODetails;
   submitted: boolean;
   isShowDoCreate: boolean = true;
+  receivedDateforDue = new Date();
+  dueDateUpdate;
 
-  //partyNames: Array<String>;
+  collaryList: Array<string>;
+  areaList: Array<string>
+
   destinationsNames: Array<String>;
-  //destinationsPartyNames: Array<String>;
 
   partyData =
     [
@@ -51,9 +55,14 @@ export class DoCreateComponent implements OnInit {
 
   optionsSelect;
   ngOnInit() {
-    this.doDetails = new DODetails(),
-      this.sizes = ["Small", "Big", "medium"]
-  
+    this.doDetails = new DODetails()
+    this.sizes = ["Small", "Big", "medium"]
+
+    this.doService.getdoRefData().subscribe(
+      (data) => { },
+      (error) => { }
+    )
+
   }
 
   doCreateForm = this.doFormBuilder.group({
@@ -124,11 +133,20 @@ export class DoCreateComponent implements OnInit {
       return;
     }
 
-    this.createDo(this.doCreateForm.value)
+
+    let doCreationData = this.doCreateForm.value;
+
+    //modify data for sending request to server.
+    //modify party,destination,date.
+
+    // this.modifyPartyData(this.partyData).then(() => {
+    //   delete doCreationData.party
+    // })
+    // this.createDo(doCreationData);
   }
 
-  createDo(doData) {
-    this.doService.createDoService(doData).subscribe(
+  createDo(doCreationData) {
+    this.doService.createDoService(doCreationData).subscribe(
       (data) => {
 
       },
@@ -173,6 +191,46 @@ export class DoCreateComponent implements OnInit {
         this.destinationsNames = element.destination;
       }
     });
+
+  }
+
+  modifyPartyData(data) {
+    let selectedParty = this.doCreateForm.controls.party.value
+    return new Promise((resolve, reject) => {
+      data.forEach(element => {
+        if (selectedParty == element.name) {
+          resolve(element)
+        }
+      });
+    })
+  }
+
+  modifyDestinationData() {
+
+  }
+
+  modifyDateFomat() {
+
+  }
+
+  updateDate() {
+
+    // let incDate = new Date();
+
+    // let recvdDate = this.receivedDateforDue.getDate();
+
+    // //console.log(Date.UTC(recvdDate[2], recvdDate[1], recvdDate[0]))
+
+    // let utcSeconds = Date.UTC(recvdDate[0], recvdDate[1], recvdDate[2]);
+    // let d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+    // console.log(new Date(d.setUTCSeconds(utcSeconds)));
+
+    // this.dueDateUpdate = "2018-01-01"
+
+    var day = moment(this.receivedDateforDue);
+   
+    var added = moment(day).add(3, 'days');
+
 
   }
 }

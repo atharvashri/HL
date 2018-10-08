@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http'
 @Injectable()
 export class LoginService {
 
-    url = 'localhost';
+    url = 'http://localhost:8080/';
     public isloginDone = new Subject<boolean>();
 
     setLoginstatus(isloggedin) {
@@ -21,6 +21,6 @@ export class LoginService {
 
 
     login(data) {
-        return this.http.post(this.url + '/login', data)
+        return this.http.post(this.url + 'auth', data)
     }
 }

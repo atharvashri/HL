@@ -61,13 +61,13 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="receivedDate">Received Date</label>
-              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
+              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate" [(ngModel)]="receivedDateforDue" (change)="updateDate()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="dueDate">Due Date</label>
-              <input type="date" class="form-control" id="dueDate" formControlName="dueDate" disabled>
+              <input type="date" class="form-control" id="dueDate" formControlName="dueDate" disabled value="{{dueDateUpdate}}">
             </div>
           </div>
           <div class="col-md-3">
@@ -298,7 +298,7 @@
 
         <!-- <button type="submit" class="btn btn-success">Create</button> -->
         <div *ngIf="isShowDoCreate">
-          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="submit" class="btn btn-primary" (click)="createDo()">Create</button>
         </div>
         <div *ngIf="!isShowDoCreate">
           <button type="submit" class="btn btn-primary">Update</button>
