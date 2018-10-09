@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UserService } from '../../services/user.service'
 
 interface User {
     UserName: string,
@@ -31,10 +32,17 @@ export class UserListComponent implements OnInit {
         { UserName: 'ABC', FirstName: 'ASDF', LastName: 'asdewr', Role: 'office', Status: 'active' }
     ]
 
+    constructor(private userService:UserService) {
+
+    }
+
     ngOnInit() {
+
+        this.userService.getAlluser().subscribe(
+            (data)=>{},
+            (error)=>{}
+            )
     }
 
-    constructor() {
-
-    }
+    
 }

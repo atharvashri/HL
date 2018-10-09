@@ -57,8 +57,8 @@ import { LoginService } from './services/login.service'
 import { PartyService } from './services/party.service'
 import { AddHeaderInterceptor } from './interceptor/header.interceptor'
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
+import { ToastrModule } from 'ngx-toastr';
 
 import { ModalComponent } from './modal/modal.component'
 
@@ -117,7 +117,12 @@ import { ModalComponent } from './modal/modal.component'
     FooterModule,
     FixedPluginModule,
     CommonModule,
-    NgbModule
+    NgbModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    })
     // required animations module
 
   ],

@@ -12,6 +12,46 @@ interface IParty {
   freightRanges: Array<string>
 }
 
+//below Destinationparty object is reference object Please ignore - Atharva.
+Destinationparty: {
+  id: 123
+  name: name
+  Destinations: ['mumbai', 'pune']
+  Freights: [{
+    mumbai: [
+      {
+        Max: 123,
+        Min: 10
+      },
+      {
+        Max: 234,
+        Min: 436
+      },
+      {
+        Max: 743,
+        Min: 237
+      }
+    ]
+  },
+  {
+    pune: [
+      {
+        Max: 123,
+        Min: 10
+      },
+      {
+        Max: 234,
+        Min: 436
+      },
+      {
+        Max: 743,
+        Min: 237
+      }
+    ]
+  }
+  ]
+}
+
 interface IFreightRate {
   max: number,
   min: number
@@ -49,35 +89,6 @@ export class DoCreateComponent implements OnInit {
   ngOnInit() {
     this.doDetails = new DODetails()
     this.sizes = ["Small", "Big", "medium"]
-
-    this.doService.getdoRefData().subscribe(
-      (res) => {
-        this.areaList = res["data"]["areaList"];
-        this.collaryList = res["data"]["collaryList"];
-        this.partyData = res["data"]["partyList"];
-        this.destinationData = res["data"]["partyList"]
-      },
-      (error) => { }
-    )
-
-    this.dropdownList = [
-      { item_id: 1, item_text: 'Mumbai' },
-      { item_id: 2, item_text: 'Bangaluru' },
-      { item_id: 3, item_text: 'Pune' },
-      { item_id: 4, item_text: 'Navsari' },
-      { item_id: 5, item_text: 'New Delhi' }
-    ];
-
-    this.dropdownSettings = {
-      singleSelection: false,
-      idField: 'item_id',
-      textField: 'item_text',
-      selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
-    };
-
   }
 
   doCreateForm = this.doFormBuilder.group({
@@ -106,6 +117,8 @@ export class DoCreateComponent implements OnInit {
     // }),
     destinationParty: [''],
     destinations: [''],
+    addedDestinationParty: [''],
+    addedDestinations: [''],
     // freight: new FormGroup({
     //   min: [''],
     //   max: ['']
@@ -255,5 +268,7 @@ export class DoCreateComponent implements OnInit {
 
   addFreightEntry() {
     this.isfrightEntryAdded = true;
+
+
   }
 }

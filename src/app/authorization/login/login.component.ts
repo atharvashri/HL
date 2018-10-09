@@ -2,6 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { LoginService } from '../../services/login.service'
 import { Router } from '@angular/router'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'login',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router'
 })
 export class LoginComponent implements OnInit {
 
-    constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router) { }
+    constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,private toaster:ToastrService ) { }
 
     ngOnInit() {
     }
@@ -59,6 +60,9 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['/createdo']);
             },
             (error) => {
+                this.toaster.error(error +"Please check your username and password","wrong UserName password error",{
+                    timeOut: 3000
+                  });
 
             })
     }

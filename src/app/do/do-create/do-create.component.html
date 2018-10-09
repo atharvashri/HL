@@ -129,12 +129,12 @@
         <br>
         <div *ngIf="isfrightEntryAdded">
           <strong>Added Freight Entries</strong>
-          <br>
+          <br><br>
           <div class="row">
             <div class="col-md-2">
               <div class="form-group">
                 <label for="destinationParty">Destination Party</label>
-                <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                <select class="form-control" name="destinationParty" id="destinationParty" formControlName="addedDestinationParty"
                   (change)="onChangeDestinationsData()">
                   <option *ngFor="let destd of destinationData" [value]="destd.name">{{destd.name}}</option>
                 </select>
@@ -143,7 +143,23 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="destination">Destination</label>
-                <select class="form-control" name="destination" id="destination" formControlName="destinations">
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
+                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destination">Max</label>
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
+                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destination">Destination</label>
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
                   <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
                 </select>
               </div>
