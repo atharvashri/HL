@@ -35,23 +35,15 @@ export class DoCreateComponent implements OnInit {
 
   destinationsNames: Array<String>;
 
-  partyData =
-    [
-      { 'id': 1, 'name': 'abc', 'destination': ['a1', 'b1', 'c1'], 'freightRanges': [100, 200, 300] },
-      { 'id': 2, 'name': 'xyz', 'destination': ['v1', 'c1', 't1'], 'freightRanges': [1000, 2000, 3000] },
-      { 'id': 3, 'name': 'pqr', 'destination': ['e1', 'r1', 'y1'], 'freightRanges': [300, 900, 800] },
-      { 'id': 4, 'name': 'mno', 'destination': ['m1', 'p1', 'o1'], 'freightRanges': [600, 300, 1200] }
-    ]
-  destinationData =
-    [
-      { 'id': 1, 'name': 'abc', 'destination': ['a1', 'b1', 'c1'], 'freightRanges': [100, 200, 300] },
-      { 'id': 2, 'name': 'xyz', 'destination': ['v1', 'c1', 't1'], 'freightRanges': [1000, 2000, 3000] },
-      { 'id': 3, 'name': 'pqr', 'destination': ['e1', 'r1', 'y1'], 'freightRanges': [300, 900, 800] },
-      { 'id': 4, 'name': 'mno', 'destination': ['m1', 'p1', 'o1'], 'freightRanges': [600, 300, 1200] }
-    ]
+  partyData: Array<IParty> = []
+  destinationData: Array<IParty> = []
 
+  isfrightEntryAdded: boolean = false
 
   constructor(private doFormBuilder: FormBuilder, private doService: DoService) { }
+  dropdownList = [];
+  selectedItems = [];
+  dropdownSettings = {};
 
   optionsSelect;
   ngOnInit() {
@@ -59,9 +51,32 @@ export class DoCreateComponent implements OnInit {
     this.sizes = ["Small", "Big", "medium"]
 
     this.doService.getdoRefData().subscribe(
-      (data) => { },
+      (res) => {
+        this.areaList = res["data"]["areaList"];
+        this.collaryList = res["data"]["collaryList"];
+        this.partyData = res["data"]["partyList"];
+        this.destinationData = res["data"]["partyList"]
+      },
       (error) => { }
     )
+
+    this.dropdownList = [
+      { item_id: 1, item_text: 'Mumbai' },
+      { item_id: 2, item_text: 'Bangaluru' },
+      { item_id: 3, item_text: 'Pune' },
+      { item_id: 4, item_text: 'Navsari' },
+      { item_id: 5, item_text: 'New Delhi' }
+    ];
+
+    this.dropdownSettings = {
+      singleSelection: false,
+      idField: 'item_id',
+      textField: 'item_text',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
 
   }
 
@@ -95,7 +110,8 @@ export class DoCreateComponent implements OnInit {
     //   min: [''],
     //   max: ['']
     // }),
-    freight: [''],
+    freightMin: [''],
+    freightMax: [''],
     permissionNo: [''],
     area: [''],
     collary: [''],
@@ -145,6 +161,13 @@ export class DoCreateComponent implements OnInit {
     // this.createDo(doCreationData);
   }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
+  }
+
   createDo(doCreationData) {
     this.doService.createDoService(doCreationData).subscribe(
       (data) => {
@@ -188,7 +211,7 @@ export class DoCreateComponent implements OnInit {
 
     this.destinationData.forEach(element => {
       if (this.doCreateForm.controls.destinationParty.value == element.name) {
-        this.destinationsNames = element.destination;
+        this.destinationsNames = element.destinations;
       }
     });
 
@@ -228,5 +251,9 @@ export class DoCreateComponent implements OnInit {
 
     this.dueDateUpdate = _year + "-" + _month + "-" + _day;
 
+  }
+
+  addFreightEntry() {
+    this.isfrightEntryAdded = true;
   }
 }

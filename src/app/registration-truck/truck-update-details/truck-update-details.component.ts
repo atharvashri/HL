@@ -74,7 +74,9 @@ export class TruckUpdateDetailsComponent implements OnInit {
     });
 
   }
-  open(content) {
+  
+  openModel(content) {
+    console.log("model");
     this.modalService.open(content);
   }
 }

@@ -54,7 +54,9 @@ import { DoService } from './services/do.service'
 import { UserService } from './services/user.service'
 import { ReportService } from './services/report.service'
 import { LoginService } from './services/login.service'
+import { PartyService } from './services/party.service'
 import { AddHeaderInterceptor } from './interceptor/header.interceptor'
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
 
@@ -97,7 +99,7 @@ import { ModalComponent } from './modal/modal.component'
   imports: [
 
     BrowserAnimationsModule,
-
+    NgMultiSelectDropDownModule,
     MatFormFieldModule,
     MatDialogModule,
     MatInputModule,
@@ -128,6 +130,7 @@ import { ModalComponent } from './modal/modal.component'
     DoService,
     UserService,
     LoginService,
+    PartyService,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],

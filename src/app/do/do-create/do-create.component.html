@@ -18,6 +18,7 @@
     </div>
     <div class="panel-body">
       <form [formGroup]="doCreateForm" (ngSubmit)="onSubmitDo()">
+        <hr>
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
@@ -61,7 +62,8 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="receivedDate">Received Date</label>
-              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate" [(ngModel)]="receivedDateforDue" (change)="updateDate()">
+              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate" [(ngModel)]="receivedDateforDue"
+                (change)="updateDate()">
             </div>
           </div>
           <div class="col-md-3">
@@ -78,7 +80,10 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+        </div>
+        <div class="row">
+          <hr>
+          <div class="col-md-2">
             <div class="form-group">
               <label for="partyName">Party Name</label>
               <select class="form-control" name="partyName" id="partyName" formControlName="party">
@@ -86,16 +91,16 @@
               </select>
             </div>
           </div>
-
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group">
               <label for="destinationParty">Destination Party</label>
-              <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty" (change)="onChangeDestinationsData()">
+              <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                (change)="onChangeDestinationsData()">
                 <option *ngFor="let destd of destinationData" [value]="destd.name">{{destd.name}}</option>
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group">
               <label for="destination">Destination</label>
               <select class="form-control" name="destination" id="destination" formControlName="destinations">
@@ -103,14 +108,51 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <div class="form-group">
-              <label for="freight">Freight</label>
-              <select class="form-control" name="freight" id="freight" formControlName="freight">
-                <option *ngFor="let size of sizes" [value]="size">Freight</option>
-              </select>
+              <label for="freight">Freight Min</label>
+              <input type="number" class="form-control" formControlName="freightMin">
             </div>
           </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="freight">Freight Min</label>
+              <input type="number" class="form-control" formControlName="freightMax">
+            </div>
+          </div>
+          <div class="col-md-2">
+            <div class="form-group">
+              <button class="btn btn-primary margin-btn margin-btn-left" (click)="addFreightEntry()">Add Freight Entry</button>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div *ngIf="isfrightEntryAdded">
+          <strong>Added Freight Entries</strong>
+          <br>
+          <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destinationParty">Destination Party</label>
+                <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                  (change)="onChangeDestinationsData()">
+                  <option *ngFor="let destd of destinationData" [value]="destd.name">{{destd.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destination">Destination</label>
+                <select class="form-control" name="destination" id="destination" formControlName="destinations">
+                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+        <div class="row">
           <div class="col-md-3">
             <div class="form-group">
               <label for="permissionNo">Permission No</label>
@@ -121,7 +163,7 @@
             <div class="form-group">
               <label for="area">Area</label>
               <select class="form-control" name="area" id="area" formControlName="area">
-                <option *ngFor="let size of sizes" [value]="size">Area</option>
+                <option *ngFor="let al of areaList" [value]="al">{{al}}</option>
               </select>
             </div>
           </div>
@@ -129,7 +171,7 @@
             <div class="form-group">
               <label for="collary">Collary</label>
               <select class="form-control" name="collary" id="collary" formControlName="collary">
-                <option *ngFor="let size of sizes" [value]="size">Collary</option>
+                <option *ngFor="let cl of collaryList" [value]="cl">{{cl}}</option>
               </select>
             </div>
           </div>
