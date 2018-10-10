@@ -13,44 +13,17 @@ interface IParty {
 }
 
 //below Destinationparty object is reference object Please ignore - Atharva.
-Destinationparty: {
-  id: 123
-  name: name
-  Destinations: ['mumbai', 'pune']
+Destinationparty: [{
+  id: 123,
+  name: 'ABC',
+  Destinations: ['mumbai', 'pune'],
   Freights: [{
-    mumbai: [
-      {
-        Max: 123,
-        Min: 10
-      },
-      {
-        Max: 234,
-        Min: 436
-      },
-      {
-        Max: 743,
-        Min: 237
-      }
-    ]
+    mumbai: [100, 200, 300]
   },
   {
-    pune: [
-      {
-        Max: 123,
-        Min: 10
-      },
-      {
-        Max: 234,
-        Min: 436
-      },
-      {
-        Max: 743,
-        Min: 237
-      }
-    ]
-  }
-  ]
-}
+    pune: [2100, 500, 650]
+  }]
+}]
 
 interface IFreightRate {
   max: number,
@@ -69,6 +42,7 @@ export class DoCreateComponent implements OnInit {
   isShowDoCreate: boolean = true;
   receivedDateforDue = new Date();
   dueDateUpdate;
+  Freights = [];
 
   collaryList: Array<string>;
   areaList: Array<string>
@@ -77,6 +51,7 @@ export class DoCreateComponent implements OnInit {
 
   partyData: Array<IParty> = []
   destinationData: Array<IParty> = []
+  destinationParty = [];
 
   isfrightEntryAdded: boolean = false
 
@@ -89,6 +64,16 @@ export class DoCreateComponent implements OnInit {
   ngOnInit() {
     this.doDetails = new DODetails()
     this.sizes = ["Small", "Big", "medium"]
+
+    this.doService.getdoRefData().subscribe(
+      (res) => {
+        this.areaList = res["data"]["areaList"];
+        this.collaryList = res["data"]["collaryList"];
+        this.partyData = res["data"]["partyList"];
+        this.destinationData = res["data"]["partyList"]
+      },
+      (error) => { }
+    )
   }
 
   doCreateForm = this.doFormBuilder.group({
@@ -123,8 +108,7 @@ export class DoCreateComponent implements OnInit {
     //   min: [''],
     //   max: ['']
     // }),
-    freightMin: [''],
-    freightMax: [''],
+    freight: [''],
     permissionNo: [''],
     area: [''],
     collary: [''],
@@ -269,6 +253,31 @@ export class DoCreateComponent implements OnInit {
   addFreightEntry() {
     this.isfrightEntryAdded = true;
 
+    let _destinationName = this.doCreateForm.controls.destinationParty.value
+    let _destination = this.doCreateForm.controls.destinations.value
+    let _currentFreight = this.doCreateForm.controls.freight.value;
+
+
+    if (this.destinationParty.length == 0) {
+      this.destinationParty.push({
+        name: _destinationName,
+        destinations: [
+          {
+            name: _destination,
+            freight: [_currentFreight]
+          }
+        ]
+      })
+      return;
+    }
+
+    this.destinationParty.forEach((element, index) => {
+        
+      if(_destinationName == element.name){
+
+      }
+
+    });
 
   }
 }

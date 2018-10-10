@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="panel panel-default">
-    <div class="panel-heading">
+    <!-- <div class="panel-heading">
       <div class="row">
         <div class="col-md-12">
           <strong>Please Select your option for DO</strong>
@@ -15,7 +15,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <div class="panel-body">
       <form [formGroup]="doCreateForm" (ngSubmit)="onSubmitDo()">
         <hr>
@@ -103,21 +103,16 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="destination">Destination</label>
-              <select class="form-control" name="destination" id="destination" formControlName="destinations">
+              <!-- <select class="form-control" name="destination" id="destination" formControlName="destinations">
                 <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
-              </select>
+              </select> -->
+              <input type="text" class="form-control" formControlName="destinations">
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
-              <label for="freight">Freight Min</label>
-              <input type="number" class="form-control" formControlName="freightMin">
-            </div>
-          </div>
-          <div class="col-md-2">
-            <div class="form-group">
-              <label for="freight">Freight Min</label>
-              <input type="number" class="form-control" formControlName="freightMax">
+              <label for="freight">Freight</label>
+              <input type="number" class="form-control" formControlName="freight">
             </div>
           </div>
           <div class="col-md-2">
@@ -150,15 +145,7 @@
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <label for="destination">Max</label>
-                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
-                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="destination">Destination</label>
+                <label for="destination">Freight</label>
                 <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
                   <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
                 </select>
