@@ -4,7 +4,7 @@
       <div class="panel-heading">
         <div class="row">
           <div class="col-md-6">
-            <strong>UPDATE TRUCK DETAILS</strong>
+            <strong>{{formtitle}} PAN Details</strong>
           </div>
         </div>
       </div>
@@ -20,6 +20,12 @@
                 <input class="form-control" type="text" id="panc" value="" formControlName="pan">
               </div>
             </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                  <label for="vehicleno">Vehicle No</label>
+                  <input class="form-control" type="text" id="vehicleno" value="" formControlName="vehicleno">
+                </div>
+              </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="panCopyLink">Pan Copy Link</label>
@@ -139,8 +145,18 @@
               </div>
             </div>
           </div>
-          <button class="btn btn-primary" type="submit" name="update" (click)="updatePanDetails()">Update</button>
-          <button class="btn btn-primary" type="submit" name="update" (click)="d('Cross click')">Cancel</button>
+          <div class="row">
+            <div class="col-md-1 col-md-push-4">
+              <div class="form-group">
+                <button class="btn btn-primary" type="submit" name="update" (click)="updatePanDetails()">Update</button>
+              </div>
+            </div>
+            <div class="col-md-1 col-md-push-4">
+              <div class="form-group">
+                  <button class="btn btn-primary" name="Cancel" (click)="d('Cross click')">Cancel</button>
+              </div>
+            </div>
+          </div>
         </form>
       </div>
     </div>

@@ -1,25 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild,Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms'
-import { NgbModalConfig, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'app-truck-update-details',
-  templateUrl: './truck-update-details.component.html',
-  styleUrls: ['./truck-update-details.component.css']
+  selector: 'app-add-pan-update-details',
+  templateUrl: './pan-add-update-details.component.html',
+  styleUrls: ['./pan-add-update-details.component.css']
 })
-export class TruckUpdateDetailsComponent implements OnInit {
+export class PanAddUpdateDetailsComponent implements OnInit {
 
   constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal) { }
 
   ngOnInit() {
   }
 
+  @ViewChild('content') content
   accountsForm: any;
   addedBankAccounts = new Array();
+  @Input() formtitle:string;
 
   truckUpdateForm = this.truckUpdate.group({
     pan: [],
     panCopyLink: [],
+    vehicleno:[],
     declarationLink: [],
     ownerName: [],
     fatherName: [],
@@ -75,8 +78,8 @@ export class TruckUpdateDetailsComponent implements OnInit {
 
   }
   
-  openModel(content) {
+  public openModel() {
     console.log("model");
-    this.modalService.open(content);
+    this.modalService.open(this.content);
   }
 }

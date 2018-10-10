@@ -1,32 +1,34 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs'
 
 
 @Injectable()
 export class TruckPanService {
 
-    constructor(public http: Http) {
-        
-    }
+    url: string = "http://localhost:8080/"
 
-    registerPAN(){
+    constructor(public http: HttpClient) {
 
     }
 
-    getAllRegisteredPAN(){
+    registerPAN() {
 
     }
 
-    getOnePANByID(){
+    getAllRegisteredPAN() {
 
     }
 
-    updatePAN(){
+    getOnePANByID(id) {
+        return this.http.get(this.url + `pan/${id}`)
+    }
+
+    updatePAN() {
 
     }
 
-    getVehicleByNo(){
-        
+    getVehicleByNo() {
+
     }
 }

@@ -4,6 +4,7 @@ import { DoService } from '../../services/do.service'
 
 import { DODetails } from '../../model/do-details.model'
 import * as moment from 'moment';
+import { ToastrService } from 'ngx-toastr';
 
 interface IParty {
   id: number,
@@ -55,7 +56,7 @@ export class DoCreateComponent implements OnInit {
 
   isfrightEntryAdded: boolean = false
 
-  constructor(private doFormBuilder: FormBuilder, private doService: DoService) { }
+  constructor(private doFormBuilder: FormBuilder, private doService: DoService, private toaster: ToastrService) { }
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
@@ -254,7 +255,7 @@ export class DoCreateComponent implements OnInit {
     this.isfrightEntryAdded = true;
 
     let _destinationName = this.doCreateForm.controls.destinationParty.value
-    let _destination = this.doCreateForm.controls.destinations.value
+    let _destinations = this.doCreateForm.controls.destinations.value
     let _currentFreight = this.doCreateForm.controls.freight.value;
 
 
@@ -263,7 +264,7 @@ export class DoCreateComponent implements OnInit {
         name: _destinationName,
         destinations: [
           {
-            name: _destination,
+            name: _destinations,
             freight: [_currentFreight]
           }
         ]
@@ -271,12 +272,46 @@ export class DoCreateComponent implements OnInit {
       return;
     }
 
-    this.destinationParty.forEach((element, index) => {
-        
-      if(_destinationName == element.name){
+    this.destinationParty.forEach((element_destParty, party_ind, party_arr) => {
+
+      if (_destinationName == element_destParty.name) {
+
+        element_destParty.destinations.forEach((element_dest, dest_ind, dest_arr) => {
+
+          if (element_dest.name == _destinations) {
+            if (element_dest.freights.includes(_currentFreight)) {
+              this.toaster.error("");
+            }
+            else {
+              element_dest.freights.push(_currentFreight);
+            }
+            this.destinationParty.push(element_dest);
+            return;
+          }
+          if (dest_ind === dest_arr.length - 1) {
+            element_destParty.destinations.push({
+              name: _destinations,
+              freights: [_currentFreight]
+            })
+            this.destinationParty.push(element_dest);
+            return;
+          }
+        });
+        return;
+      }
+      if (party_ind === party_arr.length - 1) {
+        this.destinationParty.push({
+          name: _destinationName,
+          destinations: [
+            {
+              name: _destinations,
+              freight: [_currentFreight]
+            }
+          ]
+        })
+        return;
 
       }
-
     });
 
   }

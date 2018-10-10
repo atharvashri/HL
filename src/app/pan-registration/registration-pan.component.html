@@ -1,0 +1,49 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 col-md-push-5">
+      <div class="form-group">
+        <label for="pan">PAN</label>
+        <input type="text" class="form-control" id="pan" required #panID>
+      </div>
+      <div class="form-group spacer-25">
+        <button type="submit" class="btn btn-primary" (click)="getPanStatus(panID.value)">Submit</button>
+        <!--(click)="open()"-->
+      </div>
+    </div>
+    <app-add-pan-update-details #updateDetails [formtitle]="formtitleParent"></app-add-pan-update-details>
+  </div>
+</div>
+<!-- <div>
+  <div class="row">
+    <div class="col-md-3 col-md-offset-4">
+        <button class="btn btn-primary" (click)="open()">Add PAN</button>
+    </div>
+  </div>
+</div> -->
+
+<div *ngIf="isUpdateVehicle">
+
+  <div class="row">
+    <div class="col-md-3 col-md-push-5 scrollbar">
+      <div *ngFor="let vehicle of vehicleList">
+        <label for="{{vehicle}}">
+          <input id="{{vehicle}}" type="radio" value = {{vehicle}} (change)="updatecheckBoxList(activeDO, $event)">
+          {{vehicle}}
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #confirmDialog let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">PAN not registered</h4>
+  </div>
+  <div class="modal-body">
+    <p>Entered PAN number is not registered, Do want to register it now ?</p>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="open()">Add</button>
+    <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
+  </div>
+</ng-template>
