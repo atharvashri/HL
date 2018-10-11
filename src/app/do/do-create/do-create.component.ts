@@ -53,6 +53,8 @@ export class DoCreateComponent implements OnInit {
   partyData: Array<IParty> = []
   destinationData: Array<IParty> = []
   destinationParty = [];
+  selectedDestinations = [];
+  selectedFreight = [];
 
   isfrightEntryAdded: boolean = false
 
@@ -257,7 +259,7 @@ export class DoCreateComponent implements OnInit {
     let _destinationName = this.doCreateForm.controls.destinationParty.value
     let _destinations = this.doCreateForm.controls.destinations.value
     let _currentFreight = this.doCreateForm.controls.freight.value;
-
+    let _isdestinationPresent = false;
 
     if (this.destinationParty.length == 0) {
       this.destinationParty.push({
@@ -269,8 +271,10 @@ export class DoCreateComponent implements OnInit {
           }
         ]
       })
+      this.toaster.success("Freight rate is added");
       return;
     }
+
 
     this.destinationParty.forEach((element_destParty, party_ind, party_arr) => {
 
@@ -279,21 +283,22 @@ export class DoCreateComponent implements OnInit {
         element_destParty.destinations.forEach((element_dest, dest_ind, dest_arr) => {
 
           if (element_dest.name == _destinations) {
-            if (element_dest.freights.includes(_currentFreight)) {
-              this.toaster.error("");
+            if (element_dest.freight.includes(_currentFreight)) {
+              this.toaster.error("Freight rate is already added");
+              return;
             }
             else {
-              element_dest.freights.push(_currentFreight);
+              this.destinationParty[party_ind].destinations[dest_ind].freight.push(_currentFreight);
             }
-            this.destinationParty.push(element_dest);
+            this.toaster.success("Freight rate is added");
             return;
           }
           if (dest_ind === dest_arr.length - 1) {
             element_destParty.destinations.push({
               name: _destinations,
-              freights: [_currentFreight]
+              freight: [_currentFreight]
             })
-            this.destinationParty.push(element_dest);
+            this.toaster.success("Freight rate is added");
             return;
           }
         });
@@ -309,10 +314,45 @@ export class DoCreateComponent implements OnInit {
             }
           ]
         })
+        this.toaster.success("Freight rate is added");
         return;
-
       }
+
+      return true;
+
     });
+
+    this.showDestinationAndFreightData(true);
+
+  }
+
+  showDestinationAndFreightData(isDestination) {
+    isDestination = Boolean(isDestination);
+    if (isDestination) {
+      this.selectedDestinations = [];
+    }
+   
+    let _selectedDestinationParty = this.doCreateForm.controls.addedDestinationParty.value;
+    let _selectedDestination = this.doCreateForm.controls.addedDestinations.value;
+
+    this.destinationParty.forEach((element_party) => {
+      if (_selectedDestinationParty == element_party.name) {
+        element_party.destinations.forEach(element => {
+          if (isDestination) {
+            this.selectedDestinations.push(element.name)
+          }
+          else {
+            if (_selectedDestination == element.name) {
+              this.selectedFreight = element.freight;
+            }
+          }
+        });
+      }
+    })
+
+  }
+
+  showFerightRates() {
 
   }
 }

@@ -130,16 +130,17 @@
               <div class="form-group">
                 <label for="destinationParty">Destination Party</label>
                 <select class="form-control" name="destinationParty" id="destinationParty" formControlName="addedDestinationParty"
-                  (change)="onChangeDestinationsData()">
-                  <option *ngFor="let destd of destinationData" [value]="destd.name">{{destd.name}}</option>
+                  (change)="showDestinationAndFreightData(true)">
+                  <option *ngFor="let destparty of destinationParty" [value]="destparty.name">{{destparty.name}}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
                 <label for="destination">Destination</label>
-                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
-                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations" 
+                (change)="showDestinationAndFreightData(false)">
+                  <option *ngFor="let destNames of selectedDestinations" [value]="destNames">{{destNames}}</option>
                 </select>
               </div>
             </div>
@@ -147,7 +148,7 @@
               <div class="form-group">
                 <label for="destination">Freight</label>
                 <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
-                  <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+                  <option *ngFor="let freights of selectedFreight" [value]="freights">{{freights}}</option>
                 </select>
               </div>
             </div>
