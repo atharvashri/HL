@@ -89,5 +89,7 @@ export class RegistrationPanComponent implements OnInit {
       return
     }
 
+    
+
   }
 }
