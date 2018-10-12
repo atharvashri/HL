@@ -28,7 +28,7 @@ export class TruckPanService {
 
     }
 
-    getVehicleByNo() {
-
+    getVehicleByPanNo(id) {
+        return this.http.get(this.url + `pan/${id}`)
     }
 }

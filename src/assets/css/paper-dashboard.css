@@ -97,29 +97,30 @@
 /* Track */
 ::-webkit-scrollbar-track {
     box-shadow: inset 0 0 5px grey; 
-    border-radius: 10px;
+    border-radius: 0px;
 }
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: #337ab7; 
-    border-radius: 10px;
+    background: #23527c; 
+    border-radius: 0px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-    background: #337ab7; 
+    background: #23527c; 
 }              
 
+/* need to change below css field */
 .col-md-push-5 {
     background-color: white
 }
+
 .btn-primary{
     margin-left: 50%;
     margin-top: 5%
     
 }
-
 
 .p-txt {
   font-size: 16px;
@@ -3195,12 +3196,8 @@ Copyright (c) 2015 Daniel Eden
   }
 
   .form-control {
-    size: 100px
-  }
-
-
-  .test {
-    font-size: 50px
+    size: 100px;
+    color:red
   }
 
   .navbar-transparent {

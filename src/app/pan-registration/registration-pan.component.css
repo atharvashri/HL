@@ -1,3 +1,13 @@
 .modal-dialog{
     width:1250px
 }
+
+.hl_radio_margin{
+    margin:10px
+}
+
+.hl_vehiclelist{
+    border: 1px solid transparent;
+    border-radius: 5px;
+    background-color: white
+}
