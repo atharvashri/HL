@@ -13,18 +13,6 @@ interface IParty {
   freightRanges: Array<string>
 }
 
-//below Destinationparty object is reference object Please ignore - Atharva.
-Destinationparty: [{
-  id: 123,
-  name: 'ABC',
-  Destinations: ['mumbai', 'pune'],
-  Freights: [{
-    mumbai: [100, 200, 300]
-  },
-  {
-    pune: [2100, 500, 650]
-  }]
-}]
 
 interface IFreightRate {
   max: number,
@@ -50,8 +38,8 @@ export class DoCreateComponent implements OnInit {
 
   destinationsNames: Array<String>;
 
-  partyData: Array<IParty> = []
-  destinationData: Array<IParty> = []
+  partyData = []
+  //destinationData = []
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
@@ -73,7 +61,7 @@ export class DoCreateComponent implements OnInit {
         this.areaList = res["data"]["areaList"];
         this.collaryList = res["data"]["collaryList"];
         this.partyData = res["data"]["partyList"];
-        this.destinationData = res["data"]["partyList"]
+        this.destinationParty = res["data"]["partyList"]
       },
       (error) => { }
     )
@@ -152,13 +140,17 @@ export class DoCreateComponent implements OnInit {
 
     let doCreationData = this.doCreateForm.value;
 
-    //modify data for sending request to server.
-    //modify party,destination,date.
+    delete doCreationData.party;
+    delete doCreationData.destinationParty;
 
-    // this.modifyPartyData(this.partyData).then(() => {
-    //   delete doCreationData.party
-    // })
-    // this.createDo(doCreationData);
+    this.getSelectedParty().then((data) => {
+      doCreationData.party = data;
+      doCreationData.destinationparty = this.destinationParty;
+  
+      this.createDo(doCreationData);
+    })
+
+    //this.createDo(doCreationData);
   }
 
   onItemSelect(item: any) {
@@ -191,25 +183,13 @@ export class DoCreateComponent implements OnInit {
     }
   }
 
-  getDestinationsData(destinationData) {
-
-    // return new Promise((resolve, reject) => {
-    //   destinationData.forEach((element, index, array) => {
-    //     this.destinationsNames.push(element.name)
-    //     if (destinationData.length - 1 == index) {
-    //       resolve(this.destinationsNames)
-    //     }
-    //   });
-    // })
-  }
-
   getPartyData(partyData) {
 
   }
 
   onChangeDestinationsData() {
 
-    this.destinationData.forEach(element => {
+    this.destinationParty.forEach(element => {
       if (this.doCreateForm.controls.destinationParty.value == element.name) {
         this.destinationsNames = element.destinations;
       }
@@ -331,7 +311,7 @@ export class DoCreateComponent implements OnInit {
     if (isDestination) {
       this.selectedDestinations = [];
     }
-   
+
     let _selectedDestinationParty = this.doCreateForm.controls.addedDestinationParty.value;
     let _selectedDestination = this.doCreateForm.controls.addedDestinations.value;
 
@@ -352,7 +332,17 @@ export class DoCreateComponent implements OnInit {
 
   }
 
-  showFerightRates() {
+  getSelectedParty() {
 
+    let _selectedPartyName = this.doCreateForm.controls.party.value;
+
+    return new Promise((resolve, reject) => {
+      this.partyData.forEach((element) => {
+
+        if (_selectedPartyName == element.name) {
+          resolve(element)
+        }
+      })
+    })
   }
 }

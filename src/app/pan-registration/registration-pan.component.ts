@@ -51,7 +51,6 @@ export class RegistrationPanComponent implements OnInit {
         this.toaster.error("Please select action before submission");
         break;
     }
-
   }
 
   showVehicleList(id) {
@@ -68,14 +67,16 @@ export class RegistrationPanComponent implements OnInit {
   }
 
   updatePan() {
-    if (this.selectedvehicle != null) {
-      this.formtitleParent = "Update"
-      this.modalService.dismissAll()
-      this.update.openModel();
-    }
+    this.isUpdateVehicle = false;
+    //if (this.selectedvehicle != null) {
+    this.formtitleParent = "Update"
+    this.modalService.dismissAll()
+    this.update.openModel();
+    //}
   }
 
   addPan() {
+    this.isUpdateVehicle = false;
     this.formtitleParent = "Add"
     this.modalService.dismissAll()
     this.update.openModel();
@@ -83,10 +84,10 @@ export class RegistrationPanComponent implements OnInit {
   }
 
   updateVehicleDetails() {
-    if (this.selectedvehicle == undefined){
+    if (this.selectedvehicle == undefined) {
       this.toaster.error("Please select the vehicle");
       return
     }
-      
+
   }
 }

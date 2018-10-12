@@ -29,14 +29,14 @@ export class DoService {
     }
 
     getDoByIDService(id): Observable<any> {
-        return this.http.get(this.url + '${id}');
+        return this.http.get(this.url + `/do/${id}`);
     }
 
-    updateDoService(data): Observable<any> {
-        return this.http.put(this.url + '${id}', data);
+    updateDoService(data,id): Observable<any> {
+        return this.http.put(this.url + `/do/${id}`, data);
     }
 
     getdoRefData() {
-        return this.http.get(this.url + '/refdata')
+        return this.http.get(this.url + '/refdata');
     }
 }

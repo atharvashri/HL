@@ -17,7 +17,7 @@
       </div>
     </div> -->
     <div class="panel-body">
-      <form [formGroup]="doCreateForm" (ngSubmit)="onSubmitDo()">
+      <form [formGroup]="doCreateForm">
         <hr>
         <div class="row">
           <div class="col-md-3">
@@ -96,7 +96,7 @@
               <label for="destinationParty">Destination Party</label>
               <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
                 (change)="onChangeDestinationsData()">
-                <option *ngFor="let destd of destinationData" [value]="destd.name">{{destd.name}}</option>
+                <option *ngFor="let destd of destinationParty" [value]="destd.name">{{destd.name}}</option>
               </select>
             </div>
           </div>
@@ -344,7 +344,7 @@
 
         <!-- <button type="submit" class="btn btn-success">Create</button> -->
         <div *ngIf="isShowDoCreate">
-          <button type="submit" class="btn btn-primary" (click)="createDo()">Create</button>
+          <button type="submit" class="btn btn-primary" (click)="onSubmitDo()">Create</button>
         </div>
         <div *ngIf="!isShowDoCreate">
           <button type="submit" class="btn btn-primary">Update</button>

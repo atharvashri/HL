@@ -91,4 +91,8 @@ export class BuiltyCreateComponent implements OnInit {
   onSubmitbuilty() {
 
   }
+
+  getDataOnDoselect(){
+    
+  }
 }
