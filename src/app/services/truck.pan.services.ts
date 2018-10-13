@@ -12,8 +12,8 @@ export class TruckPanService {
 
     }
 
-    registerPAN() {
-
+    registerPAN(data) {
+        return this.http.post(this.url + 'pan', data);
     }
 
     getAllRegisteredPAN() {
@@ -24,8 +24,8 @@ export class TruckPanService {
         return this.http.get(this.url + `pan/${id}`)
     }
 
-    updatePAN() {
-
+    updatePAN(data, id) {
+        return this.http.put(this.url + `pan/${id}`, data);
     }
 
     getVehicleByPanNo(id) {

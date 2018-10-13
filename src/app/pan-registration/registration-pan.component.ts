@@ -21,67 +21,72 @@ export class RegistrationPanComponent implements OnInit {
 
   isAddpan: boolean = false;
   isUpdateVehicle: boolean = false;
+  EnteredPAN:string;
+  panData;
 
   @Output() modalEvt = new EventEmitter();
+  @ViewChild('addDetails') add 
   @ViewChild('updateDetails') update
   @ViewChild('confirmDialog') confirmDialog
 
-  vehicleList = ["MH10AB1234", "MH10AB1765", "MH10AB1354", "MH10AB1231", "MH10AB1761", "MH10AB1351", "MH10AB1232", "MH10AB1762", "MH10AB1352", "MH10AB1233", "MH10AB1763", "MH10AB1353",
-    "MH10AB1236", "MH10AB1768", "MH10AB1359", "MH10AB1223", "MH10AB1095", "MH10AB1654"]
+  vehicleList = []
 
-  open() {
-    this.formtitleParent = "Add PAN Details"
-    //console.log("model - event");
-    this.modalService.dismissAll()
-    this.update.openModel();
-  }
+  // open() {
+  //   this.formtitleParent = "Add PAN Details"
+  //   //console.log("model - event");
+  //   this.modalService.dismissAll()
+  //   this.add.openModel();
+  // }
 
   performPanAction(id) {
-    switch (this.selectedPanAction) {
-      case "vehiclelist":
-        this.showVehicleList(id);
-        break;
-      case "addpan":
-        this.addPan();
-        break;
-      case "updatepan":
-        this.updatePan();
-        break;
-      default:
-        this.toaster.error("Please select action before submission");
-        break;
+    if (id == '') {
+      this.toaster.error("please enter the PAN number to proceed");
+      return;
     }
+    this.showVehicleList(id);
   }
 
   showVehicleList(id) {
+    this.EnteredPAN = id;
     this.truckPanService.getVehicleByPanNo(id).subscribe(
-      (data) => {
-        this.vehicleList
-
+      (res) => {
+        console.log(res['data']);
+        if (res['data'] == null) {
+          this.showAddPanbtn();
+        }
+        else {
+          this.isUpdateVehicle = true;
+          this.isAddpan = false;
+          this.vehicleList = [];
+          this.panData = res["data"];
+          res['data']['vehicles'].forEach(element => {
+            this.vehicleList.push(element.vehicleNo)
+          });
+        }
       },
       (error) => {
 
       }
     )
-    this.isUpdateVehicle = true;
+
   }
 
-  updatePan() {
+  openupdatePANModel() {
     this.isUpdateVehicle = false;
-    //if (this.selectedvehicle != null) {
     this.formtitleParent = "Update PAN Details"
     this.modalService.dismissAll()
     this.update.openModel();
-    //}
   }
 
-  addPan() {
+  showAddPanbtn() {
     this.isUpdateVehicle = false;
     this.isAddpan = true;
+  }
+
+  openAddPANModel() {
     this.formtitleParent = "Add PAN Details"
     this.modalService.dismissAll()
-    this.update.openModel();
-
+    this.add.openModel();
   }
 
   updateVehicleDetails() {
@@ -92,6 +97,6 @@ export class RegistrationPanComponent implements OnInit {
 
     this.formtitleParent = "Update Vehicle Details"
     this.modalService.dismissAll()
-    this.update.openModel();
+    //this.update.openModel();
   }
 }

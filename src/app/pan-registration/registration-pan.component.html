@@ -30,12 +30,13 @@
       <div class="row">
         <div class="col-md-2 col-md-push-4">
           <div class="form-group">
-            <button class="btn btn-primary" (click)="performPanAction(panID.value)">Submit</button>
+            <button class="btn btn-primary" (click)="performPanAction(panID.value)">Submit PAN</button>
           </div>
         </div>
       </div>
 
-      <app-add-pan-update-details #updateDetails [formtitle]="formtitleParent"></app-add-pan-update-details>
+      <app-add-pan-update-details #addDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN"></app-add-pan-update-details>
+      <app-pan-update-details #updateDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN" [PanDataToUpdate] = "panData"></app-pan-update-details>
     </div>
   </div>
 </div>
@@ -50,7 +51,7 @@
 <div *ngIf="isUpdateVehicle">
   <div class="row">
     <div class="col-md-2 col-md-push-4">
-      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Update PAN</button>
+      <button type="button" class="btn btn-primary" (click)="openupdatePANModel()">Update PAN</button>
     </div>
   </div>
   <br>
@@ -82,8 +83,14 @@
 
 <div *ngIf="isAddpan">
   <div class="row">
+    <div class="col-md-6 col-md-push-4">
+      <b>Entered PAN is not found, Please add PAN</b>
+    </div>
+  </div>
+  <br>
+  <div class="row">
     <div class="col-md-2 col-md-push-4">
-      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Add PAN</button>
+      <button type="button" class="btn btn-primary" (click)="openAddPANModel()">Register PAN</button>
     </div>
   </div>
 </div>

@@ -1,16 +1,17 @@
 <div class="container-fluid">
 
-  <div class="row" >
+  <div class="row">
     <div class="col-xs-4 col-md-push-4 scrollbar do-run-list">
       <div class="">
         <label class="checkboxcontainer">Select All
           <input type="checkbox" checked="checked" [(ngModel)]="selectedAll" (change)="selectAllCheckbox($event)">
           <span class="checkmark"></span>
-      </label>
+        </label>
       </div>
       <div *ngFor="let activeDO of activeDoList">
-        <label for="{{activeDO.id}}-check" class="checkboxcontainer">{{activeDO.areaDoNo}}/{{activeDO.bspDoNo}} - {{activeDO.collary}} - {{activeDO.quantity}}
-          <input id="{{activeDO.id}}-check" type="checkbox" (change) = "updatecheckBoxList(activeDO, $event)" [(ngModel)] ="activeDO.selected">
+        <label for="{{activeDO.id}}-check" class="checkboxcontainer">{{activeDO.areaDoNo}}/{{activeDO.bspDoNo}} -
+          {{activeDO.collary}} - {{activeDO.quantity}}
+          <input id="{{activeDO.id}}-check" type="checkbox" (change)="updatecheckBoxList(activeDO, $event)" [(ngModel)]="activeDO.selected">
           <span class="checkmark"></span>
         </label>
       </div>
@@ -18,12 +19,12 @@
       </div>
     </div>
   </div>
-   <button type="button" name="Show" class="btn btn-primary" (click)="showAllRunningDo()">Show</button>
+  <button type="button" name="Show" class="btn btn-primary" (click)="showAllRunningDo()">Show</button>
 </div>
 <br>
 <div *ngIf="isrunningDoTablevisible; then showTable">
 </div>
 
 <ng-template #showTable>
-  <app-do-running-list [activeDoProperties] = activeDoProperties [activeDoList] = runningDosInTable></app-do-running-list>
+  <app-do-running-list [activeDoProperties]=activeDoProperties [activeDoList]=runningDosInTable></app-do-running-list>
 </ng-template>

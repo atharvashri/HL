@@ -109,7 +109,7 @@ export class DoRunningComponent implements OnInit {
   checkForDuplicateEntry(runningDoForcheck): any {
     return new Promise((resolve, reject) => {
       this.doAddedbyChecks.forEach((element, index, array) => {
-        if (element.doId == runningDoForcheck.doId) {
+        if (element.id == runningDoForcheck.id) {
           resolve({
             isPresent: true,
             index: index

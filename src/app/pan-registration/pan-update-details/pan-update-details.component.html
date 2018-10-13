@@ -17,68 +17,56 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="panc">PAN</label>
-                <input class="form-control" type="text" id="panc" value="" formControlName="panNo" [disabled]="true">
-              </div>
-            </div>
-            <div class="col-md-3" *ngIf="formtitle==='Add PAN Details'">
-              <div class="form-group">
-                <label for="vehicleno">Vehicle No</label>
-                <input class="form-control" type="text" id="vehicleno" value="" formControlName="vehicleNo">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="ownerName">Owner Name</label>
-                <input class="form-control" type="text" id="ownerName" value="" formControlName="ownerName">
+                <input class="form-control" type="text" id="panc" value="" formControlName="panNo" disabled>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="fatherName">Father\Husband\C/O</label>
-                <input class="form-control" type="text" id="fatherName" value="" formControlName="fatherName">
+                <input class="form-control" type="text" id="fatherName" value="{{PanDataToUpdate.fatherName}}"
+                  formControlName="fatherName">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="tds">TDS</label>
-                <select class="form-control" name="tds" id="tds" formControlName="tds">
-                    <option value="No" selected>No</option>
-                    <option value="Yes">Yes</option>
-                  </select>
+                <input class="form-control" type="text" id="tds" value="" formControlName="tds">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="address">Address</label>
-                <input class="form-control" type="text" id="address" value="" formControlName="address">
+                <input class="form-control" type="text" id="address" value="{{PanDataToUpdate.address}}"
+                  formControlName="address">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="city">City</label>
-                <input class="form-control" type="text" id="city" value="" formControlName="city">
+                <input class="form-control" type="text" id="city" value="{{PanDataToUpdate.city}}" formControlName="city">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="district">District</label>
-                <input class="form-control" type="text" id="district" value="" formControlName="district">
+                <input class="form-control" type="text" id="district" value="{{PanDataToUpdate.district}}"
+                  formControlName="district">
               </div>
             </div>
           </div>
           <hr>
 
-          <strong>Bank Information</strong>
+          <strong><u>Add Bank Information</u></strong>
           <br>
           <br>
           <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="accountNumber">Bank A/C No</label>
                 <input class="form-control" type="number" id="accountNumber" value="" formControlName="accountNumber">
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="accountHoldername">Account Holder Name</label>
                 <input class="form-control" type="text" id="accountHoldername" value="" formControlName="accountHoldername">
@@ -93,25 +81,42 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="bankname">Bank Name</label>
-                <input class="form-control" type="text" id="bankname" value="" formControlName="bankname">
+                <input class="form-control" type="text" id="bankname" value="" formControlName="bankName">
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
+                <button type="button" class="btn btn-primary margn-btn" id="addAccount" (click)="addAccountByBankName()">Add
+                  Account</button>
+              </div>
+            </div>
+          </div>
+          <strong><u>Delete Added Accounts</u></strong>
+          <br>
+          <br>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
                 <label for="adddedAccountName">Added Accounts</label>
-                <select class="form-control" name="adddedAccountName" id="adddedAccountName" formControlName="adddedAccountName">
+                <select class="form-control" name="adddedAccountName" id="adddedAccountName" formControlName="adddedAccountName"
+                  (change)="showBankDetails()">
                   <option *ngFor="let acc of addedBankAccounts" [value]="acc.accountNo">{{acc.accountNo}}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-2">
               <div class="form-group">
-                <button type="button" class="btn btn-primary margn-btn" id="addAccount" (click)="addAccountByBankName()">Add
-                  account</button>
+                <label for="Added_bankName">Bank Name</label>
+                <input class="form-control" type="text" id="Added_bankName" value="" formControlName="Added_bankName">
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary margn-btn" id="deleteAccount" (click)="deleteAccount()">Delete
+                  Account</button>
               </div>
             </div>
           </div>
-
           <hr>
           <strong>Upload Copies</strong>
           <br>
@@ -139,7 +144,7 @@
           <div class="row">
             <div class="col-md-1 col-md-push-5">
               <div class="form-group">
-                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="AddOrUpdatePanDetails()">Submit</button>
+                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="UpdatePANdetails()">Submit</button>
               </div>
             </div>
             <div class="col-md-1 col-md-push-5">
