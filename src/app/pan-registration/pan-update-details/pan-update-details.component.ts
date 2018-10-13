@@ -51,10 +51,10 @@ export class PanUpdateDetailsComponent implements OnInit {
 
   addAccountByBankName() {
 
-    if (this.panForm.controls.accountNumber.value == "" ||
-      this.panForm.controls.accountHoldername.value == "" ||
-      this.panForm.controls.ifscCode.value == "")
-      console.log("Please provide the required details")
+    if (this.panForm.controls.accountNumber.value == null ||
+      this.panForm.controls.accountHoldername.value == null ||
+      this.panForm.controls.ifscCode.value == null)
+      this.toaster.error("Please provide the required details")
 
     if (this.addedBankAccounts.length != 0)
       this.checkForduplicateAccountNo()
@@ -150,7 +150,20 @@ export class PanUpdateDetailsComponent implements OnInit {
     });
   }
 
-  deleteAccount(){
-    
+  deleteAccount() {
+    this.getAccountTobeDeleted().then((id) => {
+      this.addedBankAccounts.splice(id, 1);
+    })
+  }
+
+  getAccountTobeDeleted(): any {
+    let _accountNotoDelete = this.panForm.controls.adddedAccountName.value;
+    return new Promise((resolve, reject) => {
+      this.addedBankAccounts.forEach((element, index, array) => {
+        if (_accountNotoDelete == element.accountNo) {
+          resolve(index)
+        }
+      })
+    })
   }
 }
