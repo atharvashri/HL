@@ -26,8 +26,7 @@ export class UserComponent implements OnInit {
         lastname: [],
         password: [],
         confirmpassword: [],
-        role: [],
-        selectStatus: [],
+        role: []
 
     })
 
@@ -35,7 +34,10 @@ export class UserComponent implements OnInit {
         if (this.userForm.invalid)
             return
 
-
+        if(this.userForm.controls.password.value !== this.userForm.controls.confirmpassword.value)    {
+          this.toastrService.error("Password and Confirm password do not match");
+          return;
+        }
         let userData = {
             username: this.userForm.controls.username.value,
             firstName: this.userForm.controls.firstname.value,

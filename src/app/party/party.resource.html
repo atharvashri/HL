@@ -31,7 +31,7 @@
                     </div>
                 </div>
 
-                <div>
+                <div [hidden]="destinationsData.length == 0">
                   <h3>Destinations Added</h3>
                   <div class="list-options-local" id="destination-added" *ngFor="let destination of destinationsData">
                     <button class="remove-option" value="X" (click)="removeOption(destination)">X</button>

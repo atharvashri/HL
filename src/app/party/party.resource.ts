@@ -52,6 +52,8 @@ export class PartyResourceComponent implements OnInit {
     this.partyService.createPartyService(party).subscribe(
       (success) => {
         console.log(success);
+        this.partyForm.reset();
+        this.destinationsData = [];
         this.toaster.success("Party data saved successfully");
       },
       (error) => {

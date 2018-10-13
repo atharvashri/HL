@@ -172,7 +172,10 @@ export class DoCreateComponent implements OnInit {
     doCreationData.dueDate = this.transformDate(doCreationData.dueDate);
     doCreationData.receivedDate = this.transformDate(doCreationData.receivedDate);
     doCreationData.doDate = this.transformDate(doCreationData.doDate);
+
+    //TODO this is temporary solution to get it work.
     doCreationData.inAdvanceLimit = [doCreationData.inAdvanceLimit];
+    doCreationData.freightToBePaidBy = [doCreationData.freightToBePaidBy];
 
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
