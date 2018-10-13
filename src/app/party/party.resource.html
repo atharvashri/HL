@@ -26,11 +26,20 @@
                     </div>
                     <div class="col-md-3 col-md-push-3">
                         <div class="form-group">
-                            <button class="btn btn-primary margin-btn" (click)="submitdestination()">Add</button>
+                            <button class="btn btn-primary margin-btn" (click)="addDestination()">Add</button>
                         </div>
                     </div>
                 </div>
-                <div class="row">
+
+                <div>
+                  <h3>Destinations Added</h3>
+                  <div class="list-options-local" id="destination-added" *ngFor="let destination of destinationsData">
+                    <button class="remove-option" value="X" (click)="removeOption(destination)">X</button>
+                      {{destination}}
+                  </div>
+                </div>
+                <!--<input type="text" name="destinations" hidden [value]="destinationsData" formControlName="destinations">-->
+                <!--<div class="row">
                     <div class="col-md-3 col-md-push-2">
                         <div class="form-group">
                             <label for="freightratemin">Freightrate Min</label>
@@ -49,10 +58,10 @@
                         </div>
                     </div>
 
-                </div>
+                </div>-->
                 <div class="col-md-2 col-md-push-4">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary margin-btn" (click)="submitRequestForParty()">Submit</button>
+                        <button type="submit" class="btn btn-primary margin-btn" (click)="onSubmit()">Submit</button>
                     </div>
                 </div>
             </form>

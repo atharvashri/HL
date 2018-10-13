@@ -2,3 +2,21 @@
 .p-spacer-top-20 {
     margin-top:  20%
 }
+
+.list-options-local{
+  border: 1px solid gray;
+  padding: 15px 15px 15px 15px;
+  margin: 20px;
+  /*background: #A4D3EE;*/
+  box-shadow: 5px 5px 2px #888888;
+  position: relative;
+  display: inline-block;
+
+}
+.list-options-local .remove-option {
+    position: absolute;
+    background: red;
+    color: white;
+    top: -10px;
+    right: -10px;
+}

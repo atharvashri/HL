@@ -1,11 +1,8 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { PartyService } from '../services/party.service'
 
-interface IFreightRates {
-  min,
-  max
-}
+import { ToastrService } from 'ngx-toastr';
+import { PartyService } from '../services/party.service';
 
 @Component({
   selector: 'party-resource',
@@ -14,49 +11,54 @@ interface IFreightRates {
 })
 
 export class PartyResourceComponent implements OnInit {
-
+  destinations = [];
   ngOnInit() {
+    this.destinationsData = [];
+  }
+
+  constructor(private partyFormbuilder: FormBuilder,
+      private toaster: ToastrService,
+      private partyService: PartyService) {
 
   }
 
-  constructor(private partyFormbuilder: FormBuilder, private partyservice: PartyService) {
-
-  }
-
-  partyName: Array<string>;
-  destinationsData: Array<string> = [];
-  freightRates: Array<IFreightRates> = [];
+  partyData:string;
+  destinationsData:Array<string>;
 
   partyForm = this.partyFormbuilder.group({
     partyname: [],
-    destination: [],
-    freightratemin: [],
-    freightratemax: []
+    destination: []
   })
 
-  submitdestination() {
-    this.destinationsData.push(this.partyForm.controls.destination.value)
-  }
-
-  submitFreight() {
-    this.freightRates.push({
-      min: this.partyForm.controls.freightratemin.value,
-      max: this.partyForm.controls.freightratemax.value
-    })
-  }
-
-  submitRequestForParty() {
-    let _requestPartydata = {
-      id: 2,
-      name: this.partyForm.controls.partyname.value,
-      destinations: this.destinationsData,
-      freightRanges: this.freightRates
+  addDestination(){
+    let formEntry = this.partyForm.controls.destination.value;
+    if(this.destinationsData.includes(formEntry)){
+        this.toaster.error("Destination is already added");
+    }else{
+      this.destinationsData.push(this.partyForm.controls.destination.value);
     }
+  }
 
-    this.partyservice.createPartyService(_requestPartydata).subscribe(
-      (data) => { console.log(data) }
+  removeOption(destination: string){
+    this.destinationsData = this.destinationsData.filter(elem => elem !== destination);
+    //console.log(this.destinations);
+  }
+
+  onSubmit(){
+    let party = {
+      "name": this.partyForm.controls.partyname.value,
+      "destinations": this.destinationsData
+    }
+    this.partyService.createPartyService(party).subscribe(
+      (success) => {
+        console.log(success);
+        this.toaster.success("Party data saved successfully");
+      },
+      (error) => {
+        console.log(error);
+        this.toaster.error("Problem saving party data");
+      }
     )
-
   }
 
 }
