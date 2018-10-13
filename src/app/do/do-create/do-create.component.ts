@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core'
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
+import { Validators, FormBuilder } from '@angular/forms'
 import { DoService } from '../../services/do.service'
 
 import { DODetails } from '../../model/do-details.model'
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../services/user.service';
 
 interface IParty {
   id: number,
@@ -29,23 +30,25 @@ export class DoCreateComponent implements OnInit {
   submitted: boolean;
   isShowDoCreate: boolean = true;
   receivedDateforDue = new Date();
-  dueDateUpdate;
+  //dueDateUpdate;
   Freights = [];
 
   ref_collaryList: Array<string>;
   ref_areaList: Array<string>
-
-  destinationsNames: Array<String>;
-
   ref_partyData = []
   ref_destinationData = []
+  ref_transporters = []
+  destinationsNames: Array<String>;
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
 
   isfrightEntryAdded: boolean = false
 
-  constructor(private doFormBuilder: FormBuilder, private doService: DoService, private toaster: ToastrService) { }
+  constructor(private doFormBuilder: FormBuilder,
+          private doService: DoService,
+          private userService: UserService,
+          private toaster: ToastrService) { }
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
@@ -56,7 +59,7 @@ export class DoCreateComponent implements OnInit {
   //optionsSelect;
 
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
-  sizes = ["Small", "Big", "medium"]
+  sizes = ["ROM", "SLK", "STM"]
 
   ngOnInit() {
     this.doDetails = new DODetails()
@@ -74,17 +77,26 @@ export class DoCreateComponent implements OnInit {
         this.toaster.error("error occured while retrieving refdata");
       }
     )
+
+    this.userService.getByRole("ROLE_FIELD").subscribe(
+      (res) => {
+        this.ref_transporters = res["data"];
+      },
+      (error) => {
+        console.log("could not retrieve transporters list")
+      }
+    )
   }
 
   doCreateForm = this.doFormBuilder.group({
     bspDoNo: [],
-    areaDoNo: [, Validators.required],
+    areaDoNo: [],
     doNo: [{ value: [], disabled: true }],
     auctionNo: [],
     quantity: [],
     doDate: [],
     receivedDate: [],
-    dueDate: [{ value: [], disabled: true }],
+    dueDate: [{value:'', disabled:true}],
     size: [],
     // party: new FormGroup({
     //   id: [],
@@ -147,7 +159,7 @@ export class DoCreateComponent implements OnInit {
     }
 
 
-    let doCreationData = this.doCreateForm.value;
+    let doCreationData = this.doCreateForm.getRawValue();
 
     delete doCreationData.party;
     delete doCreationData.destinationParty;
@@ -155,12 +167,15 @@ export class DoCreateComponent implements OnInit {
     delete doCreationData.addedDestinationParty;
     delete doCreationData.addedDestinations;
     delete doCreationData.destinations;
-    delete doCreationData.transporter;
+
+    doCreationData.destinationparty = this.destinationParty;
+    doCreationData.dueDate = this.transformDate(doCreationData.dueDate);
+    doCreationData.receivedDate = this.transformDate(doCreationData.receivedDate);
+    doCreationData.doDate = this.transformDate(doCreationData.doDate);
+    doCreationData.inAdvanceLimit = [doCreationData.inAdvanceLimit];
 
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
-      doCreationData.destinationparty = this.destinationParty;
-
       console.table([doCreationData]);
       this.createDo(doCreationData);
     })
@@ -242,7 +257,8 @@ export class DoCreateComponent implements OnInit {
     let _alphaMonth = _rawStr[1];
     let _month = _monthData[_alphaMonth];
 
-    this.dueDateUpdate = _year + "-" + _month + "-" + _day;
+    //this.dueDateUpdate = _year + "-" + _month + "-" + _day;
+    this.doCreateForm.controls.dueDate.setValue(_year + "-" + _month + "-" + _day);
 
   }
 
@@ -360,5 +376,12 @@ export class DoCreateComponent implements OnInit {
         }
       })
     })
+  }
+
+  transformDate(date:string){
+    if(date && date.length == 10){
+      return (<Array<string>>date.split('-')).reverse().join('-');
+    }
+    return "";
   }
 }

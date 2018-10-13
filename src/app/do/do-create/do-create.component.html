@@ -38,7 +38,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="doNo">DO No</label>
-              <input type="text" class="form-control" id="doNo" formControlName="doNo" value="{{bspNO}} / {{areaNO}}">
+              <input type="text" class="form-control" id="doNo" formControlName="doNo" value="{{areaNO}}/{{bspNO}}">
             </div>
           </div>
           <div class="col-md-3">
@@ -69,7 +69,32 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="dueDate">Due Date</label>
-              <input type="date" class="form-control" id="dueDate" formControlName="dueDate" value="{{dueDateUpdate}}">
+              <input type="date" class="form-control" id="dueDate" formControlName="dueDate">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="area">Area</label>
+              <select class="form-control" name="area" id="area" formControlName="area">
+                <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="collary">Collary</label>
+              <select class="form-control" name="collary" id="collary" formControlName="collary">
+                <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <select class="form-control" name="grade" id="grade" formControlName="grade">
+                <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
+              </select>
             </div>
           </div>
           <div class="col-md-3">
@@ -80,10 +105,33 @@
               </select>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <hr>
-          <div class="col-md-2">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="by">By</label>
+              <select class="form-control" name="by" id="by" formControlName="by">
+                <option value="Courier">Courier</option>
+                <option value="Self">Self</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="builtyCompany">Builty Company</label>
+              <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="transporter">Transporter</label>
+              <select class="form-control" id="transporter"  formControlName="transporter">
+                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter">
+                  {{transporter.firstName}} {{transporter.lastName}}
+                </option>
+              </select>
+              <!--<input type="text" class="form-control" id="transporter" formControlName="transporter">-->
+            </div>
+          </div>
+          <div class="col-md-3">
             <div class="form-group">
               <label for="partyName">Party Name</label>
               <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
@@ -93,6 +141,11 @@
               </select>
             </div>
           </div>
+        </div>
+
+        <div class="row">
+          <hr>
+
           <div class="col-md-2">
             <div class="form-group">
               <label for="destinationParty">Destination Party</label>
@@ -166,51 +219,7 @@
               <input type="number" class="form-control" id="permissionNo" formControlName="permissionNo">
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="area">Area</label>
-              <select class="form-control" name="area" id="area" formControlName="area">
-                <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="collary">Collary</label>
-              <select class="form-control" name="collary" id="collary" formControlName="collary">
-                <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="grade">Grade</label>
-              <select class="form-control" name="grade" id="grade" formControlName="grade">
-                <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="by">By</label>
-              <select class="form-control" name="by" id="by" formControlName="by">
-                <option value="Courier">Courier</option>
-                <option value="Self">Self</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="builtyCompany">Builty Company</label>
-              <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany">
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="transporter">Transporter</label>
-              <input type="text" class="form-control" id="transporter" formControlName="transporter">
-            </div>
-          </div>
+
           <div class="col-md-3">
             <div class="form-group">
               <label for="emd">EMD</label>
@@ -275,12 +284,12 @@
               <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
             </div>
           </div>
-          <div class="col-md-3">
+        <!--<div class="col-md-3">
             <div class="form-group">
               <label for="doStatus">Do Status</label>
               <input type="text" class="form-control" id="doStatus" formControlName="doStatus">
             </div>
-          </div>
+          </div> -->
 
           <div class="col-md-3">
             <div class="form-group">
@@ -306,23 +315,19 @@
               <input type="text" class="form-control" id="totalRefundAmt" formControlName="totalRefundAmt">
             </div>
           </div>
-          <div *ngIf="isShowDoCreate">
-            <div class="col-md-3">
+          <!--  <div class="col-md-3">
               <div class="form-group">
                 <label for="finishDate">Finish Date</label>
                 <input type="date" class="form-control" id="finishDate" formControlName="finishDate">
               </div>
-            </div>
-          </div>
-          <div *ngIf="isShowDoCreate">
+            </div>-->
             <div class="col-md-3">
               <div class="form-group">
                 <label for="inAdvanceLimit">In Advance limit</label>
-                <input type="text" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
+                <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
               </div>
             </div>
-          </div>
-          <div class="col-md-6">
+          <div class="col-md-3">
             <div class="form-group">
               <label for="remarks">Remarks</label>
               <input type="text" class="form-control" id="remarks" formControlName="remarks">
@@ -332,14 +337,14 @@
           <div *ngIf="isShowDoCreate">
             <div class="col-md-3">
               <div class="form-group">
-                <label for="freightToBePaidBy">Freight to be paid</label>
+                <label for="freightToBePaidBy">Freight to be paid By</label>
                 <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy">
               </div>
             </div>
           </div>
           <!-- Only when edit DO  - END-->
 
-          <div class="col-md-4">
+          <div class="col-md-6">
             <div class="form-group">
               <label for="website">Website</label>
               <input type="text" class="form-control" id="website" formControlName="website">
