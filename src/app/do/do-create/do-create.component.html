@@ -44,7 +44,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="doNo">Auction No</label>
-              <input type="text" class="form-control" id="doNo" formControlName="auctionNo">
+              <input type="number" class="form-control" id="doNo" formControlName="auctionNo">
             </div>
           </div>
           <div class="col-md-3">
@@ -69,7 +69,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="dueDate">Due Date</label>
-              <input type="date" class="form-control" id="dueDate" formControlName="dueDate" disabled value="{{dueDateUpdate}}">
+              <input type="date" class="form-control" id="dueDate" formControlName="dueDate" value="{{dueDateUpdate}}">
             </div>
           </div>
           <div class="col-md-3">
@@ -86,27 +86,31 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="partyName">Party Name</label>
+              <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
+                    ngOptions="party.name for party in partyData"></select>-->
               <select class="form-control" name="partyName" id="partyName" formControlName="party">
-                <option *ngFor="let pd of partyData" [value]="pd.name">{{pd.name}}</option>
+                <option *ngFor="let pd of partyData" [ngValue]="pd">{{pd.name}}</option>
               </select>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="destinationParty">Destination Party</label>
+              <!--<select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                    ngOptions="party.name for party in destinationParty"></select>-->
               <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
                 (change)="onChangeDestinationsData()">
-                <option *ngFor="let destd of destinationParty" [value]="destd.name">{{destd.name}}</option>
+                <option *ngFor="let destd of destinationParty" [ngValue]="destd">{{destd.name}}</option>
               </select>
             </div>
           </div>
           <div class="col-md-2">
             <div class="form-group">
               <label for="destination">Destination</label>
-              <!-- <select class="form-control" name="destination" id="destination" formControlName="destinations">
+              <select class="form-control" name="destination" id="destination" formControlName="destinations">
                 <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
-              </select> -->
-              <input type="text" class="form-control" formControlName="destinations">
+              </select>
+              <!--<input type="text" class="form-control" formControlName="destinations">-->
             </div>
           </div>
           <div class="col-md-2">
@@ -138,7 +142,7 @@
             <div class="col-md-2">
               <div class="form-group">
                 <label for="destination">Destination</label>
-                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations" 
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations"
                 (change)="showDestinationAndFreightData(false)">
                   <option *ngFor="let destNames of selectedDestinations" [value]="destNames">{{destNames}}</option>
                 </select>

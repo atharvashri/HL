@@ -10,7 +10,7 @@ interface IParty {
   id: number,
   name: string,
   destinations: Array<string>,
-  freightRanges: Array<string>
+  //freightRanges: Array<string>
 }
 
 
@@ -50,7 +50,7 @@ export class DoCreateComponent implements OnInit {
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
-
+  refData = {};
   optionsSelect;
   ngOnInit() {
     this.doDetails = new DODetails()
@@ -58,10 +58,11 @@ export class DoCreateComponent implements OnInit {
 
     this.doService.getdoRefData().subscribe(
       (res) => {
-        this.areaList = res["data"]["areaList"];
-        this.collaryList = res["data"]["collaryList"];
-        this.partyData = res["data"]["partyList"];
-        this.destinationParty = res["data"]["partyList"]
+        this.refData = res["data"];
+        this.areaList = this.refData["areaList"];
+        this.collaryList = this.refData["collaryList"];
+        this.partyData = this.refData["partyList"];
+        this.destinationParty = this.refData["partyList"]
       },
       (error) => { }
     )
@@ -70,12 +71,12 @@ export class DoCreateComponent implements OnInit {
   doCreateForm = this.doFormBuilder.group({
     bspDoNo: [''],
     areaDoNo: ['', Validators.required],
-    doNo: [''],
+    doNo: [{value: '', disabled: true}],
     auctionNo: [''],
     quantity: [''],
     doDate: [''],
     receivedDate: [''],
-    dueDate: [''],
+    dueDate: [{value: '', disabled: true}],
     size: [''],
     // party: new FormGroup({
     //   id: [''],
@@ -146,7 +147,7 @@ export class DoCreateComponent implements OnInit {
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
       doCreationData.destinationparty = this.destinationParty;
-  
+
       this.createDo(doCreationData);
     })
 
@@ -190,7 +191,7 @@ export class DoCreateComponent implements OnInit {
   onChangeDestinationsData() {
 
     this.destinationParty.forEach(element => {
-      if (this.doCreateForm.controls.destinationParty.value == element.name) {
+      if (this.doCreateForm.controls.destinationParty.value.id == element.id) {
         this.destinationsNames = element.destinations;
       }
     });
