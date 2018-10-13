@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms'
 import { UserService } from '../services/user.service'
 import { ToastrService } from 'ngx-toastr'
@@ -10,6 +10,9 @@ import { ToastrService } from 'ngx-toastr'
 })
 
 export class UserComponent implements OnInit {
+
+    @ViewChild('userlist') userlist;
+
     ngOnInit() {
     }
 
@@ -45,13 +48,16 @@ export class UserComponent implements OnInit {
 
         this.userService.addUser(userData).subscribe(
             (data) => {
-                this.toastrService.error("User is added successfully")
+                this.toastrService.success("User is added successfully")
+                this.userlist.getAddedUsers();
             },
             (error) => {
-                
+
                 this.toastrService.error("Fail to add user to database please contact Admin", "User Add failure")
             }
         )
 
     }
+
+
 }

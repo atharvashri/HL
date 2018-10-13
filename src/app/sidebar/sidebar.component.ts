@@ -19,9 +19,10 @@ export const ROUTES: RouteInfo[] = [];
 
 export class SidebarComponent implements OnInit {
     public menuItems: any[];
-    public currentProfileIdentifier: String = "master";
+    public currentProfileIdentifier: String;
 
     ngOnInit() {
+        this.currentProfileIdentifier = localStorage.getItem('currentUser');
         this.menuItems = this.getcurrentProfileForRoutes(this.setRoutesForMenu.bind(this))
         //this.menuItems = ROUTES;//.filter(menuItem => menuItem);
     }
@@ -38,15 +39,15 @@ export class SidebarComponent implements OnInit {
 
     setRoutesForMenu(profile) {
         switch (profile) {
-            case "office":
+            case "ROLE_OFFICE":
                 return this.getOfficeMenuRoutes();
-            case "field":
+            case "ROLE_FIELD":
                 return this.getFieldMenuRoutes();
-            case "customer":
+            case "ROLE_PARTY":
                 return this.getCustomerMenuRoutes();
-            case "truck":
+            case "ROLE_TRUCK":
                 return this.getTruckMenuRoutes();
-            case "master":
+            case "ROLE_ADMIN":
                 return this.getMasterMenuRoutes();
             default:
                 break;

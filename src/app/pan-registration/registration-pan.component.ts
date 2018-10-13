@@ -30,7 +30,7 @@ export class RegistrationPanComponent implements OnInit {
     "MH10AB1236", "MH10AB1768", "MH10AB1359", "MH10AB1223", "MH10AB1095", "MH10AB1654"]
 
   open() {
-    this.formtitleParent = "Add"
+    this.formtitleParent = "Add PAN Details"
     //console.log("model - event");
     this.modalService.dismissAll()
     this.update.openModel();
@@ -69,7 +69,7 @@ export class RegistrationPanComponent implements OnInit {
   updatePan() {
     this.isUpdateVehicle = false;
     //if (this.selectedvehicle != null) {
-    this.formtitleParent = "Update"
+    this.formtitleParent = "Update PAN Details"
     this.modalService.dismissAll()
     this.update.openModel();
     //}
@@ -77,7 +77,8 @@ export class RegistrationPanComponent implements OnInit {
 
   addPan() {
     this.isUpdateVehicle = false;
-    this.formtitleParent = "Add"
+    this.isAddpan = true;
+    this.formtitleParent = "Add PAN Details"
     this.modalService.dismissAll()
     this.update.openModel();
 
@@ -89,7 +90,8 @@ export class RegistrationPanComponent implements OnInit {
       return
     }
 
-    
-
+    this.formtitleParent = "Update Vehicle Details"
+    this.modalService.dismissAll()
+    this.update.openModel();
   }
 }

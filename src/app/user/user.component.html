@@ -24,24 +24,24 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="text" class="form-control" id="password" formControlName="password">
+                            <input type="password" class="form-control" id="password" formControlName="password">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="password">Confirm Password</label>
-                            <input type="text" class="form-control" id="password" formControlName="confirmpassword">
+                            <input type="password" class="form-control" id="confirmpassword" formControlName="confirmpassword">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="Role">Role</label>
                             <select class="form-control" id="Role" formControlName="role">
-                                <option value="Office" selected>Office</option>
-                                <option value="Field" >Field</option>
-                                <option value="Party" >Party</option>
-                                <option value="Master">Master</option>
-                                <option value="TruckOwner">Truck Owner</option>
+                                <option value="ROLE_OFFICE" selected>Office</option>
+                                <option value="ROLE_FIELD" >Field</option>
+                                <option value="ROLE_PARTY" >Party</option>
+                                <option value="ROLE_ADMIN">Admin</option>
+                                <option value="ROLE_">Truck Owner</option>
                             </select>
                         </div>
                     </div>
@@ -61,5 +61,5 @@
     </div>
 </div>
 
-<user-list-cmp></user-list-cmp>
+<user-list-cmp #userlist></user-list-cmp>
 

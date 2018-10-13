@@ -25,7 +25,6 @@ interface IFreightRate {
   styleUrls: ['./do-create.component.css']
 })
 export class DoCreateComponent implements OnInit {
-  sizes: Array<string>;
   doDetails: DODetails;
   submitted: boolean;
   isShowDoCreate: boolean = true;
@@ -33,13 +32,13 @@ export class DoCreateComponent implements OnInit {
   dueDateUpdate;
   Freights = [];
 
-  collaryList: Array<string>;
-  areaList: Array<string>
+  ref_collaryList: Array<string>;
+  ref_areaList: Array<string>
 
   destinationsNames: Array<String>;
 
-  partyData = []
-  //destinationData = []
+  ref_partyData = []
+  ref_destinationData = []
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
@@ -52,82 +51,91 @@ export class DoCreateComponent implements OnInit {
   dropdownSettings = {};
   refData = {};
   optionsSelect;
+
+
+  //optionsSelect;
+
+  grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
+  sizes = ["Small", "Big", "medium"]
+
   ngOnInit() {
     this.doDetails = new DODetails()
-    this.sizes = ["Small", "Big", "medium"]
 
     this.doService.getdoRefData().subscribe(
       (res) => {
         this.refData = res["data"];
-        this.areaList = this.refData["areaList"];
-        this.collaryList = this.refData["collaryList"];
-        this.partyData = this.refData["partyList"];
-        this.destinationParty = this.refData["partyList"]
+
+        this.ref_areaList = res["data"]["areaList"];
+        this.ref_collaryList = res["data"]["collaryList"];
+        this.ref_partyData = res["data"]["partyList"];
+        this.ref_destinationData = res["data"]["partyList"]
       },
-      (error) => { }
+      (error) => {
+        this.toaster.error("error occured while retrieving refdata");
+      }
     )
   }
 
   doCreateForm = this.doFormBuilder.group({
-    bspDoNo: [''],
-    areaDoNo: ['', Validators.required],
-    doNo: [{value: '', disabled: true}],
-    auctionNo: [''],
-    quantity: [''],
-    doDate: [''],
-    receivedDate: [''],
-    dueDate: [{value: '', disabled: true}],
-    size: [''],
+    bspDoNo: [],
+    areaDoNo: [, Validators.required],
+    doNo: [{ value: [], disabled: true }],
+    auctionNo: [],
+    quantity: [],
+    doDate: [],
+    receivedDate: [],
+    dueDate: [{ value: [], disabled: true }],
+    size: [],
     // party: new FormGroup({
-    //   id: [''],
-    //   name: [''],
-    //   destinations: [''],
-    //   freightRanges: [''],
+    //   id: [],
+    //   name: [],
+    //   destinations: [],
+    //   freightRanges: [],
 
     // }),
-    party: [''],
+    party: [],
     // destinationParty: new FormGroup({
-    //   id: [''],
-    //   name: [''],
-    //   destinations: [''],
-    //   freightRanges: ['']
+    //   id: [],
+    //   name: [],
+    //   destinations: [],
+    //   freightRanges: []
     // }),
-    destinationParty: [''],
-    destinations: [''],
-    addedDestinationParty: [''],
-    addedDestinations: [''],
+    destinationParty: [],
+    destinations: [],
+    addedDestinationParty: [],
+    addedDestinations: [],
     // freight: new FormGroup({
-    //   min: [''],
-    //   max: ['']
+    //   min: [],
+    //   max: []
     // }),
-    freight: [''],
-    permissionNo: [''],
-    area: [''],
-    collary: [''],
-    grade: [''],
-    by: [''],
-    builtyCompany: [''],
-    transporter: [''],
-    emd: [''],
-    doAmt: [''],
-    doAmtpmt: [''],
-    doRate: [''],
-    doRateTcs: [''],
-    withinOutSide: [''],
-    disp: [''],
-    liftedQuantity: [''],
-    quantityDeduction: [''],
-    lepseQuantity: [''],
-    doStatus: [''],
-    refundAmt: [''],
-    refundDate: [''],
-    emdAmt: [''],
-    totalRefundAmt: [''],
-    website: [''],
-    finishDate: [''],
-    remarks: [''],
-    inAdvanceLimit: [''],
-    freightToBePaidBy: ['']
+    freight: [],
+    permissionNo: [],
+    area: [],
+    collary: [],
+    grade: [],
+    by: [],
+    builtyCompany: [],
+    transporter: [],
+    emd: [],
+    doAmt: [],
+    doAmtpmt: [],
+    doRate: [],
+    doRateTcs: [],
+    withinOutSide: [],
+    disp: [],
+    liftedQuantity: [],
+    quantityDeduction: [],
+    lepseQuantity: [],
+    doStatus: [],
+    refundAmt: [],
+    refundDate: [],
+    emdAmt: [],
+    totalRefundAmt: [],
+    website: [],
+    finishDate: [],
+    remarks: [],
+    inAdvanceLimit: [],
+    freightToBePaidBy: []
   })
 
 
@@ -143,15 +151,19 @@ export class DoCreateComponent implements OnInit {
 
     delete doCreationData.party;
     delete doCreationData.destinationParty;
+    delete doCreationData.freight;
+    delete doCreationData.addedDestinationParty;
+    delete doCreationData.addedDestinations;
+    delete doCreationData.destinations;
+    delete doCreationData.transporter;
 
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
       doCreationData.destinationparty = this.destinationParty;
 
+      console.table([doCreationData]);
       this.createDo(doCreationData);
     })
-
-    //this.createDo(doCreationData);
   }
 
   onItemSelect(item: any) {
@@ -164,10 +176,10 @@ export class DoCreateComponent implements OnInit {
   createDo(doCreationData) {
     this.doService.createDoService(doCreationData).subscribe(
       (data) => {
-
+        this.toaster.success("DO is successfully created");
       },
       (err) => {
-
+        this.toaster.error("error in DO is creation");
       }
     )
   }
@@ -190,8 +202,8 @@ export class DoCreateComponent implements OnInit {
 
   onChangeDestinationsData() {
 
-    this.destinationParty.forEach(element => {
-      if (this.doCreateForm.controls.destinationParty.value.id == element.id) {
+    this.ref_destinationData.forEach(element => {
+      if (this.doCreateForm.controls.destinationParty.value == element.name) {
         this.destinationsNames = element.destinations;
       }
     });
@@ -320,7 +332,10 @@ export class DoCreateComponent implements OnInit {
       if (_selectedDestinationParty == element_party.name) {
         element_party.destinations.forEach(element => {
           if (isDestination) {
-            this.selectedDestinations.push(element.name)
+            this.selectedDestinations.push(element.name);
+            if (element_party.destinations.length == 1) {
+              this.selectedFreight = element.freight;
+            }
           }
           else {
             if (_selectedDestination == element.name) {
@@ -338,7 +353,7 @@ export class DoCreateComponent implements OnInit {
     let _selectedPartyName = this.doCreateForm.controls.party.value;
 
     return new Promise((resolve, reject) => {
-      this.partyData.forEach((element) => {
+      this.ref_partyData.forEach((element) => {
 
         if (_selectedPartyName == element.name) {
           resolve(element)

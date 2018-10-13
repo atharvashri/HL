@@ -27,9 +27,10 @@ export class DoRunningComponent implements OnInit {
   constructor(private doService: DoService) { }
 
   ngOnInit() {
-    this.doService.getActiveDosService().subscribe(
-      (data) => {
-
+    this.doService.getAllDosService().subscribe(
+      (res) => {
+        console.log(res.data);
+        this.activeDoList = res.data;
       },
       (err) => {
 
@@ -40,20 +41,21 @@ export class DoRunningComponent implements OnInit {
   activeDoProperties: Array<any>
 
 
-  activeDoList: RunningDo[] = [
-    { doId: 1, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
-    { doId: 2, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
-    { doId: 3, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
-    { doId: 4, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
-    { doId: 5, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
-    { doId: 6, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
-    { doId: 7, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
-    { doId: 8, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
-    { doId: 9, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
-    { doId: 10, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
-    { doId: 11, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
-    { doId: 12, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
-  ];
+  activeDoList;
+  // = [
+  //   { doId: 1, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
+  //   { doId: 2, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
+  //   { doId: 3, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
+  //   { doId: 4, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
+  //   { doId: 5, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
+  //   { doId: 6, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
+  //   { doId: 7, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
+  //   { doId: 8, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
+  //   { doId: 9, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
+  //   { doId: 10, collaryName: 'bijuri', quantity: 100, areaDoNo: 1234, bspDoNo: 37272, selected: false },
+  //   { doId: 11, collaryName: 'kotma', quantity: 300, areaDoNo: 2334, bspDoNo: 37622, selected: false },
+  //   { doId: 12, collaryName: 'beohari', quantity: 400, areaDoNo: 3262, bspDoNo: 374733, selected: false },
+  // ];
 
 
   showAllRunningDo() {
@@ -80,8 +82,8 @@ export class DoRunningComponent implements OnInit {
       //   this.isrunningDoTablevisible = true;
       // }
       // else {
-        this.runningDosInTable = []
-        this.isrunningDoTablevisible = false;
+      this.runningDosInTable = []
+      this.isrunningDoTablevisible = false;
       //}
     }
   }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DO } from '../../model/do.model';
 import { Builty } from '../../model/builty.model';
+import { DoService } from '../../services/do.service'
 
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms'
 
@@ -13,7 +14,7 @@ export class BuiltyCreateComponent implements OnInit {
   doList = []
   toppingList: Array<string>
 
-  constructor(public builtyFormBuilder: FormBuilder) { }
+  constructor(public builtyFormBuilder: FormBuilder, private doService: DoService) { }
 
   optionsSelect
   ngOnInit() {
@@ -75,7 +76,7 @@ export class BuiltyCreateComponent implements OnInit {
     //   active: ['']
     // }),
     transporter: [''],
-    subTransporter : [''],
+    subTransporter: [''],
     waybillNo: [''],
     tpNo: [''],
     receivedDate: [''],
@@ -90,9 +91,23 @@ export class BuiltyCreateComponent implements OnInit {
 
   onSubmitbuilty() {
 
+    if (this.builtyForm.valid) {
+      return
+    }
+
+    
   }
 
-  getDataOnDoselect(){
-    
+  getDataOnDoselect() {
+    let _selectedDO = this.builtyForm.controls.doId.value;
+    this.doService.getDoByIDService(_selectedDO).subscribe(
+      (data) => {
+
+      },
+      (error) => {
+
+      }
+    )
+
   }
 }

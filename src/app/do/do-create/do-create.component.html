@@ -89,7 +89,7 @@
               <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
                     ngOptions="party.name for party in partyData"></select>-->
               <select class="form-control" name="partyName" id="partyName" formControlName="party">
-                <option *ngFor="let pd of partyData" [ngValue]="pd">{{pd.name}}</option>
+                <option *ngFor="let pd of ref_partyData" [ngValue]="pd.name">{{pd.name}}</option>
               </select>
             </div>
           </div>
@@ -100,7 +100,7 @@
                     ngOptions="party.name for party in destinationParty"></select>-->
               <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
                 (change)="onChangeDestinationsData()">
-                <option *ngFor="let destd of destinationParty" [ngValue]="destd">{{destd.name}}</option>
+                <option *ngFor="let destd of ref_destinationData" [ngValue]="destd.name">{{destd.name}}</option>
               </select>
             </div>
           </div>
@@ -110,7 +110,6 @@
               <select class="form-control" name="destination" id="destination" formControlName="destinations">
                 <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
               </select>
-              <!--<input type="text" class="form-control" formControlName="destinations">-->
             </div>
           </div>
           <div class="col-md-2">
@@ -171,7 +170,7 @@
             <div class="form-group">
               <label for="area">Area</label>
               <select class="form-control" name="area" id="area" formControlName="area">
-                <option *ngFor="let al of areaList" [value]="al">{{al}}</option>
+                <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
               </select>
             </div>
           </div>
@@ -179,7 +178,7 @@
             <div class="form-group">
               <label for="collary">Collary</label>
               <select class="form-control" name="collary" id="collary" formControlName="collary">
-                <option *ngFor="let cl of collaryList" [value]="cl">{{cl}}</option>
+                <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
               </select>
             </div>
           </div>
@@ -187,7 +186,7 @@
             <div class="form-group">
               <label for="grade">Grade</label>
               <select class="form-control" name="grade" id="grade" formControlName="grade">
-                <option *ngFor="let size of sizes" [value]="size">Grade</option>
+                <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
               </select>
             </div>
           </div>
@@ -195,7 +194,8 @@
             <div class="form-group">
               <label for="by">By</label>
               <select class="form-control" name="by" id="by" formControlName="by">
-                <option *ngFor="let size of sizes" [value]="size">By</option>
+                <option value="Courier">Courier</option>
+                <option value="Self">Self</option>
               </select>
             </div>
           </div>
@@ -245,7 +245,8 @@
             <div class="form-group">
               <label for="withinOutSide">Within/out Side</label>
               <select class="form-control" name="by" id="withinOutSide" formControlName="withinOutSide">
-                <option *ngFor="let size of sizes" [value]="size">Within/out Side</option>
+                <option value="withinstate">Within state</option>
+                <option value="outsidestate">Outside state</option>
               </select>
             </div>
           </div>

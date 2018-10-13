@@ -9,7 +9,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-8 col-md-push-3">
           <label>Choose Action To Proceed - </label>
           <label class="form-check-inline hl_radio_margin">
@@ -26,7 +26,7 @@
             Update PAN
           </label>
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-md-2 col-md-push-4">
           <div class="form-group">
@@ -48,7 +48,12 @@
 </div> -->
 
 <div *ngIf="isUpdateVehicle">
-
+  <div class="row">
+    <div class="col-md-2 col-md-push-4">
+      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Update PAN</button>
+    </div>
+  </div>
+  <br>
   <div class="row">
     <div class="col-md-3 col-md-push-4 hl_vehiclelist scrollbar">
       <div *ngFor="let vehicle of vehicleList">
@@ -62,15 +67,25 @@
   <br>
   <div class="row">
     <div class="col-md-6 col-md-push-4">
-      <b>Please select vehicle from above list to update</b>
+      <b>Please select vehicle from above list to delete</b>
     </div>
   </div>
   <div class="row">
-    <div class="col-md-2 col-md-push-4">
-      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Update Vehicle</button>
+    <div class="col-md-2 col-md-push-3">
+      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Delete Vehicle</button>
+    </div>
+    <div class="col-md-2 col-md-push-3">
+      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Add Vehicle</button>
     </div>
   </div>
+</div>
 
+<div *ngIf="isAddpan">
+  <div class="row">
+    <div class="col-md-2 col-md-push-4">
+      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Add PAN</button>
+    </div>
+  </div>
 </div>
 
 <ng-template #confirmDialog let-c="close" let-d="dismiss">

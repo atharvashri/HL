@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service'
 
 interface User {
@@ -12,37 +12,45 @@ interface User {
 @Component({
     selector: 'user-list-cmp',
     moduleId: module.id,
-    templateUrl: 'user-list.component.html'
+    templateUrl: 'user-list.component.html',
+    styleUrls: ['user.component.css']
 })
 
 export class UserListComponent implements OnInit {
+
 
     UserProperties = [
         'UserName',
         'FirstName',
         'LastName',
         'Role',
-        'Status',
-        '' 
+        'Active',
+        ''
     ];
 
-    UserList: User[] = [
-        { UserName: 'ABC', FirstName: 'ASDF', LastName: 'asdewr', Role: 'office', Status: 'active' },
-        { UserName: 'ABC', FirstName: 'ASDF', LastName: 'asdewr', Role: 'office', Status: 'active' },
-        { UserName: 'ABC', FirstName: 'ASDF', LastName: 'asdewr', Role: 'office', Status: 'active' }
-    ]
+    UserList: User[]
 
-    constructor(private userService:UserService) {
+
+    constructor(private userService: UserService) {
 
     }
 
     ngOnInit() {
-
-        this.userService.getAlluser().subscribe(
-            (data)=>{},
-            (error)=>{}
-            )
+        this.getAddedUsers()
     }
 
-    
+    getAddedUsers() {
+        this.userService.getAlluser().subscribe(
+            (res) => {
+                //
+                this.UserList = res["data"];
+            },
+            (error) => { }
+        )
+
+    }
+
+    updateUserData() {
+        console.log("update user")
+    }
 }

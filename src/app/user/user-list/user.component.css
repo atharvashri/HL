@@ -1,0 +1,9 @@
+.inactiveLink {
+    pointer-events: none;
+    cursor: default;
+ }
+
+ .hl-user-update-btn{
+     margin-left:25%;
+     margin-right:25%
+ }
