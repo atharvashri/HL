@@ -2,17 +2,17 @@ import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TruckPanService } from '../../services/truck.pan.services'
-import { ToastrService } from 'ngx-toastr'
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-add-pan-update-details',
-  templateUrl: './pan-add-update-details.component.html',
-  styleUrls: ['./pan-add-update-details.component.css']
+  selector: 'app-pan-update-details',
+  templateUrl: './pan-update-details.component.html',
+  styleUrls: ['./pan-update-details.component.css']
 })
-export class PanAddUpdateDetailsComponent implements OnInit {
+export class PanUpdateDetailsComponent implements OnInit {
 
   constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal,
-    private panservice: TruckPanService, private toastrService:ToastrService) { }
+    private panservice: TruckPanService, private toaster: ToastrService) { }
 
   ngOnInit() {
   }
@@ -21,7 +21,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   accountsForm: any;
   addedBankAccounts = new Array();
   @Input() formtitle: string;
-  @Input() PANno
+  @Input() PANno;
   @Input() PanDataToUpdate;
 
   panForm = this.truckUpdate.group({
@@ -38,12 +38,13 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     accountNumber: [],
     accountHoldername: [],
     ifscCode: [],
-    bankname: [],
+    bankName: [],
     adddedAccountName: [],
 
     rcCopy: [],
     declaration: [],
-    panCopy: []
+    panCopy: [],
+    Added_bankName: [{ value: [], disabled: true }]
   })
 
 
@@ -68,18 +69,21 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   }
 
   checkForduplicateAccountNo() {
+    let _isErrorOccured = false;
     this.addedBankAccounts.forEach((element, index, array) => {
       if (element.accountNo == this.panForm.controls.accountNumber.value) {
-        this.toastrService.error("bank account no is present")
+        _isErrorOccured = true;
+        this.toaster.error("bank account no is present")
         return;
       }
-      if (index === (array.length - 1)) {
+      if (index === (array.length - 1) && !_isErrorOccured) {
         this.addedBankAccounts.push({
           accountNo: this.panForm.controls.accountNumber.value,
           accountHoldername: this.panForm.controls.accountHoldername.value,
           ifscCode: this.panForm.controls.ifscCode.value,
-          bankName: this.panForm.controls.value
+          bankName: this.panForm.controls.bankName.value
         })
+        this.toaster.success("bank account is added")
       }
     });
 
@@ -89,27 +93,13 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     console.log("model");
     this.modalService.open(this.content);
     this.panForm.controls.panNo.setValue(this.PANno);
+    this.addedBankAccounts = this.PanDataToUpdate.accounts;
   }
 
-  AddOrUpdatePanDetails() {
-    switch (this.formtitle) {
-      case "Add PAN Details":
-        this.addPANdetails()
-        break;
-      case "Update PAN Details":
-        this.updatePANdetails()
-        break;
-      default:
-        break;
-    }
-  }
-
-  addPANdetails() {
+  UpdatePANdetails() {
     if (this.panForm.invalid) {
       return
     }
-
-
 
     let _panData = this.panForm.value;
     delete _panData.accountNumber;
@@ -119,30 +109,48 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     delete _panData.adddedAccountName;
     delete _panData.vehicleNo;
 
-    _panData.vehicles = [{
-      vehicleNo: this.panForm.controls.vehicleNo.value
-    }]
+    _panData.id = this.PanDataToUpdate.id
+
+    _panData.vehicles = this.PanDataToUpdate.vehicles
+
     _panData.accounts = this.addedBankAccounts;
 
-    this.panservice.registerPAN(_panData).subscribe(
+    this.panservice.updatePAN(_panData, this.panForm.controls.panNo.value).subscribe(
       (res) => {
         console.log(res);
-        this.toastrService.success("Pan is added successfully");
-        setTimeout(()=>{
+        this.toaster.success("PAN is updated successfully")
+        setTimeout(() => {
           this.modalService.dismissAll();
-        },2000)
+        }, 2000)
       },
       (error) => {
-        this.toastrService.error("Pan is not added. Please contact admin");
+        this.toaster.success("PAN is not updated, Please contact the admin")
       }
     )
 
 
   }
 
-  updatePANdetails() {
-    this.addedBankAccounts;
-    this.PanDataToUpdate
+  // updatePANdetails() {
+  //   this.addedBankAccounts;
+  //   this.PanDataToUpdate
 
+  // }
+
+  showBankDetails() {
+
+    let _selectedAccountNo = this.panForm.controls.adddedAccountName.value;
+
+    this.addedBankAccounts.forEach(element => {
+
+      if (_selectedAccountNo == element.accountNo) {
+
+        this.panForm.controls.Added_bankName.setValue(element.bankName);
+      }
+    });
+  }
+
+  deleteAccount(){
+    
   }
 }

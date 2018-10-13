@@ -26,6 +26,7 @@ import { DoCreateComponent } from './do/do-create/do-create.component';
 import { RegistrationPanComponent } from './pan-registration/registration-pan.component';
 import { PanSearchResultsComponent } from './pan-registration/pan-search-results/pan-search-results.component';
 import { PanAddUpdateDetailsComponent } from './pan-registration/pan-add-update-details/pan-add-update-details.component';
+import { PanUpdateDetailsComponent } from './pan-registration/pan-update-details/pan-update-details.component';
 import { BuiltyReceiptComponent } from './builty/builty-receipt/builty-receipt.component';
 import { BuiltyCreateComponent } from './builty/builty-create/builty-create.component';
 import { BuiltyApproveComponent } from './builty/builty-approve/builty-approve.component';
@@ -93,7 +94,8 @@ import { ModalComponent } from './modal/modal.component'
     UserListComponent,
     LoginComponent,
     ModalComponent,
-    PartyResourceComponent
+    PartyResourceComponent,
+    PanUpdateDetailsComponent
 
   ],
   imports: [
