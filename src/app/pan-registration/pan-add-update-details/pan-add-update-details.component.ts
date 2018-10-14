@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr'
 export class PanAddUpdateDetailsComponent implements OnInit {
 
   constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal,
-    private panservice: TruckPanService, private toastrService:ToastrService) { }
+    private panservice: TruckPanService, private toastrService: ToastrService) { }
 
   ngOnInit() {
   }
@@ -50,10 +50,10 @@ export class PanAddUpdateDetailsComponent implements OnInit {
 
   addAccountByBankName() {
 
-    if (this.panForm.controls.accountNumber.value == "" ||
-      this.panForm.controls.accountHoldername.value == "" ||
-      this.panForm.controls.ifscCode.value == "")
-      console.log("Please provide the required details")
+    if (this.panForm.controls.accountNumber.value == null ||
+      this.panForm.controls.accountHoldername.value == null ||
+      this.panForm.controls.ifscCode.value == null)
+      this.toastrService.error("Please provide the required details")
 
     if (this.addedBankAccounts.length != 0)
       this.checkForduplicateAccountNo()
@@ -64,6 +64,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
         ifscCode: this.panForm.controls.ifscCode.value,
         bankName: this.panForm.controls.bankname.value
       })
+      this.toastrService.success("Account is added successfully.");
     }
   }
 
@@ -109,8 +110,6 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       return
     }
 
-
-
     let _panData = this.panForm.value;
     delete _panData.accountNumber;
     delete _panData.accountHoldername;
@@ -118,6 +117,14 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     delete _panData.bankname;
     delete _panData.adddedAccountName;
     delete _panData.vehicleNo;
+    delete _panData.tds;
+
+    if(this.panForm.controls.tds.value == 'false'){
+      _panData.tds = false
+    }
+    else{
+      _panData.tds = true
+    }
 
     _panData.vehicles = [{
       vehicleNo: this.panForm.controls.vehicleNo.value
@@ -128,9 +135,9 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       (res) => {
         console.log(res);
         this.toastrService.success("Pan is added successfully");
-        setTimeout(()=>{
+        setTimeout(() => {
           this.modalService.dismissAll();
-        },2000)
+        }, 2000)
       },
       (error) => {
         this.toastrService.error("Pan is not added. Please contact admin");

@@ -23,6 +23,7 @@ export class PanUpdateDetailsComponent implements OnInit {
   @Input() formtitle: string;
   @Input() PANno;
   @Input() PanDataToUpdate;
+  selectedValue = "AM";
 
   panForm = this.truckUpdate.group({
     panNo: [],
@@ -114,6 +115,13 @@ export class PanUpdateDetailsComponent implements OnInit {
     _panData.vehicles = this.PanDataToUpdate.vehicles
 
     _panData.accounts = this.addedBankAccounts;
+
+    if(this.panForm.controls.tds.value == 'false'){
+      _panData.tds = false
+    }
+    else{
+      _panData.tds = true
+    }
 
     this.panservice.updatePAN(_panData, this.panForm.controls.panNo.value).subscribe(
       (res) => {
