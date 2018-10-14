@@ -95,6 +95,18 @@ export class PanUpdateDetailsComponent implements OnInit {
     this.modalService.open(this.content);
     this.panForm.controls.panNo.setValue(this.PANno);
     this.addedBankAccounts = this.PanDataToUpdate.accounts;
+    this.panForm.controls.fatherName.setValue(this.PanDataToUpdate.fatherName);
+    this.panForm.controls.address.setValue(this.PanDataToUpdate.address);
+    this.panForm.controls.city.setValue(this.PanDataToUpdate.city);
+    this.panForm.controls.district.setValue(this.PanDataToUpdate.district);
+
+    if(this.PanDataToUpdate.tds == false){
+      this.panForm.controls.tds.setValue('false');
+    }
+    else{
+      this.panForm.controls.tds.setValue('true');
+    }
+
   }
 
   UpdatePANdetails() {

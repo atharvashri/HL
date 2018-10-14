@@ -3,17 +3,18 @@ import { Http } from '@angular/http';
 import { Subject } from 'rxjs'
 import { HttpHeaders } from '@angular/common/http'
 import { HttpClient } from '@angular/common/http'
+import { AppConfig } from '../app-config';
 
 @Injectable()
 export class BuiltyService {
-    url: string = "localhost"
+    url: string = AppConfig.API_ENDPOINT;
 
     constructor(public http: HttpClient) {
 
     }
 
-    createBuiltyService() {
-
+    createBuiltyService(data) {
+        return this.http.post(this.url + '/builty', data)
     }
 
     getActiveBuiltiesService() {
@@ -21,7 +22,7 @@ export class BuiltyService {
     }
 
     getAllbuiltiesService() {
-
+        return this.http.get(this.url + '/builty?get=all');
     }
 
     getCompletedBuiltiesService() {

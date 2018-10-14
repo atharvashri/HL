@@ -23,37 +23,34 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="fatherName">Father\Husband\C/O</label>
-                <input class="form-control" type="text" id="fatherName" value="{{PanDataToUpdate.fatherName}}"
-                  formControlName="fatherName">
+                <input class="form-control" type="text" id="fatherName" formControlName="fatherName">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="tds">TDS</label>
-                <select class="form-control" name="tds" id="tds" formControlName="tds" [value] = "No">
-                    <option value="false" selected>No</option>
-                    <option value="true">Yes</option>
-                  </select>
+                <select class="form-control" name="tds" id="tds" formControlName="tds" [value]="No">
+                  <option value="false" selected>No</option>
+                  <option value="true">Yes</option>
+                </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="address">Address</label>
-                <input class="form-control" type="text" id="address" value="{{PanDataToUpdate.address}}"
-                  formControlName="address">
+                <input class="form-control" type="text" id="address" formControlName="address">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="city">City</label>
-                <input class="form-control" type="text" id="city" value="{{PanDataToUpdate.city}}" formControlName="city">
+                <input class="form-control" type="text" id="city" formControlName="city">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="district">District</label>
-                <input class="form-control" type="text" id="district" value="{{PanDataToUpdate.district}}"
-                  formControlName="district">
+                <input class="form-control" type="text" id="district" formControlName="district">
               </div>
             </div>
           </div>

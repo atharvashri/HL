@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <form [formGroup]="builtyForm" (ngSubmit)="onSubmitbuilty()">
+    <form [formGroup]="builtyForm" (ngSubmit)="submitBuilty()">
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
@@ -11,8 +11,9 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="selectDo">DO</label>
-            <select class="form-control" name="selectDo" id="selectDo" formControlName = "doDisplay">
-              <option *ngFor="let do of doList" [value]="do.doId">{{do.doDisplay}}</option>
+            <select class="form-control" name="selectDo" id="selectDo" formControlName = "doDisplay" (change)="ShowDataForBuiltyCreation()">
+              <option *ngFor="let do of doList" [value]="do.id">{{do.areaDoNo}}/{{do.bspDoNo}} -
+                {{do.collary}} - {{do.quantity}}</option>
             </select>
           </div>
         </div>
@@ -24,13 +25,13 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="otBuiltyCompany">Builty Company</label>
+            <label for="otBuiltyCompany">OT Builty Company</label>
             <input type="text" name="otBuiltyCompany" class="form-control" value="" formControlName = "otBuiltyCompany">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="otBuiltyNumber">Builty Number</label>
+            <label for="otBuiltyNumber">OT Builty Number</label>
             <input type="number" name="otBuiltyNumber" class="form-control" value="" formControlName = "otBuiltyNumber">
           </div>
         </div>
@@ -78,7 +79,10 @@
           <div class="form-group">
             <label for="freight">Freight</label>
             <select class="form-control" name="freight" id="freight" formControlName = "freight">
-              <option *ngFor="let do of doList" [value]="do.doId">Freight</option>
+              <!-- <option *ngFor="let do of doList" [value]="do.doId">100</option> -->
+              <option [value]="100" >100</option>
+              <option [value]="100">100</option>
+              <option [value]="100">100</option>
             </select>
           </div>
         </div>
@@ -159,7 +163,7 @@
           <div class="form-group">
             <label for="subTransporter">Sub Transporter</label>
             <select class="form-control" name="subTransporter" id="subTransporter" formControlName = "subTransporter">
-              <option *ngFor="let do of doList" [value]="do.doId">Sub Transporter</option>
+              <option *ngFor="let trs of transporter" [value]="trs.id">{{trs.firstName}}</option>
             </select>
           </div>
         </div>

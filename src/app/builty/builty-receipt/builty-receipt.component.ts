@@ -24,9 +24,10 @@ export class BuiltyReceiptComponent implements OnInit {
   constructor(private builtyService: BuiltyService) { }
 
   ngOnInit() {
-    this.builtyService.getActiveBuiltiesService().subscribe(
-      (data) => {
-
+    this.builtyService.getAllbuiltiesService().subscribe(
+      (res) => {
+        console.log(res);
+        this.builtyList = res['data'];
       },
       (err) => {
 
@@ -38,21 +39,7 @@ export class BuiltyReceiptComponent implements OnInit {
 
   ]
 
-  builtyList: Builtys[] = [
-    { builtyNo: 1234, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1235, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1236, receivedDate: "1968-11-16", receivedQuantity: 100 , selected: false},
-    { builtyNo: 1237, receivedDate: "1968-11-16", receivedQuantity: 100 , selected: false},
-    { builtyNo: 1238, receivedDate: "1968-11-16", receivedQuantity: 100 , selected: false},
-    { builtyNo: 1239, receivedDate: "1968-11-16", receivedQuantity: 100 , selected: false},
-    { builtyNo: 1212, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1222, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1233, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1244, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false },
-    { builtyNo: 1255, receivedDate: "1968-11-16", receivedQuantity: 100 , selected: false},
-    { builtyNo: 1266, receivedDate: "1968-11-16", receivedQuantity: 100, selected: false }
-
-  ]
+  builtyList = []
 
   showAllRunningDo() {
 

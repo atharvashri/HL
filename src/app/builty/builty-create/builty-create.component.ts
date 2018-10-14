@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { DO } from '../../model/do.model';
 import { Builty } from '../../model/builty.model';
 import { DoService } from '../../services/do.service'
+import { BuiltyService } from '../../services/builty.service'
 
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms'
+//import { resolve } from 'path';
 
 @Component({
   selector: 'app-builty-create',
@@ -12,91 +14,78 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms'
 })
 export class BuiltyCreateComponent implements OnInit {
   doList = []
-  toppingList: Array<string>
+  transporter = []
+  constructor(public builtyFormBuilder: FormBuilder, private doService: DoService, private builtyService: BuiltyService) { }
 
-  constructor(public builtyFormBuilder: FormBuilder, private doService: DoService) { }
-
-  optionsSelect
+  optionsSelect;
+  activeDoList
   ngOnInit() {
-    this.doList.push(new DO(133, 'bilaspur', 1200, 2345, 4563));
-    this.doList.push(new DO(132, 'bhilai', 1000, 2345, 4563));
-    this.doList.push(new DO(131, 'bijuri', 1100, 2345, 4563));
-
-    this.toppingList = ['Extra cheese', 'Mushroom', 'Onion', 'Pepperoni', 'Sausage', 'Tomato'];
+    this.getAllDOs()
   }
 
   builtyForm = this.builtyFormBuilder.group({
 
-    builtyNo: [''],
-    doId: [''],
-    doDisplay: [''],
+    builtyNo: [],
+    doId: [],
+    doDisplay: [],
     // party: new FormGroup({
-    //   id: [''],
-    //   name: [''],
-    //   destinations: [''],
-    //   freightRanges: [''],
+    //   id: [],
+    //   name: [],
+    //   destinations: [],
+    //   freightRanges: [],
 
     // }),
-    builtyDate: [''],
-    otBuiltyCompany: [''],
-    otBuiltyNumber: [''],
-    vehicleNo: [''],
-    quantity: [''],
-    inAdvance: [''],
-    outAdvance: [''],
-    diesel: [''],
-    pumpName: [''],
-    freight: [''],
-    totalAdvance: [''],
-    permitNo: [''],
-    permitBalance: [''],
-    permitEndDate: [''],
-    igpNo: [''],
-    invoiceNo: [''],
-    invoiceValue: [''],
-    driverName: [''],
-    driverMobile: [''],
-    grossWeight: [''],
-    tierWeight: [''],
-    doBalance: [''],
+    builtyDate: [],
+    otBuiltyCompany: [],
+    otBuiltyNumber: [],
+    vehicleNo: [],
+    quantity: [],
+    inAdvance: [],
+    outAdvance: [],
+    diesel: [],
+    pumpName: [],
+    freight: [],
+    totalAdvance: [],
+    permitNo: [],
+    permitBalance: [],
+    permitEndDate: [],
+    igpNo: [],
+    invoiceNo: [],
+    invoiceValue: [],
+    driverName: [],
+    driverMobile: [],
+    grossWeight: [],
+    tierWeight: [],
+    doBalance: [],
     // transporter: new FormGroup({
-    //   userName: [''],
-    //   firstName: [''],
-    //   lastName: [''],
-    //   password: [''],
-    //   role: [''],
-    //   active: ['']
+    //   userName: [],
+    //   firstName: [],
+    //   lastName: [],
+    //   password: [],
+    //   role: [],
+    //   active: []
     // }),
     // subTransporter: new FormGroup({
-    //   userName: [''],
-    //   firstName: [''],
-    //   lastName: [''],
-    //   password: [''],
-    //   role: [''],
-    //   active: ['']
+    //   userName: [],
+    //   firstName: [],
+    //   lastName: [],
+    //   password: [],
+    //   role: [],
+    //   active: []
     // }),
-    transporter: [''],
-    subTransporter: [''],
-    waybillNo: [''],
-    tpNo: [''],
-    receivedDate: [''],
-    receivedQuantity: [''],
-    netWeight: [''],
-    refund: [''],
-    assesibleValue: [''],
-    freightToBePaidBy: [''],
-    inAdvanceLimit: ['']
+    transporter: [],
+    subTransporter: [],
+    waybillNo: [],
+    tpNo: [],
+    receivedDate: [],
+    receivedQuantity: [],
+    netWeight: [],
+    refund: [],
+    assesibleValue: [],
+    freightToBePaidBy: [],
+    inAdvanceLimit: []
 
   })
-
-  onSubmitbuilty() {
-
-    if (this.builtyForm.valid) {
-      return
-    }
-
-    
-  }
 
   getDataOnDoselect() {
     let _selectedDO = this.builtyForm.controls.doId.value;
@@ -109,5 +98,63 @@ export class BuiltyCreateComponent implements OnInit {
       }
     )
 
+  }
+
+  getAllDOs() {
+    this.doService.getAllDosService().subscribe(
+      (res) => {
+        console.log(res.data);
+        this.doList = res.data;
+      },
+      (err) => {
+
+      }
+    );
+  }
+
+  ShowDataForBuiltyCreation() {
+    let _selectedDO = this.builtyForm.controls.doDisplay.value;
+
+    this.doList.forEach((element) => {
+      if (element.id == _selectedDO) {
+        this.builtyForm.controls.otBuiltyCompany.setValue(element.builtyCompany);
+        this.builtyForm.controls.quantity.setValue(element.quantity);
+        this.builtyForm.controls.receivedDate.setValue(element.receivedDate);
+        this.transporter.push(element.transporter);
+        
+        let _recvDate = element.receivedDate.split('-').reverse().join('-')
+        this.builtyForm.controls.receivedDate.setValue(_recvDate)
+      }
+    })
+  }
+
+  submitBuilty() {
+    let _builtyData = this.builtyForm.value;
+
+    this.getPartyForSelectedDo(this.builtyForm.controls.subTransporter.value, this.transporter)
+      .then((_trnsdata) => {
+        _builtyData.subTransporter = _trnsdata
+        return this.getPartyForSelectedDo(this.builtyForm.controls.doDisplay.value, this.doList)
+      })
+      .then((data) => {
+        _builtyData.party = data;
+        this.builtyService.createBuiltyService(_builtyData).subscribe(
+          (res) => {
+            console.log(res)
+          },
+          (error) => {
+            console.log(error)
+          })
+      })
+  }
+
+  getPartyForSelectedDo(_selectedvalue, arrayTo) {
+    return new Promise((resolve, reject) => {
+      arrayTo.forEach(element => {
+        if (element.id == _selectedvalue) {
+          resolve(element)
+        }
+      });
+    })
   }
 }
