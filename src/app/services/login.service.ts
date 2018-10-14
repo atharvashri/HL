@@ -21,6 +21,6 @@ export class LoginService {
 
 
     login(data) {
-        return this.http.post(this.url + 'auth', data)
+        return this.http.post(this.url + '/auth', data)
     }
 }

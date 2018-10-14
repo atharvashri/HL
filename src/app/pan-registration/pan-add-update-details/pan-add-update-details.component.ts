@@ -79,7 +79,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
           accountNo: this.panForm.controls.accountNumber.value,
           accountHoldername: this.panForm.controls.accountHoldername.value,
           ifscCode: this.panForm.controls.ifscCode.value,
-          bankName: this.panForm.controls.value
+          bankName: this.panForm.controls.bankname.value
         })
       }
     });

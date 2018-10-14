@@ -13,22 +13,22 @@ export class UserService {
     }
 
     addUser(data) {
-        return this.http.post(this.url + 'user', data);
+        return this.http.post(this.url + '/user', data);
     }
 
     getAlluser() {
-        return this.http.get(this.url + 'user');
+        return this.http.get(this.url + '/user');
     }
 
     getOneuser(userName) {
-        return this.http.get(this.url + 'user/'+`${userName}`);
+        return this.http.get(this.url + '/user/'+`${userName}`);
     }
 
     updateUser(data, userName) {
-        return this.http.get(this.url + 'user/'+`${userName}`, data);
+        return this.http.get(this.url + '/user/'+`${userName}`, data);
     }
 
     getByRole(rolename){
-      return this.http.get(this.url + 'user/role/' + rolename);
+      return this.http.get(this.url + '/user/role/' + rolename);
     }
 }
