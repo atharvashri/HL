@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { map, filter, scan } from 'rxjs/operators'
 import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
-import { HttpHeaders } from '@angular/common/http'
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
+import { AppConfig } from '../app-config';
+
 
 @Injectable()
 export class DoService {
-    url: string = "http://localhost:8080"
+    url: string = AppConfig.API_ENDPOINT;
     constructor(public http: HttpClient) {
 
     }

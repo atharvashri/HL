@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs'
+import { AppConfig } from '../app-config';
 
 
 @Injectable()
 export class UserService {
 
-    url: string = "http://localhost:8080/";
+    url: string = AppConfig.API_ENDPOINT;
     constructor(public http: HttpClient) {
 
     }

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs'
-import { HttpHeaders } from '@angular/common/http'
 import { HttpClient } from '@angular/common/http'
+import { AppConfig } from '../app-config';
 
 
 @Injectable()
 export class LoginService {
 
-    url = 'http://localhost:8080/';
+    url: string = AppConfig.API_ENDPOINT;
     public isloginDone = new Subject<boolean>();
 
     setLoginstatus(isloggedin) {
