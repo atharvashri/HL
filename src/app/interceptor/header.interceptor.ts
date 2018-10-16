@@ -7,6 +7,9 @@ export class AddHeaderInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
 
+        if(localStorage.getItem('token') == null && localStorage.getItem('token') != "null"){
+            return next.handle(req);
+        }
         let jsonReq: HttpRequest<any> = req.clone({
             setHeaders: { "content-type": "application/json","x-auth-token": localStorage.getItem('token')}
         });
