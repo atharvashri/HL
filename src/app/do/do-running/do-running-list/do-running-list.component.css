@@ -36,3 +36,13 @@
     padding: 10px;
     text-shadow: 1px 1px 1px #fff;
 }
+
+.inactiveLink {
+    pointer-events: none;
+    cursor: default;
+}
+
+ .hl-user-update-btn{
+     margin-left:25%;
+     margin-right:25%
+ }

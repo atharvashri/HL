@@ -1,21 +1,12 @@
 <div class="container-fluid">
   <div class="panel panel-default">
-    <!-- <div class="panel-heading">
+    <div class="panel-heading">
       <div class="row">
         <div class="col-md-12">
-          <strong>Please Select your option for DO</strong>
-          <div class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="createdoRadio" name="defaultExampleRadios" checked
-              (click)="setCreateOrUpdateForm('create')">
-            <label class="custom-control-label" for="createdoRadio">Create Do</label>
-          </div>
-          <div class="custom-control custom-radio">
-            <input type="radio" class="custom-control-input" id="updatedoRadio" name="defaultExampleRadios" (click)="setCreateOrUpdateForm('update')">
-            <label class="custom-control-label" for="updatedoRadio">Update Do</label>
-          </div>
+          <strong>{{modeSelect}}</strong>
         </div>
       </div>
-    </div> -->
+    </div>
     <div class="panel-body">
       <form [formGroup]="doCreateForm">
         <hr>
@@ -123,8 +114,8 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="transporter">Transporter</label>
-              <select class="form-control" id="transporter"  formControlName="transporter">
-                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter">
+              <select class="form-control" id="transporter" formControlName="transporter">
+                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter.firstName">
                   {{transporter.firstName}} {{transporter.lastName}}
                 </option>
               </select>
@@ -145,7 +136,6 @@
 
         <div class="row">
           <hr>
-
           <div class="col-md-2">
             <div class="form-group">
               <label for="destinationParty">Destination Party</label>
@@ -195,7 +185,7 @@
               <div class="form-group">
                 <label for="destination">Destination</label>
                 <select class="form-control" name="destination" id="destination" formControlName="addedDestinations"
-                (change)="showDestinationAndFreightData(false)">
+                  (change)="showDestinationAndFreightData(false)">
                   <option *ngFor="let destNames of selectedDestinations" [value]="destNames">{{destNames}}</option>
                 </select>
               </div>
@@ -266,41 +256,50 @@
             </div>
           </div>
           <!-- Only when edit DO  - START-->
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="liftedQuantity">Lifted Quantity</label>
-              <input type="number" class="form-control" id="liftedQuantity" formControlName="liftedQuantity">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="liftedQuantity">Lifted Quantity</label>
+                <input type="number" class="form-control" id="liftedQuantity" formControlName="liftedQuantity">
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="quantityDeduction">Quantity Deduction</label>
-              <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="quantityDeduction">Quantity Deduction</label>
+                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction">
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="lepseQuantity">Lepse Quantity</label>
-              <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="lepseQuantity">Lepse Quantity</label>
+                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
+              </div>
             </div>
           </div>
-        <!--<div class="col-md-3">
+          <!--<div class="col-md-3">
             <div class="form-group">
               <label for="doStatus">Do Status</label>
               <input type="text" class="form-control" id="doStatus" formControlName="doStatus">
             </div>
           </div> -->
-
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="refundAmt">Refund Amt</label>
-              <input type="text" class="form-control" id="refundAmt" formControlName="refundAmt">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="refundAmt">Refund Amt</label>
+                <input type="text" class="form-control" id="refundAmt" formControlName="refundAmt">
+              </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="refundDate">Refund Date</label>
-              <input type="date" class="form-control" id="refundDate" formControlName="refundDate">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="refundDate">Refund Date</label>
+                <input type="date" class="form-control" id="refundDate" formControlName="refundDate">
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -309,10 +308,12 @@
               <input type="text" class="form-control" id="emdAmt" formControlName="emdAmt">
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="totalRefundAmt">Total Refund Amt</label>
-              <input type="text" class="form-control" id="totalRefundAmt" formControlName="totalRefundAmt">
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="totalRefundAmt">Total Refund Amt</label>
+                <input type="text" class="form-control" id="totalRefundAmt" formControlName="totalRefundAmt">
+              </div>
             </div>
           </div>
           <!--  <div class="col-md-3">
@@ -321,25 +322,22 @@
                 <input type="date" class="form-control" id="finishDate" formControlName="finishDate">
               </div>
             </div>-->
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="inAdvanceLimit">In Advance limit</label>
-                <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
-              </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="inAdvanceLimit">In Advance limit</label>
+              <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
             </div>
+          </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="remarks">Remarks</label>
               <input type="text" class="form-control" id="remarks" formControlName="remarks">
             </div>
           </div>
-
-          <div *ngIf="isShowDoCreate">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="freightToBePaidBy">Freight to be paid By</label>
-                <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy">
-              </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="freightToBePaidBy">Freight to be paid By</label>
+              <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy">
             </div>
           </div>
           <!-- Only when edit DO  - END-->
@@ -353,11 +351,18 @@
         </div>
 
         <!-- <button type="submit" class="btn btn-success">Create</button> -->
-        <div *ngIf="isShowDoCreate">
+        <div *ngIf="!isShowDoUpdate">
           <button type="submit" class="btn btn-primary" (click)="onSubmitDo()">Create</button>
         </div>
-        <div *ngIf="!isShowDoCreate">
-          <button type="submit" class="btn btn-primary">Update</button>
+        <div *ngIf="isShowDoUpdate">
+          <div class="row">
+            <div class="col-md-1 col-md-push-4">
+              <button type="submit" (click) = "onUpdateSubmit()" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-md-1 col-md-push-4">
+              <button (click)="cancelUpdateDO()" class="btn btn-primary">Cancel</button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

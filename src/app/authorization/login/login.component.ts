@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
                 localStorage.setItem('currentUser', data["role"]);
                 localStorage.setItem('token', data["token"]);
                 this.changeViewOnloggedIn(true);
-                this.router.navigate(['/createdo']);
+                this.router.navigate(['/do']);
             },
             (error) => {
                 this.toaster.error(error +"Please check your username and password","wrong UserName password error",{

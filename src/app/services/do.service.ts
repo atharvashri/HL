@@ -31,8 +31,8 @@ export class DoService {
         return this.http.get(this.url + `/do/${id}`);
     }
 
-    updateDoService(data,id): Observable<any> {
-        return this.http.put(this.url + `/do/${id}`, data);
+    updateDoService(data): Observable<any> {
+        return this.http.put(this.url + `/do`, data);
     }
 
     getdoRefData() {

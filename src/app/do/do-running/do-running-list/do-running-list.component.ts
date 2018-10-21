@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router'
 
 export interface RunningDo {
     doId: number;
@@ -11,19 +12,22 @@ export interface RunningDo {
 @Component({
     selector: 'app-do-running-list',
     templateUrl: './do-running-list.component.html',
+    styleUrls: ['do-running-list.component.css']
 })
 
 export class DoRunningListComponent implements OnInit {
 
-    constructor() { }
+    constructor(private router: Router) { }
 
     ngOnInit() {
     }
-    
+
     isrunningDoTablevisible: boolean = false;
 
     @Input() activeDoProperties: any
     @Input() activeDoList: any
-    
 
+    onUpdateDO(evt) {
+        this.router.navigate(['do'], { queryParams: { update: evt.target.id } });
+    }
 }

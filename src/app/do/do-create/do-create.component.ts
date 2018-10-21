@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { Validators, FormBuilder } from '@angular/forms'
 import { DoService } from '../../services/do.service'
+import { ActivatedRoute, Router } from '@angular/router'
 
 import { DODetails } from '../../model/do-details.model'
 import * as moment from 'moment';
@@ -28,7 +29,7 @@ interface IFreightRate {
 export class DoCreateComponent implements OnInit {
   doDetails: DODetails;
   submitted: boolean;
-  isShowDoCreate: boolean = true;
+  isShowDoUpdate: boolean = false;
   receivedDateforDue = new Date();
   //dueDateUpdate;
   Freights = [];
@@ -46,17 +47,15 @@ export class DoCreateComponent implements OnInit {
   isfrightEntryAdded: boolean = false
 
   constructor(private doFormBuilder: FormBuilder,
-          private doService: DoService,
-          private userService: UserService,
-          private toaster: ToastrService) { }
+    private doService: DoService,
+    private userService: UserService,
+    private toaster: ToastrService, private route: ActivatedRoute, private router: Router) { }
   dropdownList = [];
   selectedItems = [];
   dropdownSettings = {};
   refData = {};
-  optionsSelect;
+  modeSelect = "Create DO";
 
-
-  //optionsSelect;
 
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
   sizes = ["ROM", "SLK", "STM"]
@@ -64,28 +63,18 @@ export class DoCreateComponent implements OnInit {
   ngOnInit() {
     this.doDetails = new DODetails()
 
-    this.doService.getdoRefData().subscribe(
-      (res) => {
-        this.refData = res["data"];
-
-        this.ref_areaList = res["data"]["areaList"];
-        this.ref_collaryList = res["data"]["collaryList"];
-        this.ref_partyData = res["data"]["partyList"];
-        this.ref_destinationData = res["data"]["partyList"]
-      },
-      (error) => {
-        this.toaster.error("error occured while retrieving refdata");
+    this.route.queryParams.subscribe(
+      (params) => {
+        let _updateDOID = params['update'];
+        if (_updateDOID != undefined) {
+          this.getDOForUpdate(_updateDOID);
+        }
+        else {
+          this.applyCreateMode();
+        }
+        this.loadrefDataForDOCreate();
       }
-    )
-
-    this.userService.getByRole("ROLE_FIELD").subscribe(
-      (res) => {
-        this.ref_transporters = res["data"];
-      },
-      (error) => {
-        console.log("could not retrieve transporters list")
-      }
-    )
+    );
   }
 
   doCreateForm = this.doFormBuilder.group({
@@ -96,7 +85,7 @@ export class DoCreateComponent implements OnInit {
     quantity: [],
     doDate: [],
     receivedDate: [],
-    dueDate: [{value:'', disabled:true}],
+    dueDate: [{ value: '', disabled: true }],
     size: [],
     // party: new FormGroup({
     //   id: [],
@@ -160,7 +149,17 @@ export class DoCreateComponent implements OnInit {
 
 
     let doCreationData = this.doCreateForm.getRawValue();
+    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
 
+
+    this.getSelectedParty().then((data) => {
+      doCreationData.party = data;
+      console.table([doCreationData]);
+      this.createDo(doCreationData);
+    })
+  }
+
+  modifyDODataBeforeSubmit(doCreationData) {
     delete doCreationData.party;
     delete doCreationData.destinationParty;
     delete doCreationData.freight;
@@ -177,18 +176,32 @@ export class DoCreateComponent implements OnInit {
     doCreationData.inAdvanceLimit = [doCreationData.inAdvanceLimit];
     doCreationData.freightToBePaidBy = [doCreationData.freightToBePaidBy];
 
-    this.getSelectedParty().then((data) => {
-      doCreationData.party = data;
-      console.table([doCreationData]);
-      this.createDo(doCreationData);
-    })
+    return doCreationData;
   }
 
-  onItemSelect(item: any) {
-    console.log(item);
-  }
-  onSelectAll(items: any) {
-    console.log(items);
+  loadrefDataForDOCreate() {
+    this.doService.getdoRefData().subscribe(
+      (res) => {
+        this.refData = res["data"];
+
+        this.ref_areaList = res["data"]["areaList"];
+        this.ref_collaryList = res["data"]["collaryList"];
+        this.ref_partyData = res["data"]["partyList"];
+        this.ref_destinationData = res["data"]["partyList"]
+      },
+      (error) => {
+        this.toaster.error("error occured while retrieving refdata");
+      }
+    )
+
+    this.userService.getByRole("ROLE_FIELD").subscribe(
+      (res) => {
+        this.ref_transporters = res["data"];
+      },
+      (error) => {
+        console.log("could not retrieve transporters list")
+      }
+    )
   }
 
   createDo(doCreationData) {
@@ -204,18 +217,70 @@ export class DoCreateComponent implements OnInit {
 
   get f() { return this.doCreateForm.controls; }
 
+  getDOForUpdate(id) {
+    this.doService.getDoByIDService(id).subscribe((res) => {
+      console.log(res);
+      this.applyUpdateMode();
+      this.setDataToUpdateForm(res['data']);
+    },
+      () => {
+        this.toaster.error("not able to find the required do information");
+      })
+  }
+
+  setDataToUpdateForm(data) {
+    this.doCreateForm.controls.bspDoNo.setValue(data.bspDoNo);
+    this.doCreateForm.controls.areaDoNo.setValue(data.areaDoNo);
+    this.doCreateForm.controls.auctionNo.setValue(data.auctionNo)
+    this.doCreateForm.controls.collary.setValue(data.collary)
+    this.doCreateForm.controls.quantity.setValue(data.quantity)
+    this.doCreateForm.controls.doDate.setValue(this.transformDate(data.doDate))
+    this.doCreateForm.controls.dueDate.setValue(this.transformDate(data.dueDate))
+
+    this.doCreateForm.controls.grade.setValue(data.grade)
+    this.doCreateForm.controls.size.setValue(data.size)
+    this.doCreateForm.controls.area.setValue(data.area)
+    this.doCreateForm.controls.by.setValue(data.by)
+    this.doCreateForm.controls.builtyCompany.setValue(data.builtyCompany)
+
+    this.doCreateForm.controls.permissionNo.setValue(data.permissionNo)
+    this.doCreateForm.controls.emd.setValue(data.emd)
+    this.doCreateForm.controls.emdAmt.setValue(data.emdAmt)
+
+    this.doCreateForm.controls.doAmt.setValue(data.doAmt)
+    this.doCreateForm.controls.doAmtpmt.setValue(data.doAmtpmt)
+    this.doCreateForm.controls.doRate.setValue(data.doRate)
+    this.doCreateForm.controls.doRateTcs.setValue(data.doRateTcs)
+    this.doCreateForm.controls.disp.setValue(data.disp)
+    this.doCreateForm.controls.emdAmt.setValue(data.emdAmt)
+
+    this.doCreateForm.controls.party.setValue(data.party.name)
+    this.doCreateForm.controls.withinOutSide.setValue(data.withinOutSide)
+    this.doCreateForm.controls.receivedDate.setValue(this.transformDate(data.receivedDate))
+
+    this.doCreateForm.controls.lepseQuantity.setValue(data.lepseQuantity)
+    this.doCreateForm.controls.liftedQuantity.setValue(data.liftedQuantity)
+    this.doCreateForm.controls.remarks.setValue(data.remarks)
+    this.doCreateForm.controls.totalRefundAmt.setValue(data.totalRefundAmt)
+    this.doCreateForm.controls.refundDate.setValue(this.transformDate(data.refundDate))
+    this.doCreateForm.controls.website.setValue(data.website)
+    this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
+    this.doCreateForm.controls.inAdvanceLimit.setValue(data.inAdvanceLimit)
+    
+    this.isfrightEntryAdded = true;
+    this.destinationParty = data.destinationparty
+
+    this.doCreateForm.controls.transporter.setValue(data.transporter.firstName)
+
+  }
   setCreateOrUpdateForm(formCondition) {
     if (formCondition == "create") {
-      this.isShowDoCreate = true;
+      this.isShowDoUpdate = false;
     }
 
     if (formCondition == "update") {
-      this.isShowDoCreate = false;
+      this.isShowDoUpdate = true;
     }
-  }
-
-  getPartyData(partyData) {
-
   }
 
   onChangeDestinationsData() {
@@ -237,14 +302,6 @@ export class DoCreateComponent implements OnInit {
         }
       });
     })
-  }
-
-  modifyDestinationData() {
-
-  }
-
-  modifyDateFomat() {
-
   }
 
   updateDate() {
@@ -381,12 +438,66 @@ export class DoCreateComponent implements OnInit {
     })
   }
 
-  transformDate(date:string){
-    if(date && date.length == 10){
+  transformDate(date: string) {
+    if (date && date.length == 10) {
       return (<Array<string>>date.split('-')).reverse().join('-');
     }
     return "";
   }
 
+  cancelUpdateDO() {
+    this.destinationParty = [];
+    this.isfrightEntryAdded = false;
+    this.router.navigate(['do']);
+    this.doCreateForm.reset()
+    this.applyCreateMode()
+  }
 
+  applyUpdateMode() {
+    this.isShowDoUpdate = true;
+    this.modeSelect = "Update DO"
+    this.toaster.success("You are now updating do, Please press cancel button at bottom to exit the process")
+  }
+
+  applyCreateMode() {
+    this.isShowDoUpdate = false;
+    this.modeSelect = "Create DO"
+  }
+
+  onUpdateSubmit() {
+    let _updateDOID
+
+
+    if (this.doCreateForm.invalid) {
+      return;
+    }
+
+    let doCreationData = this.doCreateForm.getRawValue();
+    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
+
+    this.route.queryParams.subscribe(
+      (params) => {
+        _updateDOID = params['update'];
+      }
+    );
+
+    doCreationData.id = _updateDOID;
+
+    this.getSelectedParty().then((data) => {
+      doCreationData.party = data;
+      console.table([doCreationData]);
+      this.updateDO(doCreationData, _updateDOID);
+    })
+
+  }
+
+  updateDO(doCreationData, _updateDOID) {
+    this.doService.updateDoService(doCreationData).subscribe((data) => {
+      console.log('do is updated')
+    },
+      (error) => {
+        console.log('do is not updated')
+      }
+    )
+  }
 }

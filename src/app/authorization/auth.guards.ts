@@ -33,7 +33,7 @@ export class LoginGuard implements CanActivate {
         if (localStorage.getItem('currentUser') != null && localStorage.getItem('currentUser') != "null") {
             console.log(route.routeConfig.path + "true");
             // logged in so return true
-            this.router.navigate(['/createdo']);
+            this.router.navigate(['/do']);
             return false;
         }
         console.log(route.routeConfig.path + "false");

@@ -50,7 +50,7 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: "createdo",
+        path: "do",
         component: DoCreateComponent,
         canActivate: [AuthGuard]
     },

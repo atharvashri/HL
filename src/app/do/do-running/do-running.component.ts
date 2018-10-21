@@ -66,7 +66,8 @@ export class DoRunningComponent implements OnInit {
         'collaryName',
         'quantity',
         'areaDoNo',
-        'bspDoNo'
+        'bspDoNo',
+        ''
       ];
 
       this.runningDosInTable = [];
