@@ -57,4 +57,7 @@ export class UserListComponent implements OnInit {
         this.sendUserName.emit(evt.target.id)
     }
 
+    deactivateUser(evt){
+
+    }
 }

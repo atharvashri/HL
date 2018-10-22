@@ -7,7 +7,8 @@ import { Router } from '@angular/router'
 @Component({
     selector: 'user-cmp',
     moduleId: module.id,
-    templateUrl: 'user.component.html'
+    templateUrl: 'user.component.html',
+    styleUrls:['user.component.css']
 })
 
 export class UserComponent implements OnInit {
@@ -16,6 +17,7 @@ export class UserComponent implements OnInit {
 
     isUserCreateMode = true;
     isUserPasswordUpdate = true;
+    usernameDuplicate = false;
 
     ngOnInit() {
     }
@@ -31,7 +33,7 @@ export class UserComponent implements OnInit {
         password: [],
         confirmpassword: [],
         role: [],
-        active: []
+        //active: []
 
     })
 
@@ -49,7 +51,7 @@ export class UserComponent implements OnInit {
             lastName: this.userForm.controls.lastname.value,
             password: this.userForm.controls.password.value,
             role: this.userForm.controls.role.value,
-            active: JSON.parse(this.userForm.controls.active.value)
+            //active: JSON.parse(this.userForm.controls.active.value)
         }
 
 
@@ -74,7 +76,7 @@ export class UserComponent implements OnInit {
             firstName: this.userForm.controls.firstname.value,
             lastName: this.userForm.controls.lastname.value,
             role: this.userForm.controls.role.value,
-            active: JSON.parse(this.userForm.controls.active.value)
+            //active: JSON.parse(this.userForm.controls.active.value)
         }
 
 
@@ -84,7 +86,7 @@ export class UserComponent implements OnInit {
             data['firstName'] = this.userForm.controls.firstname.value;
             data['lastName'] = this.userForm.controls.lastname.value;
             data['role'] = this.userForm.controls.role.value;
-            data['active'] = JSON.parse(this.userForm.controls.active.value);
+            //data['active'] = JSON.parse(this.userForm.controls.active.value);
 
             delete data["authorities"]
             this.userService.updateUser(data).subscribe((res) => {
@@ -106,7 +108,7 @@ export class UserComponent implements OnInit {
             this.userForm.controls.firstname.setValue(res['data']['firstName']);
             this.userForm.controls.lastname.setValue(res['data']['lastName']);
             this.userForm.controls.role.setValue(res['data']['role']);
-            this.userForm.controls.active.setValue(res['data']['active']);
+            //this.userForm.controls.active.setValue(res['data']['active']);
         },
             () => {
                 this.toastrService.error("User Data is not found");
@@ -134,5 +136,17 @@ export class UserComponent implements OnInit {
         this.isUserPasswordUpdate = true
         this.userForm.reset()
         this.userForm.controls.username.enable();
+    }
+
+    checkUserNameAvailability() {
+        let _username = this.userForm.controls.username.value;
+        this.usernameDuplicate = false;
+        this.userlist.UserList.forEach(element => {
+            if (_username == element.username) {
+                this.usernameDuplicate = true;
+                this.toastrService.error('username is already present')
+                return;
+            }
+        });
     }
 }

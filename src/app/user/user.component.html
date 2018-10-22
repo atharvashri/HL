@@ -1,12 +1,13 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-body">
-            <form [formGroup]="userForm" >
+            <form [formGroup]="userForm">
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="username">User Name</label>
-                            <input type="text" class="form-control" id="username" formControlName="username">
+                            <input [ngClass]="{'error-username':usernameDuplicate===true}" type="text" class="form-control" id="username"
+                                formControlName="username" (keyup)="checkUserNameAvailability()" (focusout)="checkUserNameAvailability()">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -49,7 +50,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <!-- <div class="col-md-3">
                         <div class="form-group">
                             <label for="active">Select Status</label>
                             <select class="form-control" id="active" formControlName="active">
@@ -57,7 +58,7 @@
                                 <option value="false">Not Active</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
 
                 </div>
                 <div *ngIf="isUserCreateMode">

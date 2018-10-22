@@ -2,11 +2,11 @@
     <div class="header">
         <h4 class="title">Added Users</h4>
     </div>
-     <div class="content table-responsive table-full-width">
+    <div class="content table-responsive table-full-width">
         <table class="table table-bordered table-responsive">
             <thead class="p-back-color">
                 <tr>
-                    <th *ngFor="let UserProp of UserProperties" ><span class="p-txt ">{{ UserProp }}</span></th>
+                    <th *ngFor="let UserProp of UserProperties"><span class="p-txt ">{{ UserProp }}</span></th>
                 </tr>
             </thead>
             <tbody>
@@ -15,7 +15,11 @@
                     <td>{{user.firstName}}</td>
                     <td>{{user.lastName}}</td>
                     <td>{{user.role}}</td>
-                    <td>{{user.active}}</td>
+                    <td> <label class="checkboxcontainer"><input id="{{user.username}}-check" [checked]="user.active"
+                                type="checkbox" (change)="deactivateUser($event)" />
+                            <span class="checkmark"></span>
+                        </label>
+                    </td>
                     <td><button class="btn btn-primary hl-user-update-btn" id="{{user.username}}" (click)="updateUser($event)">Update</button></td>
                 </tr>
             </tbody>
@@ -23,6 +27,6 @@
     </div>
 </div>
 
- <ng-template #content let-c="close" let-d="dismiss">
+<ng-template #content let-c="close" let-d="dismiss">
 
-</ng-template> 
+</ng-template>
