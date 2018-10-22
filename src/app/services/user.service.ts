@@ -24,8 +24,8 @@ export class UserService {
         return this.http.get(this.url + '/user/'+`${userName}`);
     }
 
-    updateUser(data, userName) {
-        return this.http.get(this.url + '/user/'+`${userName}`, data);
+    updateUser(data) {
+        return this.http.put(this.url + '/user', data);
     }
 
     getByRole(rolename){

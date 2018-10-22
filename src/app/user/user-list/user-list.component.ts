@@ -1,5 +1,6 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Output, ViewChild, EventEmitter } from '@angular/core';
 import { UserService } from '../../services/user.service'
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 interface User {
     UserName: string,
@@ -18,6 +19,7 @@ interface User {
 
 export class UserListComponent implements OnInit {
 
+    @Output() sendUserName: EventEmitter<any> = new EventEmitter<any>();
 
     UserProperties = [
         'UserName',
@@ -31,7 +33,7 @@ export class UserListComponent implements OnInit {
     UserList: User[]
 
 
-    constructor(private userService: UserService) {
+    constructor(private userService: UserService, private modalService: NgbModal) {
 
     }
 
@@ -43,6 +45,7 @@ export class UserListComponent implements OnInit {
         this.userService.getAlluser().subscribe(
             (res) => {
                 //
+                console.log(res["data"])
                 this.UserList = res["data"];
             },
             (error) => { }
@@ -50,7 +53,8 @@ export class UserListComponent implements OnInit {
 
     }
 
-    updateUserData() {
-        console.log("update user")
+    updateUser(evt) {
+        this.sendUserName.emit(evt.target.id)
     }
+
 }

@@ -87,7 +87,6 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   }
 
   public openModel() {
-    console.log("model");
     this.modalService.open(this.content);
     this.panForm.controls.panNo.setValue(this.PANno);
   }

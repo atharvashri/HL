@@ -1,7 +1,8 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms'
 import { UserService } from '../services/user.service'
 import { ToastrService } from 'ngx-toastr'
+import { Router } from '@angular/router'
 
 @Component({
     selector: 'user-cmp',
@@ -13,10 +14,13 @@ export class UserComponent implements OnInit {
 
     @ViewChild('userlist') userlist;
 
+    isUserCreateMode = true;
+    isUserPasswordUpdate = true;
+
     ngOnInit() {
     }
 
-    constructor(public userInfo: FormBuilder, private userService: UserService, private toastrService: ToastrService) {
+    constructor(public userInfo: FormBuilder, private userService: UserService, private toastrService: ToastrService, private router: Router) {
 
     }
 
@@ -26,7 +30,8 @@ export class UserComponent implements OnInit {
         lastname: [],
         password: [],
         confirmpassword: [],
-        role: []
+        role: [],
+        active: []
 
     })
 
@@ -34,9 +39,9 @@ export class UserComponent implements OnInit {
         if (this.userForm.invalid)
             return
 
-        if(this.userForm.controls.password.value !== this.userForm.controls.confirmpassword.value)    {
-          this.toastrService.error("Password and Confirm password do not match");
-          return;
+        if (this.userForm.controls.password.value !== this.userForm.controls.confirmpassword.value) {
+            this.toastrService.error("Password and Confirm password do not match");
+            return;
         }
         let userData = {
             username: this.userForm.controls.username.value,
@@ -44,7 +49,7 @@ export class UserComponent implements OnInit {
             lastName: this.userForm.controls.lastname.value,
             password: this.userForm.controls.password.value,
             role: this.userForm.controls.role.value,
-            active: Boolean(this.userForm.controls.firstname.value)
+            active: JSON.parse(this.userForm.controls.active.value)
         }
 
 
@@ -61,5 +66,73 @@ export class UserComponent implements OnInit {
 
     }
 
+    onUpdateSubmit() {
+        let _userName = this.userForm.controls.username.value;
+        this.isUserCreateMode = false
+        let userData = {
+            username: this.userForm.controls.username.value,
+            firstName: this.userForm.controls.firstname.value,
+            lastName: this.userForm.controls.lastname.value,
+            role: this.userForm.controls.role.value,
+            active: JSON.parse(this.userForm.controls.active.value)
+        }
 
+
+
+        this.getUserPassWord(_userName).then((data) => {
+            data['username'] = this.userForm.controls.username.value;
+            data['firstName'] = this.userForm.controls.firstname.value;
+            data['lastName'] = this.userForm.controls.lastname.value;
+            data['role'] = this.userForm.controls.role.value;
+            data['active'] = JSON.parse(this.userForm.controls.active.value);
+
+            delete data["authorities"]
+            this.userService.updateUser(data).subscribe((res) => {
+                this.userlist.getAddedUsers();
+                console.log(res);
+            })
+        })
+
+
+    }
+
+    getUserToupdate(id) {
+        this.setUserUpdateMode();
+
+        this.userService.getOneuser(id).subscribe((res) => {
+            //console.log(res)
+            this.toastrService.success("You are in upadating process please click cancel to exit")
+            this.userForm.controls.username.setValue(res['data']['username']);
+            this.userForm.controls.firstname.setValue(res['data']['firstName']);
+            this.userForm.controls.lastname.setValue(res['data']['lastName']);
+            this.userForm.controls.role.setValue(res['data']['role']);
+            this.userForm.controls.active.setValue(res['data']['active']);
+        },
+            () => {
+                this.toastrService.error("User Data is not found");
+            })
+    }
+
+    setUserUpdateMode() {
+        this.isUserCreateMode = false
+        this.isUserPasswordUpdate = false
+        this.userForm.controls.username.disable();
+    }
+
+    //this is a temporary code
+    getUserPassWord(userName) {
+        return new Promise((resolve, reject) => {
+            this.userService.getOneuser(userName).subscribe((res) => {
+                resolve(res['data'])
+            })
+        })
+    }
+
+    cancelUpdateUser() {
+        this.router.navigate(['adduser'])
+        this.isUserCreateMode = true
+        this.isUserPasswordUpdate = true
+        this.userForm.reset()
+        this.userForm.controls.username.enable();
+    }
 }
