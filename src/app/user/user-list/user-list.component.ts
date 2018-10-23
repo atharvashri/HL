@@ -20,6 +20,11 @@ interface User {
 export class UserListComponent implements OnInit {
 
     @Output() sendUserName: EventEmitter<any> = new EventEmitter<any>();
+    @ViewChild('activateUser') activateUserModal;
+    @ViewChild('deactivateUser') deactivateUserModal;
+
+    userIDForActivation = null
+
 
     UserProperties = [
         'UserName',
@@ -57,7 +62,23 @@ export class UserListComponent implements OnInit {
         this.sendUserName.emit(evt.target.id)
     }
 
-    deactivateUser(evt){
+    deactivateUser() {
 
+
+    }
+
+    activateUser() {
+
+
+    }
+
+    showAlertModalForUserAction(evt) {
+        this.userIDForActivation = evt.target.id
+        if (evt.target.checked) {
+            this.modalService.open(this.activateUserModal)
+        }
+        else {
+            this.modalService.open(this.deactivateUserModal)
+        }
     }
 }

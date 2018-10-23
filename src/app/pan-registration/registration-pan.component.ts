@@ -42,7 +42,7 @@ export class RegistrationPanComponent implements OnInit {
     if (id == '') {
       this.toaster.error("please enter the PAN number to proceed");
       return;
-    }
+    } 
     this.showVehicleList(id);
   }
 

@@ -15,8 +15,8 @@
                     <td>{{user.firstName}}</td>
                     <td>{{user.lastName}}</td>
                     <td>{{user.role}}</td>
-                    <td> <label class="checkboxcontainer"><input id="{{user.username}}-check" [checked]="user.active"
-                                type="checkbox" (change)="deactivateUser($event)" />
+                    <td> <label class="checkboxcontainer"><input id="{{user.id}}" [checked]="user.active"
+                                type="checkbox" (change)="showAlertModalForUserAction($event)" />
                             <span class="checkmark"></span>
                         </label>
                     </td>
@@ -27,6 +27,29 @@
     </div>
 </div>
 
-<ng-template #content let-c="close" let-d="dismiss">
+<ng-template #activateUser let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Activate User </h4>
+    </div>
+    <div class="modal-body">
+        <p>Do you want to activate this User now ?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="activateUser()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="d('Cross click')">No</button>
+    </div>
 
+</ng-template>
+
+<ng-template #deactivateUser let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Deactivate User </h4>
+    </div>
+    <div class="modal-body">
+        <p>Do you want to deactivate this User now ?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="deactivateUser()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="d('Cross click')">No</button>
+    </div>
 </ng-template>
