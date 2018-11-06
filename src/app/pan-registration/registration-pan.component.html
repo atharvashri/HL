@@ -4,79 +4,94 @@
       <div class="row">
         <div class="col-md-3 col-md-push-4">
           <div class="form-group">
-            <label for="pan">Enter PAN Number</label>
-            <input type="text" class="form-control" id="pan" required #panID>
+            <label for="pan">Enter PAN / Vehicle</label>
+            <input type="text" class="form-control" id="pan" placeholder="Search text" required #searchText>
           </div>
         </div>
       </div>
-      <!-- <div class="row">
-        <div class="col-md-8 col-md-push-3">
-          <label>Choose Action To Proceed - </label>
-          <label class="form-check-inline hl_radio_margin">
-            <input class="form-check-input" type="radio" name="mode" value="vehiclelist" [(ngModel)]="selectedPanAction"
-              checked>
-            Get Vehicle list
-          </label>
-          <label class="form-check-inline hl_radio_margin">
-            <input class="form-check-input" type="radio" name="mode" value="addpan" [(ngModel)]="selectedPanAction">
-            Add PAN
-          </label>
-          <label class="form-check-inline hl_radio_margin">
-            <input class="form-check-input" type="radio" name="mode" value="updatepan" [(ngModel)]="selectedPanAction">
-            Update PAN
-          </label>
+      <div class="row">
+        <div class="col-md-6 col-md-push-4">
+          <div class="radio-inline">
+            <label class="radio-inline"><input type="radio" [(ngModel)]="searchby" checked value="pan">By PAN</label>
+            <label class="radio-inline"><input type="radio" [(ngModel)]="searchby" value="vehicle">By Vehicle No.</label>
+          </div>
         </div>
-      </div> -->
+      </div>
+
       <div class="row">
         <div class="col-md-2 col-md-push-4">
           <div class="form-group">
-            <button class="btn btn-primary" (click)="performPanAction(panID.value)">Submit PAN</button>
+            <button class="btn btn-primary" (click)="performSearch(searchText.value)">Search</button>
           </div>
         </div>
       </div>
 
       <app-add-pan-update-details #addDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN"></app-add-pan-update-details>
-      <app-pan-update-details #updateDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN" [PanDataToUpdate] = "panData"></app-pan-update-details>
+      <app-pan-update-details #updateDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN" [PanDataToUpdate] = "panSelected"></app-pan-update-details>
     </div>
   </div>
 </div>
-<!-- <div>
-  <div class="row">
-    <div class="col-md-3 col-md-offset-4">
-        <button class="btn btn-primary" (click)="open()">Add PAN</button>
+
+<div class="container" *ngIf="isUpdatePan || !noVehicle">
+  <div class="row" *ngIf="isUpdatePan">
+    <div class="col-md-4 col-md-push-2">
+      <strong>Owner Name:</strong>&emsp;{{panSelected.panHolderName}}
+    </div>
+    <div class="col-md-4 col-md-push-2">
+      <strong>Pan Copy:&nbsp;&nbsp;</strong><a *ngIf="panSelected.panCopyLink" [href]="s3url+panSelected.panCopyLink" target="_blank">&emsp;<img src="/assets/img/img_icon.png" alt="View Copy" width="20" height="20"></a>
+    </div>
+    <div class="col-md-4">
+      <strong>Declaration:&nbsp;&nbsp;</strong><a *ngIf="panSelected.declarationLink" [href]="s3url+panSelected.declarationLink" target="_blank">&emsp;<img src="/assets/img/img_icon.png" alt="View Copy" width="20" height="20"></a>
     </div>
   </div>
-</div> -->
-
-<div *ngIf="isUpdateVehicle">
+  <br>
   <div class="row">
-    <div class="col-md-2 col-md-push-4">
+    <div class="col-md-8 col-md-push-2">
+    <div class="table-responsive" *ngIf="vehicleList.length;else novhiclesForPan">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><strong>Vehicle Number</strong></th>
+            <th *ngIf="!noVehicle"><strong>PAN</strong></th>
+            <th *ngIf="!noVehicle"><strong>Pan Holder</strong></th>
+            <th><strong>Old Owner</strong></th>
+            <th><strong>RC Copy</strong></th>
+            <th></th>
+            <th *ngIf="isUpdatePan"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--<div *ngFor="let pan of panList">-->
+            <tr *ngFor="let vehicle of vehicleList; let i=index">
+              <td>{{vehicle.vehicleNo | uppercase}}</td>
+              <td *ngIf="!noVehicle">{{vehicle.panNo}}</td>
+              <td *ngIf="!noVehicle">{{vehicle.panHolderName}}</td>
+              <td>{{vehicle.oldOwner ? 'YES' : 'NO'}}</td>
+              <td><a *ngIf="vehicle.rcCopyLink" target="_blank" [href]="s3url+vehicle.rcCopyLink"><img src="/assets/img/img_icon.png" width="20" height="20"/></a></td>
+              <td><a [href]="" (click)="selectedvehicle=vehicle;openAddVehicleDialog(true)">update</a></td>
+              <td *ngIf="isUpdatePan"><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeVehicle(i)"/></td>
+            </tr>
+          <!--</div>-->
+
+        </tbody>
+      </table>
+    </div>
+    <ng-template #novhiclesForPan>
+      <div class="row">
+        <div class="col-md-6">
+          No vehicles linked to this PAN.
+        </div>
+      </div>
+    </ng-template>
+    </div>
+  </div>
+  <br>
+  <div class="row" *ngIf="isUpdatePan">
+    <div class="col-md-4">
       <button type="button" class="btn btn-primary" (click)="openupdatePANModel()">Update PAN</button>
     </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-3 col-md-push-4 hl_vehiclelist scrollbar">
-      <div *ngFor="let vehicle of vehicleList">
-        <label for="{{vehicle}}">
-          <input id="{{vehicle}}" type="radio" value={{vehicle}} class="form-check-input" [(ngModel)]="selectedvehicle">
-          {{vehicle}}
-        </label>
-      </div>
-    </div>
-  </div>
-  <br>
-  <div class="row">
-    <div class="col-md-6 col-md-push-4">
-      <b>Please select vehicle from above list to delete</b>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2 col-md-push-3">
-      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Delete Vehicle</button>
-    </div>
-    <div class="col-md-2 col-md-push-3">
-      <button type="button" class="btn btn-primary" (click)="updateVehicleDetails()">Add Vehicle</button>
+    <div class="col-md-4">
+      <button type="button" class="btn btn-primary" (click)="openAddVehicleDialog(false)">Link Vehicle</button>
     </div>
   </div>
 </div>
@@ -95,15 +110,60 @@
   </div>
 </div>
 
-<ng-template #confirmDialog let-c="close" let-d="dismiss">
+<div *ngIf="noVehicle && searchby=='vehicle'">
+  <div class="row">
+    <div class="col-md-6 col-md-push-4">
+      <b>No Vehicles found for entered criteria</b>
+    </div>
+  </div>
+</div>
+
+<ng-template #addvehicleDialog let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">PAN not registered</h4>
+    <h4 class="modal-title" id="modal-basic-title">Add new Vehicle</h4>
   </div>
   <div class="modal-body">
-    <p>Entered PAN number is not registered, Do want to register it now ?</p>
+    <form>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pan">Pan</label>
+              <input class="form-control" type="text" id="pan" [value]="panSelected.panNo" disabled>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="panholder">Pan Holder</label>
+              <input class="form-control" type="text" id="panholder" [value]="panSelected.panHolderName" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="vehicleno">Vehicle No.</label>
+              <input class="form-control" type="text" id="vehicleno" [value]="selectedvehicle?.vehicleNo" [(ngModel)]="selectedvehicle.vehicleNo" name="vehicleno" [disabled]="isUpdate">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="rccopy">RC Copy</label>
+              <input #rccopy class="form-control" type="file" ng2FileSelect [uploader]="uploader" id="rccopy">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <button *ngIf="!isUpdate" type="button" class="btn btn-primary" (click)="addvehicle(rccopy)">Add</button>
+            <button *ngIf="isUpdate" type="button" class="btn btn-primary" (click)="updatecopy(rccopy)">Update</button>
+          </div>
+          <div class="col-md-6">
+            <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </form>
   </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="open()">Add</button>
-    <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
-  </div>
+
 </ng-template>

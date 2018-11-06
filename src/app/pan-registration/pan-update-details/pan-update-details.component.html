@@ -10,47 +10,56 @@
       </div>
       <div class="panel-body">
         <form [formGroup]="panForm">
-          <strong>Truck Information</strong>
+          <strong>PAN Information</strong>
           <br>
           <br>
           <div class="row">
             <div class="col-md-3">
               <div class="form-group">
                 <label for="panc">PAN</label>
-                <input class="form-control" type="text" id="panc" value="" formControlName="panNo" disabled>
+                <input class="form-control" type="text" id="panc" formControlName="panNo" [value]="PanDataToUpdate.panNo" disabled>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="fatherName">Father\Husband\C/O</label>
-                <input class="form-control" type="text" id="fatherName" formControlName="fatherName">
+                <label for="panHolderName">Pan Holder Name</label>
+                <input class="form-control" type="text" [value]="PanDataToUpdate.panHolderName" formControlName="panHolderName">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="tds">TDS</label>
-                <select class="form-control" name="tds" id="tds" formControlName="tds" [value]="No">
-                  <option value="false" selected>No</option>
-                  <option value="true">Yes</option>
+                <select class="form-control" name="tds" id="tds" formControlName="tds">
+                    <option value="false" [selected]="!PanDataToUpdate.tds">No</option>
+                    <option value="true" [selected]="PanDataToUpdate.tds">Yes</option>
+                  </select>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input class="form-control" type="text" id="city" [value]="PanDataToUpdate.city" formControlName="city">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="state">State</label>
+                <select class="form-control" name="state" id="state" formControlName="state">
+                  <option *ngFor="let s of ref_states" [value]="s">{{s}}</option>
                 </select>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="address">Address</label>
-                <input class="form-control" type="text" id="address" formControlName="address">
+                <label for="panCopy">PAN Copy</label>
+                <input class="form-control" type="file" id="panCopy" ng2FileSelect [uploader]="uploader" (change)="onFileChange('pancopy')" formControlName="panCopy">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="city">City</label>
-                <input class="form-control" type="text" id="city" formControlName="city">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="district">District</label>
-                <input class="form-control" type="text" id="district" formControlName="district">
+                <label for="declaration">Declaration</label>
+                <input class="form-control" type="file" id="declaration" ng2FileSelect [uploader]="uploader" (change)="onFileChange('declaration')" formControlName="declaration">
               </div>
             </div>
           </div>
@@ -68,20 +77,38 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="accountHoldername">Account Holder Name</label>
-                <input class="form-control" type="text" id="accountHoldername" value="" formControlName="accountHoldername">
+                <label for="confirmaccountNumber">Confirm A/C No</label>
+                <input class="form-control" type="password" id="confirmaccountNumber" formControlName="confirmAccountNumber">
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="accountHoldername">Account Holder Name</label>
+                <input class="form-control" type="text" id="accountHoldername" formControlName="accountHoldername">
+              </div>
+            </div>
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="ifscCode">IFSC Code</label>
                 <input class="form-control" type="text" id="ifscCode" value="" formControlName="ifscCode">
               </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="confirmifscCode">Confirm IFSC Code</label>
+                <input class="form-control" type="password" id="confirmifscCode" formControlName="confirmIfscCode">
+              </div>
+            </div>
+            <div class="col-md-3">
               <div class="form-group">
                 <label for="bankname">Bank Name</label>
                 <input class="form-control" type="text" id="bankname" value="" formControlName="bankName">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="passbook">Passbook</label>
+                <input type="file" name="passbook">
               </div>
             </div>
             <div class="col-md-2">
@@ -91,63 +118,40 @@
               </div>
             </div>
           </div>
-          <strong><u>Delete Added Accounts</u></strong>
-          <br>
-          <br>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="adddedAccountName">Added Accounts</label>
-                <select class="form-control" name="adddedAccountName" id="adddedAccountName" formControlName="adddedAccountName"
-                  (change)="showBankDetails()">
-                  <option *ngFor="let acc of addedBankAccounts" [value]="acc.accountNo">{{acc.accountNo}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="Added_bankName">Bank Name</label>
-                <input class="form-control" type="text" id="Added_bankName" value="" formControlName="Added_bankName">
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <button type="button" class="btn btn-primary margn-btn" id="deleteAccount" (click)="deleteAccount()">Delete
-                  Account</button>
-              </div>
-            </div>
-          </div>
           <hr>
-          <strong>Upload Copies</strong>
-          <br>
-          <br>
-          <div class="row">
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="rcCopy">RC Copy</label>
-                <input class="form-control" type="file" id="rcCopy" value="" formControlName="rcCopy">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="panCopy">PAN Copy</label>
-                <input class="form-control" type="file" id="panCopy" value="" formControlName="panCopy">
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="declaration">Declaration</label>
-                <input class="form-control" type="file" id="declaration" value="" formControlName="declaration">
+          <div class="row" *ngIf="accountsAvailable()">
+            <div class="col-md-8">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th><strong>Account No.</strong></th>
+                      <th><strong>Account Holder</strong></th>
+                      <th><strong>IFSC</strong></th>
+                      <th><strong>Bank Name</strong></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let account of addedBankAccounts; let i=index;">
+                      <td>{{account.accountNo}}</td>
+                      <td>{{account.accountHoldername}}</td>
+                      <td>{{account.ifscCode}}</td>
+                      <td>{{account.bankName}}</td>
+                      <td><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeAccount(i)"/></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
           <div class="row">
-            <div class="col-md-1 col-md-push-5">
+            <div class="col-md-2 col-md-push-4">
               <div class="form-group">
-                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="UpdatePANdetails()">Submit</button>
+                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="UpdatePANdetails()">Update</button>
               </div>
             </div>
-            <div class="col-md-1 col-md-push-5">
+            <div class="col-md-2 col-md-push-4">
               <div class="form-group">
                 <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
               </div>

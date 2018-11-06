@@ -11,3 +11,11 @@
     border-radius: 5px;
     background-color: white
 }
+
+.radio-inline label{
+  margin-right: 10px;
+}
+
+div.container {
+  width: 90%;
+}

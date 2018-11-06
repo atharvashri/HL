@@ -1,6 +1,27 @@
 /* You can add global styles to this file, and also import other style files */
+html,
+body {
+    height: 100%;
+}
+/*.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}*/
+div.invalid-field{
+  color: red !important;
+  font-size: 11px;
+}
+div.row{
+  display: inline !important;
+}
 .p-spacer-top-20 {
     margin-top:  20%
+}
+
+a{
+  cursor: pointer;
 }
 
 .list-options-local{
@@ -19,4 +40,14 @@
     color: white;
     top: -10px;
     right: -10px;
+}
+
+div.centered{
+  text-align: center;
+  vertical-align: middle;
+  align-content: center;
+}
+
+.table tbody tr td, .table thead tr th, .table tfoot tr td{
+  padding: 4px !important;
 }

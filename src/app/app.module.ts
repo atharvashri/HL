@@ -61,7 +61,9 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
 import { ToastrModule } from 'ngx-toastr';
 
-import { ModalComponent } from './modal/modal.component'
+import { ModalComponent } from './modal/modal.component';
+import { FileSelectDirective } from 'ng2-file-upload';
+import { FileUploadService } from './services/fileupload.service';
 
 @NgModule({
   declarations: [
@@ -95,7 +97,8 @@ import { ModalComponent } from './modal/modal.component'
     LoginComponent,
     ModalComponent,
     PartyResourceComponent,
-    PanUpdateDetailsComponent
+    PanUpdateDetailsComponent,
+    FileSelectDirective
 
   ],
   imports: [
@@ -138,6 +141,7 @@ import { ModalComponent } from './modal/modal.component'
     UserService,
     LoginService,
     PartyService,
+    FileUploadService,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
