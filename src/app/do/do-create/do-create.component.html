@@ -41,20 +41,20 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="quantity">Quantity</label>
-              <input type="number" class="form-control" id="quantity" formControlName="quantity">
+              <input type="number" class="form-control" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doDate">DO Date</label>
-              <input type="date" class="form-control" id="doDate" formControlName="doDate">
+              <input type="date" class="form-control" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
+                (change)="updateDate()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="receivedDate">Received Date</label>
-              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate" [(ngModel)]="receivedDateforDue"
-                (change)="updateDate()">
+              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
             </div>
           </div>
           <div class="col-md-3">
@@ -107,7 +107,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="builtyCompany">Builty Company</label>
+              <label for="builtyCompany">Builty Company (Multi select)</label>
               <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany">
             </div>
           </div>
@@ -115,7 +115,7 @@
             <div class="form-group">
               <label for="transporter">Transporter</label>
               <select class="form-control" id="transporter" formControlName="transporter">
-                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter.firstName">
+                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter">
                   {{transporter.firstName}} {{transporter.lastName}}
                 </option>
               </select>
@@ -124,7 +124,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="partyName">Party Name</label>
+              <label for="partyName">DO Owner Name</label>
               <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
                     ngOptions="party.name for party in partyData"></select>-->
               <select class="form-control" name="partyName" id="partyName" formControlName="party">
@@ -143,7 +143,7 @@
                     ngOptions="party.name for party in destinationParty"></select>-->
               <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
                 (change)="onChangeDestinationsData()">
-                <option *ngFor="let destd of ref_destinationData" [ngValue]="destd.name">{{destd.name}}</option>
+                <option *ngFor="let destd of ref_destinationData" [value]="destd.name">{{destd.name}}</option>
               </select>
             </div>
           </div>
@@ -171,7 +171,8 @@
         <div *ngIf="isfrightEntryAdded">
           <strong>Added Freight Entries</strong>
           <br><br>
-          <div class="row">
+          <!-- below code is commented for now, we can roll it back for deleting fright entry functionality -->
+          <!-- <div class="row">
             <div class="col-md-2">
               <div class="form-group">
                 <label for="destinationParty">Destination Party</label>
@@ -198,7 +199,21 @@
                 </select>
               </div>
             </div>
-          </div>
+          </div> -->
+          <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+              <tr>
+                <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let freightEntries of dataToShowInFreightsTable">
+                <td>{{freightEntries.destinationParty}}</td>
+                <td>{{freightEntries.destinations}}</td>
+                <td>{{freightEntries.freights}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
         <hr>
@@ -213,13 +228,19 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="emd">EMD</label>
-              <input type="text" class="form-control" id="emd" formControlName="emd">
+              <input type="text" class="form-control" id="emd" formControlName="emd" (keyup)="setEMDAMt()">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="emdAmt">EMD Amt</label>
+              <input type="text" class="form-control" id="emdAmt" formControlName="emdAmt">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doAmt">DO Amt</label>
-              <input type="text" class="form-control" id="doAmt" formControlName="doAmt">
+              <input type="text" class="form-control" id="doAmt" formControlName="doAmt" (keyup)="setDOAMtPMT()">
             </div>
           </div>
           <div class="col-md-3">
@@ -230,13 +251,13 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="doRate">DO Rate</label>
+              <label for="doRate">DO Basic Rate</label>
               <input type="text" class="form-control" id="doRate" formControlName="doRate">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="doRateTcs">DO Rate + TCS</label>
+              <label for="doRateTcs">TCS Amount</label>
               <input type="text" class="form-control" id="doRateTcs" formControlName="doRateTcs">
             </div>
           </div>
@@ -249,18 +270,12 @@
               </select>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="disp">Disp</label>
-              <input type="text" class="form-control" id="disp" formControlName="disp">
-            </div>
-          </div>
           <!-- Only when edit DO  - START-->
           <div *ngIf="isShowDoUpdate">
             <div class="col-md-3">
               <div class="form-group">
                 <label for="liftedQuantity">Lifted Quantity</label>
-                <input type="number" class="form-control" id="liftedQuantity" formControlName="liftedQuantity">
+                <input type="number" class="form-control" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
               </div>
             </div>
           </div>
@@ -268,7 +283,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="quantityDeduction">Quantity Deduction</label>
-                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction">
+                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction" (keyup)="setlepseQuantity()">
               </div>
             </div>
           </div>
@@ -276,7 +291,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="lepseQuantity">Lepse Quantity</label>
-                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
+                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity" >
               </div>
             </div>
           </div>
@@ -302,31 +317,24 @@
               </div>
             </div>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="emdAmt">EMD Amt</label>
-              <input type="text" class="form-control" id="emdAmt" formControlName="emdAmt">
-            </div>
-          </div>
-          <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="totalRefundAmt">Total Refund Amt</label>
-                <input type="text" class="form-control" id="totalRefundAmt" formControlName="totalRefundAmt">
-              </div>
-            </div>
-          </div>
+
+
           <!--  <div class="col-md-3">
               <div class="form-group">
                 <label for="finishDate">Finish Date</label>
                 <input type="date" class="form-control" id="finishDate" formControlName="finishDate">
               </div>
             </div>-->
-          <div class="col-md-3">
+          <!-- <div class="col-md-3">
             <div class="form-group">
               <label for="inAdvanceLimit">In Advance limit</label>
               <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
             </div>
+          </div> -->
+          <div class="col-md-3">
+            <label for="inAdvanceLimit">In Advance limit (Enter Multiple values)</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="inAdvanceLimit" (onAdd)="addTags($event)" [(ngModel)]="inAdvanceLimitEntries" formControlName="inAdvanceLimit"></tag-input>
           </div>
           <div class="col-md-3">
             <div class="form-group">
@@ -337,7 +345,10 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="freightToBePaidBy">Freight to be paid By</label>
-              <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy">
+              <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
+              <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
+                <option *ngFor="let freightspaid of freightToBePaidBy" value='freightspaid'>{{freightspaid}}</option>
+              </select>
             </div>
           </div>
           <!-- Only when edit DO  - END-->
@@ -357,7 +368,7 @@
         <div *ngIf="isShowDoUpdate">
           <div class="row">
             <div class="col-md-1 col-md-push-4">
-              <button type="submit" (click) = "onUpdateSubmit()" class="btn btn-primary">Update</button>
+              <button type="submit" (click)="onUpdateSubmit()" class="btn btn-primary">Update</button>
             </div>
             <div class="col-md-1 col-md-push-4">
               <button (click)="cancelUpdateDO()" class="btn btn-primary">Cancel</button>
@@ -368,3 +379,231 @@
     </div>
   </div>
 </div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Confirm DO Details</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">BSP DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Area DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.areaDoNo}}</span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}/{{doDataForConfirmationModel.areaDoNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Auction No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.auctionNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Quantity</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.quantity}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Date</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.dueDate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Received Date</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.receivedDate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Area</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.area}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Collary</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.collary}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Grade</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.grade}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Size</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.size}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">By</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.by}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Builty Company (Multi select)</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.builtyCompany}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Transporter</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.transporter.firstName}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Owner Name</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.partyName}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Permission No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.permissionNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">EMD</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.emd}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">EMD Amt</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.emdAmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Amt</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doAmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Amt P. MT</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doAmtpmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Basic Rate</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doRate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Within/out Side</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.withinOutSide}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">In Advance limit</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.inAdvanceMultiple}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Remarks</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.remarks}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Freight to be paid By</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.freightToBePaidBy}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Website</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.website}}</span>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+              <tr>
+                <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let freightEntries of dataToShowInFreightsTable">
+                <td>{{freightEntries.destinationParty}}</td>
+                <td>{{freightEntries.destinations}}</td>
+                <td>{{freightEntries.freights}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-md-1 col-md-push-4">
+            <div class="form-group">
+              <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createDo()">Submit</button>
+            </div>
+          </div>
+          <div class="col-md-1 col-md-push-4">
+            <div class="form-group">
+              <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

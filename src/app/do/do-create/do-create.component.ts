@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
 import { Validators, FormBuilder } from '@angular/forms'
 import { DoService } from '../../services/do.service'
 import { ActivatedRoute, Router } from '@angular/router'
@@ -7,19 +7,8 @@ import { DODetails } from '../../model/do-details.model'
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
-interface IParty {
-  id: number,
-  name: string,
-  destinations: Array<string>,
-  //freightRanges: Array<string>
-}
-
-
-interface IFreightRate {
-  max: number,
-  min: number
-}
 
 @Component({
   selector: 'app-do-create',
@@ -31,7 +20,13 @@ export class DoCreateComponent implements OnInit {
   submitted: boolean;
   isShowDoUpdate: boolean = false;
   receivedDateforDue = new Date();
-  //dueDateUpdate;
+  dataToShowInFreightsTable = [];
+  titlesForFreightsTable = [
+    "Destination Party",
+    "Destinations",
+    "Freights"
+  ]
+
   Freights = [];
 
   ref_collaryList: Array<string>;
@@ -43,24 +38,36 @@ export class DoCreateComponent implements OnInit {
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
+  changedDestination
 
-  isfrightEntryAdded: boolean = false
+  isfrightEntryAdded: boolean = false;
+  createDoOnConfirmData;
 
   constructor(private doFormBuilder: FormBuilder,
     private doService: DoService,
     private userService: UserService,
-    private toaster: ToastrService, private route: ActivatedRoute, private router: Router) { }
-  dropdownList = [];
-  selectedItems = [];
-  dropdownSettings = {};
+    private toaster: ToastrService, private route: ActivatedRoute, private router: Router, private modalService: NgbModal) { }
+
   refData = {};
   modeSelect = "Create DO";
-
+  addedInAdvanceLimit = []
 
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
   sizes = ["ROM", "SLK", "STM"]
 
+  liftedQuantityUpdate;
+  doQuantityUpdate;
+  quantityDeductionUpdate;
+  lepseQuantityUpdate;
+
+  inAdvanceLimitEntries = [];
+
+  @ViewChild('content') content;
+
+  doDataForConfirmationModel;
+
   ngOnInit() {
+
     this.doDetails = new DODetails()
 
     this.route.queryParams.subscribe(
@@ -118,20 +125,18 @@ export class DoCreateComponent implements OnInit {
     builtyCompany: [],
     transporter: [],
     emd: [],
+    emdAmt: [{ value: '', disabled: true }],
     doAmt: [],
-    doAmtpmt: [],
+    doAmtpmt: [{ value: '', disabled: true }],
     doRate: [],
     doRateTcs: [],
     withinOutSide: [],
-    disp: [],
     liftedQuantity: [],
     quantityDeduction: [],
-    lepseQuantity: [],
+    lepseQuantity: [{ value: '', disabled: true }],
     doStatus: [],
     refundAmt: [],
     refundDate: [],
-    emdAmt: [],
-    totalRefundAmt: [],
     website: [],
     finishDate: [],
     remarks: [],
@@ -139,6 +144,10 @@ export class DoCreateComponent implements OnInit {
     freightToBePaidBy: []
   })
 
+  addTags(evt) {
+    //console.log(evt);
+    this.addedInAdvanceLimit.push(evt.value);
+  }
 
   onSubmitDo() {
     this.submitted = true;
@@ -147,15 +156,22 @@ export class DoCreateComponent implements OnInit {
       return;
     }
 
-
     let doCreationData = this.doCreateForm.getRawValue();
     doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
 
-
     this.getSelectedParty().then((data) => {
+
       doCreationData.party = data;
-      console.table([doCreationData]);
-      this.createDo(doCreationData);
+      this.createDoOnConfirmData = {};
+      this.doDataForConfirmationModel = {};
+
+      this.createDoOnConfirmData = doCreationData;
+      this.doDataForConfirmationModel = doCreationData;
+
+      this.doDataForConfirmationModel.inAdvanceMultiple = this.addedInAdvanceLimit.join(', ');
+      this.doDataForConfirmationModel.partyName = this.doCreateForm.controls.party.value;
+      this.modalService.open(this.content);
+
     })
   }
 
@@ -173,7 +189,7 @@ export class DoCreateComponent implements OnInit {
     doCreationData.doDate = this.transformDate(doCreationData.doDate);
 
     //TODO this is temporary solution to get it work.
-    doCreationData.inAdvanceLimit = [doCreationData.inAdvanceLimit];
+    doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
     doCreationData.freightToBePaidBy = [doCreationData.freightToBePaidBy];
 
     return doCreationData;
@@ -183,11 +199,12 @@ export class DoCreateComponent implements OnInit {
     this.doService.getdoRefData().subscribe(
       (res) => {
         this.refData = res["data"];
-
+        console.log(res["data"]);
         this.ref_areaList = res["data"]["areaList"];
         this.ref_collaryList = res["data"]["collaryList"];
         this.ref_partyData = res["data"]["partyList"];
         this.ref_destinationData = res["data"]["partyList"]
+        this.refData['builtyCompany'] = ['mumbai', 'pune'];
       },
       (error) => {
         this.toaster.error("error occured while retrieving refdata");
@@ -204,18 +221,18 @@ export class DoCreateComponent implements OnInit {
     )
   }
 
-  createDo(doCreationData) {
-    this.doService.createDoService(doCreationData).subscribe(
+  createDo() {
+    this.doService.createDoService(this.createDoOnConfirmData).subscribe(
       (data) => {
+        this.modalService.dismissAll();
+        this.reloadPage();
         this.toaster.success("DO is successfully created");
       },
       (err) => {
-        this.toaster.error("error in DO is creation");
+        this.toaster.error("error in DO creation");
       }
     )
   }
-
-  get f() { return this.doCreateForm.controls; }
 
   getDOForUpdate(id) {
     this.doService.getDoByIDService(id).subscribe((res) => {
@@ -224,8 +241,32 @@ export class DoCreateComponent implements OnInit {
       this.setDataToUpdateForm(res['data']);
     },
       () => {
-        this.toaster.error("not able to find the required do information");
+        this.toaster.error("not able to find the required DO information");
       })
+  }
+
+  setlepseQuantity() {
+    let _doQuantity = this.doCreateForm.controls.quantity.value;
+    let _liftedQuantityUpdate = this.doCreateForm.controls.liftedQuantity.value
+    let _quantityDeductionUpdate = this.doCreateForm.controls.quantityDeduction.value
+
+    this.doCreateForm.controls.lepseQuantity.setValue(_doQuantity - _liftedQuantityUpdate - _quantityDeductionUpdate);
+
+  }
+
+  setEMDAMt() {
+    console.log("emd at");
+    let _emd = this.doCreateForm.controls.emd.value;
+    let _doQuantity = this.doCreateForm.controls.quantity.value;
+
+    this.doCreateForm.controls.emdAmt.setValue(_emd * _doQuantity);
+  }
+
+  setDOAMtPMT() {
+    let _doAmt = this.doCreateForm.controls.doAmt.value;
+    let _doQuantity = this.doCreateForm.controls.quantity.value;
+
+    this.doCreateForm.controls.doAmtpmt.setValue(_doAmt / _doQuantity);
   }
 
   setDataToUpdateForm(data) {
@@ -245,42 +286,37 @@ export class DoCreateComponent implements OnInit {
 
     this.doCreateForm.controls.permissionNo.setValue(data.permissionNo)
     this.doCreateForm.controls.emd.setValue(data.emd)
-    this.doCreateForm.controls.emdAmt.setValue(data.emdAmt)
 
     this.doCreateForm.controls.doAmt.setValue(data.doAmt)
     this.doCreateForm.controls.doAmtpmt.setValue(data.doAmtpmt)
     this.doCreateForm.controls.doRate.setValue(data.doRate)
     this.doCreateForm.controls.doRateTcs.setValue(data.doRateTcs)
-    this.doCreateForm.controls.disp.setValue(data.disp)
-    this.doCreateForm.controls.emdAmt.setValue(data.emdAmt)
 
     this.doCreateForm.controls.party.setValue(data.party.name)
     this.doCreateForm.controls.withinOutSide.setValue(data.withinOutSide)
     this.doCreateForm.controls.receivedDate.setValue(this.transformDate(data.receivedDate))
 
-    this.doCreateForm.controls.lepseQuantity.setValue(data.lepseQuantity)
+
     this.doCreateForm.controls.liftedQuantity.setValue(data.liftedQuantity)
     this.doCreateForm.controls.remarks.setValue(data.remarks)
-    this.doCreateForm.controls.totalRefundAmt.setValue(data.totalRefundAmt)
     this.doCreateForm.controls.refundDate.setValue(this.transformDate(data.refundDate))
     this.doCreateForm.controls.website.setValue(data.website)
     this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
-    this.doCreateForm.controls.inAdvanceLimit.setValue(data.inAdvanceLimit)
-    
+    this.doCreateForm.controls.inAdvanceLimit.setValue(data.inAdvanceLimit);
+    //this.inAdvanceLimitEntries = data.inAdvanceLimit
+    if (data.liftedQuantity != undefined && data.quantityDeduction != undefined && data.quantity) {
+      this.doCreateForm.controls.lepseQuantity.setValue(data.quantity - data.liftedQuantity - data.quantityDeduction)
+    }
+
     this.isfrightEntryAdded = true;
     this.destinationParty = data.destinationparty
+    this.showDestinationandFreightDataForTable(this.destinationParty);
+    this.doCreateForm.controls.transporter.setValue(data.transporter.firstName);
 
-    this.doCreateForm.controls.transporter.setValue(data.transporter.firstName)
+    this.setEMDAMt();
+    this.setlepseQuantity()
+    this.setDOAMtPMT();
 
-  }
-  setCreateOrUpdateForm(formCondition) {
-    if (formCondition == "create") {
-      this.isShowDoUpdate = false;
-    }
-
-    if (formCondition == "update") {
-      this.isShowDoUpdate = true;
-    }
   }
 
   onChangeDestinationsData() {
@@ -324,9 +360,11 @@ export class DoCreateComponent implements OnInit {
 
   addFreightEntry() {
     this.isfrightEntryAdded = true;
-
-    let _destinationName = this.doCreateForm.controls.destinationParty.value
-    let _destinations = this.doCreateForm.controls.destinations.value
+    console.log(this.destinationParty);
+    let _destinationName = this.doCreateForm.controls.destinationParty.value;
+    //it is a reported bug for reactive forms, that values are not get fetched for select, so have to move for javascript syntax
+    //let _destinations = this.doCreateForm.controls.destinations.value; --- was not working on onchange event.
+    let _destinations = (<HTMLInputElement>document.getElementById("destination")).value;
     let _currentFreight = this.doCreateForm.controls.freight.value;
     let _isdestinationPresent = false;
 
@@ -341,6 +379,7 @@ export class DoCreateComponent implements OnInit {
         ]
       })
       this.toaster.success("Freight rate is added");
+      this.showDestinationandFreightDataForTable(this.destinationParty);
       return;
     }
 
@@ -392,12 +431,14 @@ export class DoCreateComponent implements OnInit {
     });
 
     this.showDestinationAndFreightData(true);
+    this.showDestinationandFreightDataForTable(this.destinationParty);
 
   }
 
-  showDestinationAndFreightData(isDestination) {
-    isDestination = Boolean(isDestination);
-    if (isDestination) {
+  showDestinationAndFreightData(isDestinationselected) {
+    isDestinationselected = Boolean(isDestinationselected);
+    console.log(this.destinationParty);
+    if (isDestinationselected) {
       this.selectedDestinations = [];
     }
 
@@ -407,7 +448,7 @@ export class DoCreateComponent implements OnInit {
     this.destinationParty.forEach((element_party) => {
       if (_selectedDestinationParty == element_party.name) {
         element_party.destinations.forEach(element => {
-          if (isDestination) {
+          if (isDestinationselected) {
             this.selectedDestinations.push(element.name);
             if (element_party.destinations.length == 1) {
               this.selectedFreight = element.freight;
@@ -422,6 +463,22 @@ export class DoCreateComponent implements OnInit {
       }
     })
 
+  }
+
+  showDestinationandFreightDataForTable(destinationParty) {
+    let _freightlist = null;
+    this.dataToShowInFreightsTable = []
+    destinationParty.forEach(element_destinationParty => {
+      element_destinationParty.destinations.forEach(element_destinations => {
+        _freightlist = element_destinations.freight.join(', ');
+        this.dataToShowInFreightsTable.push({
+          destinationParty: element_destinationParty.name,
+          destinations: element_destinations.name,
+          freights: _freightlist
+        })
+        _freightlist = null;
+      });
+    });
   }
 
   getSelectedParty() {
@@ -467,7 +524,6 @@ export class DoCreateComponent implements OnInit {
   onUpdateSubmit() {
     let _updateDOID
 
-
     if (this.doCreateForm.invalid) {
       return;
     }
@@ -485,7 +541,6 @@ export class DoCreateComponent implements OnInit {
 
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
-      console.table([doCreationData]);
       this.updateDO(doCreationData, _updateDOID);
     })
 
@@ -499,5 +554,11 @@ export class DoCreateComponent implements OnInit {
         console.log('do is not updated')
       }
     )
+  }
+
+  reloadPage() {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
   }
 }
