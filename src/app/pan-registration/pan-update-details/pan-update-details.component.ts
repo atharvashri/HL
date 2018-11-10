@@ -226,7 +226,7 @@ ref_states: Array<string>;
   getFileNameForRC(filename: string): string{
     if(filename){
       let ext = this.getFileExtension(filename);
-      return `${this.panForm.panNo}_${this.panForm.vehicleNo}`.toUpperCase() + ext;
+      return `${this.panForm.controls.panNo}_${this.panForm.controls.vehicleNo}`.toUpperCase() + ext;
     }else{
       return "";
     }
@@ -235,7 +235,7 @@ ref_states: Array<string>;
   getFileNameForPan(filename: string): string{
     if(filename){
       let ext = this.getFileExtension(filename);
-      return `${this.panForm.panNo}`.toUpperCase() + ext;
+      return `${this.panForm.controls.panNo}`.toUpperCase() + ext;
     }else{
       return "";
     }
@@ -244,7 +244,7 @@ ref_states: Array<string>;
   getFileNameForDeclaration(filename: string): string{
     if(filename){
       let ext = this.getFileExtension(filename);
-      return `${this.panForm.panNo}_declaration`.toUpperCase() + ext;
+      return `${this.panForm.controls.panNo}_declaration`.toUpperCase() + ext;
     }else{
       return "";
     }

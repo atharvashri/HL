@@ -274,7 +274,7 @@ strong {
 
 
 /*     General overwrite     */
-.loader-container {
+/* .loader-container {
   position: fixed;
   width: 100%;
   height: 100%;
@@ -318,7 +318,7 @@ strong {
 
 .loader:after {
   left: 3.5em;
-}
+} */
 
 @-webkit-keyframes load7 {
   0%,
@@ -434,8 +434,8 @@ hr {
   z-index: 1;
   background-size: cover;
   background-position: center center;
-  
 }
+
 .sidebar .sidebar-wrapper {
   position: relative;
   max-height: none;
@@ -1017,7 +1017,7 @@ hr {
   border-top-color: #DD0330;
 }
 
-.btn-neutral {
+/* .btn-neutral {
   border-color: #FFFFFF;
   color: #FFFFFF;
 }
@@ -1072,7 +1072,7 @@ hr {
 }
 .btn-neutral.btn-simple:active, .btn-neutral.btn-simple.active {
   background-color: transparent;
-}
+} */
 
 .btn:disabled, .btn[disabled], .btn.disabled {
   opacity: 0.5;
@@ -1532,11 +1532,11 @@ textarea.form-control {
   cursor: not-allowed;
 }
 
-.checkbox.checkbox-circle label::before {
+.checkbox .checkbox-circle label::before {
   border-radius: 50%;
 }
 
-.checkbox.checkbox-inline {
+.checkbox .checkbox-inline {
   margin-top: 0;
 }
 
@@ -1905,7 +1905,7 @@ Licensed under the MIT license - http://opensource.org/licenses/MIT
 
 Copyright (c) 2015 Daniel Eden
 */
-.animated {
+/* .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
@@ -2065,7 +2065,7 @@ Copyright (c) 2015 Daniel Eden
 .fadeOutUp {
   -webkit-animation-name: fadeOutUp;
   animation-name: fadeOutUp;
-}
+} */
 
 .dropdown-menu {
   background-color: #FFFCF5;
@@ -2182,7 +2182,7 @@ Copyright (c) 2015 Daniel Eden
   overflow: visible;
 }
 
-.card {
+/* .card {
   border-radius: 6px;
   box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
   background-color: #FFFFFF;
@@ -2395,7 +2395,7 @@ Copyright (c) 2015 Daniel Eden
 }
 .card-plain .image {
   border-radius: 4px;
-}
+} */
 
 .ct-label {
   fill: rgba(0, 0, 0, 0.4);

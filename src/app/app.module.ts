@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -57,9 +58,9 @@ import { ReportService } from './services/report.service'
 import { LoginService } from './services/login.service'
 import { PartyService } from './services/party.service'
 import { AddHeaderInterceptor } from './interceptor/header.interceptor'
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
 import { ToastrModule } from 'ngx-toastr';
+import { TagInputModule } from 'ngx-chips';
 
 import { ModalComponent } from './modal/modal.component';
 import { FileSelectDirective } from 'ng2-file-upload';
@@ -69,7 +70,6 @@ import { FileUploadService } from './services/fileupload.service';
   declarations: [
     AppComponent,
     NotificationsComponent,
-
     DoRunningComponent,
     DoCompletedComponent,
     DoCreateComponent,
@@ -102,16 +102,15 @@ import { FileUploadService } from './services/fileupload.service';
 
   ],
   imports: [
-
+    TagInputModule ,
     BrowserAnimationsModule,
-    NgMultiSelectDropDownModule,
     MatFormFieldModule,
     MatDialogModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
     MatIconModule,
-
+    NgxPaginationModule,
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
