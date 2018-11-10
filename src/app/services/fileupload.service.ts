@@ -36,6 +36,7 @@ export class FileUploadService{
           extraparams["vehicleno"] = vehicleno;
         }
         this.uploader.options.additionalParameter = extraparams;
+        fileitem.withCredentials = false;
         filemap.set(fileQueue[idx], fileitem);
 
     })
