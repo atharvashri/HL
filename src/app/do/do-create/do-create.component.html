@@ -7,7 +7,7 @@
         </div>
       </div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body fixed-height-divs">
       <form [formGroup]="doCreateForm">
         <hr>
         <div class="row">
@@ -15,15 +15,18 @@
             <div class="form-group">
               <label for="bspDoNo" class="test">BSP DO No.</label>
               <input type="number" class="form-control" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
+              <div *ngIf="submitted && f.bspDoNo.errors" class="invalid-field">
+                  <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="areaDoNo">Area DO No.</label>
               <input type="text" class="form-control" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
-              <!-- <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-feedback">
-                <div *ngIf="submitted && f.areaDoNo.errors.required">First Name is required</div>
-              </div> -->
+              <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-field">
+                  <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -42,6 +45,18 @@
             <div class="form-group">
               <label for="quantity">Quantity</label>
               <input type="number" class="form-control" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
+              <div *ngIf="submitted && f.quantity.errors" class="invalid-field">
+                  <div *ngIf="f.quantity.errors.required">Quantity is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="receivedDate">Received Date</label>
+              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
+              <div *ngIf="submitted && f.receivedDate.errors" class="invalid-field">
+                  <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -49,12 +64,9 @@
               <label for="doDate">DO Date</label>
               <input type="date" class="form-control" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
                 (change)="updateDate()">
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="receivedDate">Received Date</label>
-              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
+                <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
+                    <div *ngIf="f.doDate.errors.required">DO date is required</div>
+                </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -70,6 +82,9 @@
               <select class="form-control" name="area" id="area" formControlName="area">
                 <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
               </select>
+              <div *ngIf="submitted && f.area.errors" class="invalid-field">
+                  <div *ngIf="f.area.errors.required">Area is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -78,6 +93,9 @@
               <select class="form-control" name="collary" id="collary" formControlName="collary">
                 <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
               </select>
+              <div *ngIf="submitted && f.collary.errors" class="invalid-field">
+                  <div *ngIf="f.collary.errors.required">Collary is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -86,6 +104,9 @@
               <select class="form-control" name="grade" id="grade" formControlName="grade">
                 <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
               </select>
+              <div *ngIf="submitted && f.grade.errors" class="invalid-field">
+                  <div *ngIf="f.grade.errors.required">Grade is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -130,6 +151,9 @@
               <select class="form-control" name="partyName" id="partyName" formControlName="party">
                 <option *ngFor="let pd of ref_partyData" [ngValue]="pd.name">{{pd.name}}</option>
               </select>
+              <div *ngIf="submitted && f.party.errors" class="invalid-field">
+                  <div *ngIf="f.party.errors.required">DO Owner is required</div>
+              </div>
             </div>
           </div>
         </div>
@@ -221,7 +245,9 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="permissionNo">Permission No</label>
-              <input type="number" class="form-control" id="permissionNo" formControlName="permissionNo">
+              <select class="form-control" id="permissionNo" formControlName="permissionNo">
+                <option *ngFor="let permit of permits" [value]="permit.permitnumber">{{permit.permitnumber}}</option>
+              </select>
             </div>
           </div>
 
@@ -332,7 +358,7 @@
             </div>
           </div> -->
           <div class="col-md-3">
-            <label for="inAdvanceLimit">In Advance limit (Enter Multiple values)</label>
+            <label for="inAdvanceLimit">In Advance limit (Multiple values)</label>
             <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
               id="inAdvanceLimit" (onAdd)="addTags($event)" [(ngModel)]="inAdvanceLimitEntries" formControlName="inAdvanceLimit"></tag-input>
           </div>

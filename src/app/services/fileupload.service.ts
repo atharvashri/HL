@@ -73,6 +73,13 @@ export class FileUploadService{
     }
   }
 
+  getFileNameForPassbook(filename: string, accountno: string){
+    if(filename){
+      let ext = this.getFileExtension(filename);
+      return `${this.panno}_${accountno}`.toUpperCase() + ext;
+    }
+  }
+
   getFileExtension(filename){
     return filename.substring(filename.lastIndexOf("."), filename.length);
   }

@@ -84,6 +84,11 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       account.ifscCode = this.panForm.controls.ifscCode.value;
       account.accountHoldername = this.panForm.controls.accountHoldername.value;
       this.addedBankAccounts.push(account);
+      if(this.panForm.controls.passbook.value){
+        this.fileQueue.push('passbook')
+        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.passbook.value, account.accountNo);
+        this.panForm.controls.passbook.setValue("");
+      }
       //this.toastrService.success("Account is added successfully.");
     }
   }

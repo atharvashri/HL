@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PermitService } from '../../services/permit.service';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class DoCreateComponent implements OnInit {
   ref_partyData = []
   ref_destinationData = []
   ref_transporters = []
+  permits = []
   destinationsNames: Array<String>;
   destinationParty = [];
   selectedDestinations = [];
@@ -46,7 +48,11 @@ export class DoCreateComponent implements OnInit {
   constructor(private doFormBuilder: FormBuilder,
     private doService: DoService,
     private userService: UserService,
-    private toaster: ToastrService, private route: ActivatedRoute, private router: Router, private modalService: NgbModal) { }
+    private permitservice: PermitService,
+    private toaster: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private modalService: NgbModal) { }
 
   refData = {};
   modeSelect = "Create DO";
@@ -80,34 +86,22 @@ export class DoCreateComponent implements OnInit {
           this.applyCreateMode();
         }
         this.loadrefDataForDOCreate();
+        this.loadpermit();
       }
     );
   }
 
   doCreateForm = this.doFormBuilder.group({
-    bspDoNo: [],
-    areaDoNo: [],
+    bspDoNo: ['', Validators.required],
+    areaDoNo: ['', Validators.required],
     doNo: [{ value: [], disabled: true }],
     auctionNo: [],
-    quantity: [],
-    doDate: [],
-    receivedDate: [],
+    quantity: ['', Validators.required],
+    doDate: ['', Validators.required],
+    receivedDate: ['', Validators.required],
     dueDate: [{ value: '', disabled: true }],
     size: [],
-    // party: new FormGroup({
-    //   id: [],
-    //   name: [],
-    //   destinations: [],
-    //   freightRanges: [],
-
-    // }),
-    party: [],
-    // destinationParty: new FormGroup({
-    //   id: [],
-    //   name: [],
-    //   destinations: [],
-    //   freightRanges: []
-    // }),
+    party: ['', Validators.required],
     destinationParty: [],
     destinations: [],
     addedDestinationParty: [],
@@ -118,9 +112,9 @@ export class DoCreateComponent implements OnInit {
     // }),
     freight: [],
     permissionNo: [],
-    area: [],
-    collary: [],
-    grade: [],
+    area: ['', Validators.required],
+    collary: ['', Validators.required],
+    grade: ['', Validators.required],
     by: [],
     builtyCompany: [],
     transporter: [],
@@ -153,6 +147,7 @@ export class DoCreateComponent implements OnInit {
     this.submitted = true;
 
     if (this.doCreateForm.invalid) {
+      this.toaster.error("Please correct the errors in form");
       return;
     }
 
@@ -217,6 +212,16 @@ export class DoCreateComponent implements OnInit {
       },
       (error) => {
         console.log("could not retrieve transporters list")
+      }
+    )
+  }
+
+  loadpermit(){
+    this.permitservice.getpermits().subscribe(
+      (res) => {
+        if(res.success){
+          this.permits = res.data;
+        }
       }
     )
   }
@@ -506,25 +511,28 @@ export class DoCreateComponent implements OnInit {
     this.destinationParty = [];
     this.isfrightEntryAdded = false;
     this.router.navigate(['do']);
-    this.doCreateForm.reset()
     this.applyCreateMode()
   }
 
   applyUpdateMode() {
     this.isShowDoUpdate = true;
     this.modeSelect = "Update DO"
-    this.toaster.success("You are now updating do, Please press cancel button at bottom to exit the process")
+    //this.toaster.success("You are now updating do, Please press cancel button at bottom to exit the process")
   }
 
   applyCreateMode() {
     this.isShowDoUpdate = false;
     this.modeSelect = "Create DO"
+    this.doCreateForm.reset();
+    this.dataToShowInFreightsTable = [];
   }
 
   onUpdateSubmit() {
+    this.submitted = true;
     let _updateDOID
 
     if (this.doCreateForm.invalid) {
+      this.toaster.error("Please correct the errors in form");
       return;
     }
 
@@ -561,4 +569,6 @@ export class DoCreateComponent implements OnInit {
       return false;
     };
   }
+
+  get f(){return this.doCreateForm.controls;}
 }

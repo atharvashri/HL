@@ -2,6 +2,7 @@
 html,
 body {
     height: 100%;
+    font-size: 12px !important;
 }
 /*.container {
     height: 100%;
@@ -9,9 +10,12 @@ body {
     justify-content: center;
     align-items: center;
 }*/
-div.invalid-field{
+div.fixed-height-divs div[class^="col-"]{
+  height: 6.5rem;
+}
+.invalid-field{
   color: red !important;
-  font-size: 11px;
+  font-size: 11px !important;
 }
 div.row{
   display: inline !important;
@@ -46,6 +50,11 @@ div.centered{
   text-align: center;
   vertical-align: middle;
   align-content: center;
+}
+
+button.right{
+  float: right;
+  margin-top: 0 !important;
 }
 
 .table tbody tr td, .table thead tr th, .table tfoot tr td{

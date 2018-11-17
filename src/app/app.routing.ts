@@ -25,6 +25,7 @@ import { UserComponent } from './user/user.component'
 import { LoginComponent } from './authorization/login/login.component'
 import { AuthGuard,LoginGuard } from './authorization/auth.guards'
 import { PartyResourceComponent } from './party/party.resource'
+import { PermitComponent } from './permit/permit.component';
 
 export const AppRoutes: Routes = [
     {
@@ -152,6 +153,11 @@ export const AppRoutes: Routes = [
     {
         path: 'party',
         component: PartyResourceComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'permit',
+        component: PermitComponent,
         canActivate: [AuthGuard]
     }
 ]

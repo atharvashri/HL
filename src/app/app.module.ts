@@ -65,6 +65,8 @@ import { TagInputModule } from 'ngx-chips';
 import { ModalComponent } from './modal/modal.component';
 import { FileSelectDirective } from 'ng2-file-upload';
 import { FileUploadService } from './services/fileupload.service';
+import { PermitComponent } from './permit/permit.component';
+import { PermitService } from './services/permit.service';
 
 @NgModule({
   declarations: [
@@ -98,7 +100,8 @@ import { FileUploadService } from './services/fileupload.service';
     ModalComponent,
     PartyResourceComponent,
     PanUpdateDetailsComponent,
-    FileSelectDirective
+    FileSelectDirective,
+    PermitComponent
 
   ],
   imports: [
@@ -141,6 +144,7 @@ import { FileUploadService } from './services/fileupload.service';
     LoginService,
     PartyService,
     FileUploadService,
+    PermitService,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],

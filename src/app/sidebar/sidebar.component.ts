@@ -25,6 +25,7 @@ export const ROUTES: RouteInfo[] = [
     { path: 'party', title: 'Party', icon: 'ti-panel', class: '' },
     { path: 'dispatchreport', title: 'Dispatch Report', icon: 'ti-panel', class: '' },
     { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },
+    { path: 'permit', title: 'Permit', icon: 'ti-panel', class: '' }
 ];
 
 @Component({
@@ -125,6 +126,7 @@ export class SidebarComponent implements OnInit {
             { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },
             { path: 'adduser', title: 'User Management', icon: 'ti-user', class: '' },
             { path: 'party', title: 'Party', icon: 'ti-panel', class: '' },
+            { path: 'permit', title: 'Permit', icon: 'ti-panel', class: '' }
         ];
         return masterRoutes;
     }
