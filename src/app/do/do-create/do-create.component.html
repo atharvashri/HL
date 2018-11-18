@@ -16,7 +16,7 @@
               <label for="bspDoNo" class="test">BSP DO No.</label>
               <input type="number" class="form-control" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
               <div *ngIf="submitted && f.bspDoNo.errors" class="invalid-field">
-                  <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
+                <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
               </div>
             </div>
           </div>
@@ -25,7 +25,7 @@
               <label for="areaDoNo">Area DO No.</label>
               <input type="text" class="form-control" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
               <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-field">
-                  <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
+                <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
               </div>
             </div>
           </div>
@@ -46,7 +46,7 @@
               <label for="quantity">Quantity</label>
               <input type="number" class="form-control" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
               <div *ngIf="submitted && f.quantity.errors" class="invalid-field">
-                  <div *ngIf="f.quantity.errors.required">Quantity is required</div>
+                <div *ngIf="f.quantity.errors.required">Quantity is required</div>
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
               <label for="receivedDate">Received Date</label>
               <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
               <div *ngIf="submitted && f.receivedDate.errors" class="invalid-field">
-                  <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
+                <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
               </div>
             </div>
           </div>
@@ -64,9 +64,9 @@
               <label for="doDate">DO Date</label>
               <input type="date" class="form-control" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
                 (change)="updateDate()">
-                <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
-                    <div *ngIf="f.doDate.errors.required">DO date is required</div>
-                </div>
+              <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
+                <div *ngIf="f.doDate.errors.required">DO date is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
@@ -83,7 +83,7 @@
                 <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
               </select>
               <div *ngIf="submitted && f.area.errors" class="invalid-field">
-                  <div *ngIf="f.area.errors.required">Area is required</div>
+                <div *ngIf="f.area.errors.required">Area is required</div>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@
                 <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
               </select>
               <div *ngIf="submitted && f.collary.errors" class="invalid-field">
-                  <div *ngIf="f.collary.errors.required">Collary is required</div>
+                <div *ngIf="f.collary.errors.required">Collary is required</div>
               </div>
             </div>
           </div>
@@ -105,7 +105,7 @@
                 <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
               </select>
               <div *ngIf="submitted && f.grade.errors" class="invalid-field">
-                  <div *ngIf="f.grade.errors.required">Grade is required</div>
+                <div *ngIf="f.grade.errors.required">Grade is required</div>
               </div>
             </div>
           </div>
@@ -152,7 +152,7 @@
                 <option *ngFor="let pd of ref_partyData" [ngValue]="pd.name">{{pd.name}}</option>
               </select>
               <div *ngIf="submitted && f.party.errors" class="invalid-field">
-                  <div *ngIf="f.party.errors.required">DO Owner is required</div>
+                <div *ngIf="f.party.errors.required">DO Owner is required</div>
               </div>
             </div>
           </div>
@@ -309,7 +309,8 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="quantityDeduction">Quantity Deduction</label>
-                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction" (keyup)="setlepseQuantity()">
+                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction"
+                  (keyup)="setlepseQuantity()">
               </div>
             </div>
           </div>
@@ -317,7 +318,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="lepseQuantity">Lepse Quantity</label>
-                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity" >
+                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
               </div>
             </div>
           </div>
@@ -360,7 +361,8 @@
           <div class="col-md-3">
             <label for="inAdvanceLimit">In Advance limit (Multiple values)</label>
             <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
-              id="inAdvanceLimit" (onAdd)="addTags($event)" [(ngModel)]="inAdvanceLimitEntries" formControlName="inAdvanceLimit"></tag-input>
+              id="inAdvanceLimit" (onAdd)="addTags($event)" (onRemove)="removeTag($event)" [(ngModel)]="inAdvanceLimitEntries"
+              formControlName="inAdvanceLimit"></tag-input>
           </div>
           <div class="col-md-3">
             <div class="form-group">
@@ -373,7 +375,7 @@
               <label for="freightToBePaidBy">Freight to be paid By</label>
               <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
               <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
-                <option *ngFor="let freightspaid of freightToBePaidBy" value='freightspaid'>{{freightspaid}}</option>
+                <option *ngFor="let freightspaid of freightToBePaidBy" [value]='freightspaid'>{{freightspaid}}</option>
               </select>
             </div>
           </div>

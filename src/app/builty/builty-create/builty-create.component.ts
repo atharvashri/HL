@@ -18,6 +18,7 @@ export class BuiltyCreateComponent implements OnInit {
   doList = []
   transporter = []
   isSearchvehicle = true;
+  updatedFrights = [];
   constructor(public builtyFormBuilder: FormBuilder,
     private doService: DoService,
     private builtyService: BuiltyService,
@@ -61,7 +62,7 @@ export class BuiltyCreateComponent implements OnInit {
     otBuiltyCompany: [],
     otBuiltyNumber: [],
     vehicleNo: [],
-    quantity: [],
+    doOpeningbalance: [{ value: '', disabled: true }],
     inAdvance: [],
     outAdvance: [],
     totalCashAdvance: [{ value: '', disabled: true }],
@@ -79,7 +80,7 @@ export class BuiltyCreateComponent implements OnInit {
     driverMobile: [],
     grossWeight: [],
     tierWeight: [],
-    doClosingBalance: [],
+    doClosingBalance: [{ value: '', disabled: true }],
     // transporter: new FormGroup({
     //   userName: [],
     //   firstName: [],
@@ -171,7 +172,7 @@ export class BuiltyCreateComponent implements OnInit {
       if (element.id == _selectedDO) {
         this.currentdoDisplayName = element.areaDoNo + "/" + element.bspDoNo + "-" + element.collary + "-" + element.quantity;
 
-        this.builtyForm.controls.quantity.setValue(element.quantity);
+        this.builtyForm.controls.doOpeningbalance.setValue(element.quantity);
         this.builtyForm.controls.receivedDate.setValue(element.receivedDate);
         this.transporter = [];
         this.transporter.push(element.transporter);
@@ -215,7 +216,7 @@ export class BuiltyCreateComponent implements OnInit {
         this.builtyForm.controls.otBuiltyCompany.setValue(element.otBuiltyCompany);
         this.builtyForm.controls.otBuiltyNumber.setValue(element.otBuiltyNumber);
         this.builtyForm.controls.vehicleNo.setValue(element.vehicleNo);
-        this.builtyForm.controls.quantity.setValue(element.quantity);
+        this.builtyForm.controls.doOpeningbalance.setValue(element.doBalance);
         this.builtyForm.controls.outAdvance.setValue(element.outAdvance);
         this.builtyForm.controls.inAdvance.setValue(element.inAdvance);
         this.builtyForm.controls.diesel.setValue(element.diesel);
@@ -246,6 +247,8 @@ export class BuiltyCreateComponent implements OnInit {
         this.builtyForm.controls.permitEndDate.setValue(element.permitEndDate);
 
         this.showDataAfterDoSelection(false);
+        this.calculateDoClosingBalance();
+        this.calculateTotalCashAdvance();
       }
     });
   }
@@ -308,7 +311,9 @@ export class BuiltyCreateComponent implements OnInit {
         )
       })
   }
-  onChangeDestinationsData(evt) {
+
+  //evt is required for onclick event.
+  onChangeDestinationsParty(evt) {
 
     this.destinationNames = [];
     this.destinationsParty.forEach(element => {
@@ -316,6 +321,23 @@ export class BuiltyCreateComponent implements OnInit {
         if (evt.target.value == element.name) {
           element.destinations.forEach(element => {
             this.destinationNames.push(element.name);
+          });
+        }
+      }
+    });
+  }
+
+  onChangeDestinations(evt) {
+    this.updatedFrights = [];
+    //reactive forms control in not working so using javascript syntax to retrive the value.
+    //let _selectedDestParty = this.builtyForm.controls.party.value;
+    let _selectedDestParty = (<HTMLInputElement>document.getElementById('selectDestinationParty')).value;
+    this.destinationsParty.forEach(element_destinationParty => {
+      if (evt != undefined) {
+        if (_selectedDestParty == element_destinationParty.name) {
+          element_destinationParty.destinations.forEach(element_destinations => {
+            if (evt.target.value == element_destinations.name)
+              this.updatedFrights = element_destinations.freight;
           });
         }
       }
@@ -339,15 +361,21 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   calculateTotalCashAdvance() {
-    let _inadvnace = this.builtyForm.controls.inAdvance.value; 
-    let _outadvnace = this.builtyForm.controls.outAdvance.value; 
+    let _inadvnace = this.builtyForm.controls.inAdvance.value;
+    let _outadvnace = this.builtyForm.controls.outAdvance.value;
     let _diesel = this.builtyForm.controls.diesel.value;
 
     this.builtyForm.controls.totalCashAdvance.setValue(_inadvnace + _outadvnace)
     this.builtyForm.controls.totalAdvance.setValue(_inadvnace + _outadvnace + _diesel)
   }
 
+  calculateDoClosingBalance() {
+    let _netweigth = this.builtyForm.controls.netWeight.value;
+    let _doOpeningbalance = this.builtyForm.controls.doOpeningbalance.value;
 
+    this.builtyForm.controls.doClosingBalance.setValue(_doOpeningbalance - _netweigth)
+
+  }
 
   clearBuiltyForm() {
     this.builtyForm.reset();

@@ -65,7 +65,7 @@ export class DoCreateComponent implements OnInit {
   doQuantityUpdate;
   quantityDeductionUpdate;
   lepseQuantityUpdate;
-
+  freightToBePaidBy = ["DO Owner", "Builty Owner"];
   inAdvanceLimitEntries = [];
 
   @ViewChild('content') content;
@@ -140,7 +140,12 @@ export class DoCreateComponent implements OnInit {
 
   addTags(evt) {
     //console.log(evt);
+    console.log(this.inAdvanceLimitEntries);
     this.addedInAdvanceLimit.push(evt.value);
+  }
+
+  removeTag(evt) {
+    this.addedInAdvanceLimit = this.addedInAdvanceLimit.filter((e => e != evt.value))
   }
 
   onSubmitDo() {
@@ -187,9 +192,27 @@ export class DoCreateComponent implements OnInit {
 
     //TODO this is temporary solution to get it work.
     doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
-    doCreationData.freightToBePaidBy = [doCreationData.freightToBePaidBy];
-
+    //doCreationData.freightToBePaidBy = ;
+    // let _freightToBePaidBy = doCreationData.freightToBePaidBy;
+    // doCreationData.freightToBePaidBy = [];
+    // doCreationData.freightToBePaidBy.push(_freightToBePaidBy);
+    // this.getSelectedTransporter(doCreationData.transporter).
+    //   then((data) => {
+    //     doCreationData.transporter = data
+    //     
+    //   })
     return doCreationData;
+
+  }
+
+  getSelectedTransporter(id) {
+    return new Promise((resolve, reject) => {
+      this.ref_transporters.forEach(element => {
+        if (element.id == id) {
+          resolve(element);
+        }
+      });
+    })
   }
 
   loadrefDataForDOCreate() {
@@ -305,11 +328,14 @@ export class DoCreateComponent implements OnInit {
 
 
     this.doCreateForm.controls.liftedQuantity.setValue(data.liftedQuantity)
+    this.doCreateForm.controls.quantityDeduction.setValue(data.quantityDeduction)
     this.doCreateForm.controls.remarks.setValue(data.remarks)
     this.doCreateForm.controls.refundDate.setValue(this.transformDate(data.refundDate))
+    this.doCreateForm.controls.refundAmt.setValue(data.refundAmt)
     this.doCreateForm.controls.website.setValue(data.website)
     this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
-    this.doCreateForm.controls.inAdvanceLimit.setValue(data.inAdvanceLimit);
+    this.addedInAdvanceLimit = data.inAdvanceLimit;
+    this.showInAdvanceLimitForUpdate(data.inAdvanceLimit)
     //this.inAdvanceLimitEntries = data.inAdvanceLimit
     if (data.liftedQuantity != undefined && data.quantityDeduction != undefined && data.quantity) {
       this.doCreateForm.controls.lepseQuantity.setValue(data.quantity - data.liftedQuantity - data.quantityDeduction)
@@ -318,12 +344,26 @@ export class DoCreateComponent implements OnInit {
     this.isfrightEntryAdded = true;
     this.destinationParty = data.destinationparty
     this.showDestinationandFreightDataForTable(this.destinationParty);
-    this.doCreateForm.controls.transporter.setValue(data.transporter.firstName);
+    this.doCreateForm.controls.transporter.setValue(data.transporter);
 
     this.setEMDAMt();
     this.setlepseQuantity()
     this.setDOAMtPMT();
 
+  }
+
+  showInAdvanceLimitForUpdate(inAdvanceLimits) {
+    let _inAdvanceLimitsWithDisplay = [];
+    inAdvanceLimits.forEach((element, index) => {
+      _inAdvanceLimitsWithDisplay.push({
+        display: element.toString(),
+        value: element.toString()
+      })
+      if (index == inAdvanceLimits.length - 1) {
+        this.inAdvanceLimitEntries = _inAdvanceLimitsWithDisplay;
+        //this.doCreateForm.controls.inAdvanceLimit.setValue(_inAdvanceLimitsWithDisplay);
+      }
+    });
   }
 
   onChangeDestinationsData() {
@@ -369,7 +409,7 @@ export class DoCreateComponent implements OnInit {
     this.isfrightEntryAdded = true;
     console.log(this.destinationParty);
     let _destinationName = this.doCreateForm.controls.destinationParty.value;
-    //it is a reported bug for reactive forms, that values are not get fetched for select, so have to move for javascript syntax
+    //it is a reported bug for reactive forms, that values are not getting fetched for select, so have to move for javascript syntax
     //let _destinations = this.doCreateForm.controls.destinations.value; --- was not working on onchange event.
     let _destinations = (<HTMLInputElement>document.getElementById("destination")).value;
     let _currentFreight = this.doCreateForm.controls.freight.value;
@@ -390,6 +430,7 @@ export class DoCreateComponent implements OnInit {
       return;
     }
 
+    let _isFreightrateAdded = false;
 
     this.destinationParty.forEach((element_destParty, party_ind, party_arr) => {
 
@@ -404,22 +445,25 @@ export class DoCreateComponent implements OnInit {
             }
             else {
               this.destinationParty[party_ind].destinations[dest_ind].freight.push(_currentFreight);
+              this.toaster.success("Freight rate is added");
+              _isFreightrateAdded = true;
+              return;
             }
-            this.toaster.success("Freight rate is added");
-            return;
+
           }
-          if (dest_ind === dest_arr.length - 1) {
+          if (dest_ind === dest_arr.length - 1 && !_isFreightrateAdded) {
             element_destParty.destinations.push({
               name: _destinations,
               freight: [_currentFreight]
             })
             this.toaster.success("Freight rate is added");
+            _isFreightrateAdded = true;
             return;
           }
         });
         return;
       }
-      if (party_ind === party_arr.length - 1) {
+      if (party_ind === party_arr.length - 1 && !_isFreightrateAdded) {
         this.destinationParty.push({
           name: _destinationName,
           destinations: [
@@ -429,11 +473,12 @@ export class DoCreateComponent implements OnInit {
             }
           ]
         })
+        _isFreightrateAdded = true;
         this.toaster.success("Freight rate is added");
         return;
       }
 
-      return true;
+      return;
 
     });
 
@@ -558,10 +603,11 @@ export class DoCreateComponent implements OnInit {
 
   updateDO(doCreationData, _updateDOID) {
     this.doService.updateDoService(doCreationData).subscribe((data) => {
-      console.log('do is updated')
+      this.toaster.success('Do is updated, Redirecting to running do');
+      this.router.navigate(['runningdo']);
     },
       (error) => {
-        console.log('do is not updated')
+        this.toaster.error('do is not updated, please contact admin');
       }
     )
   }

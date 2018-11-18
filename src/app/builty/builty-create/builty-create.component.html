@@ -32,9 +32,9 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="selectDestination">Party</label>
-            <select class="form-control" name="selectDestination" id="selectDestination" formControlName="party"
-              (change)="onChangeDestinationsData()" (click)="onChangeDestinationsData($event)">
+            <label for="selectDestinationParty">Party</label>
+            <select class="form-control" name="selectDestinationParty" id="selectDestinationParty" formControlName="party"
+              (change)="onChangeDestinationsParty()" (click)="onChangeDestinationsParty($event)" >
               <option *ngFor="let dest of destinationsParty" [value]="dest.name">{{dest.name}}</option>
             </select>
           </div>
@@ -42,7 +42,8 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="destination">Destination</label>
-            <select class="form-control" name="destination" id="destination" formControlName="destination">
+            <select class="form-control" name="destination" id="destination" formControlName="destination" 
+            (change)="onChangeDestinations($event)" >
               <option *ngFor="let destNames of destinationNames" [value]="destNames">{{destNames}}</option>
             </select>
           </div>
@@ -72,8 +73,8 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="quantity">Do Opening Balance</label>
-            <input type="number" name="quantity" class="form-control" value="" formControlName="quantity">
+            <label for="doOpeningbalance">Do Opening Balance</label>
+            <input type="number" name="doOpeningbalance" class="form-control" value="" formControlName="doOpeningbalance">
           </div>
         </div>
         <div class="col-md-3">
@@ -91,7 +92,7 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="netWeight">Net Weight</label>
-            <input type="text" name="netWeight" value="" class="form-control" formControlName="netWeight">
+            <input type="text" name="netWeight" value="" class="form-control" formControlName="netWeight" (keyup)="calculateDoClosingBalance()">
           </div>
         </div>
         <div class="col-md-3">
@@ -142,10 +143,7 @@
           <div class="form-group">
             <label for="freight">Freight</label>
             <select class="form-control" name="freight" id="freight" formControlName="freight">
-              <!-- <option *ngFor="let do of doList" [value]="do.doId">100</option> -->
-              <option [value]="100">100</option>
-              <option [value]="100">100</option>
-              <option [value]="100">100</option>
+              <option *ngFor="let frts of updatedFrights" [value]="frts">{{frts}}</option>
             </select>
           </div>
         </div>
