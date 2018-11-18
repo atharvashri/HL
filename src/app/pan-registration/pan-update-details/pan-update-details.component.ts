@@ -7,6 +7,7 @@ import { Account } from '../../model/account.model';
 import { FileUploader } from '../../../../node_modules/ng2-file-upload';
 import { FileUploadService } from '../../services/fileupload.service';
 import { Refdata } from '../../utils/refdata.service';
+import { AppConfig } from '../../app-config';
 
 @Component({
   selector: 'app-pan-update-details',
@@ -17,13 +18,15 @@ export class PanUpdateDetailsComponent implements OnInit {
 
 uploader: FileUploader;
 ref_states: Array<string>;
+s3url: string;
   constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal,
     private panservice: TruckPanService, private toaster: ToastrService,
     private uploaderService: FileUploadService) { }
 
     panForm = this.truckUpdate.group({
       panNo: [],
-      panHolderName: [],
+      panHolderName: ['', Validators.required],
+      mobile:[],
       tds: [],
       city: [],
       state: [],
@@ -36,6 +39,7 @@ ref_states: Array<string>;
       adddedAccountName: [],
       declaration: [],
       panCopy: [],
+      passbook: [],
       Added_bankName: [{ value: [], disabled: true }]
     })
     accounts: Array<Account> = [];
@@ -43,6 +47,7 @@ ref_states: Array<string>;
   ngOnInit() {
     this.uploader = this.uploaderService.getFileUploader();
     this.ref_states = Refdata.getStates();
+    this.s3url = AppConfig.AWS_S3_BUCKET;
   }
 
   @ViewChild('content') content
@@ -73,11 +78,18 @@ ref_states: Array<string>;
         this.toaster.error("IFSC Code and Confirm IFSC do not match");
         return;
       }
+
       let account = new Account();
       account.accountNo = this.panForm.controls.accountNumber.value;
       account.bankName = this.panForm.controls.bankName.value;
       account.ifscCode = this.panForm.controls.ifscCode.value;
       account.accountHoldername = this.panForm.controls.accountHoldername.value;
+      if(this.panForm.controls.passbook.value){
+        this.uploaderService.setPanaNo(this.panForm.controls.panNo.value);
+        this.fileQueue.push({'name':'passbook', 'accountno': account.accountNo})
+        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.passbook.value, account.accountNo);
+      }
+      this.panForm.controls.passbook.setValue("");
       this.addedBankAccounts.push(account);
       //this.toastrService.success("Account is added successfully.");
     }
@@ -97,21 +109,25 @@ ref_states: Array<string>;
     this.modalService.open(this.content);
     this.panForm.controls.panNo.setValue(this.PANno);
     this.panForm.controls.panHolderName.setValue(this.PanDataToUpdate.panHolderName);
+    this.panForm.controls.mobile.setValue(this.PanDataToUpdate.mobile);
     this.panForm.controls.city.setValue(this.PanDataToUpdate.city);
     this.panForm.controls.state.setValue(this.PanDataToUpdate.state);
     this.panForm.controls.tds.setValue(this.PanDataToUpdate.tds ? "true" : "false");
     this.panForm.controls.panCopy.setValue("");
     this.panForm.controls.declaration.setValue("");
+    this.panForm.controls.passbook.setValue("");
+    this.uploader.clearQueue();
     this.addedBankAccounts = this.PanDataToUpdate.accounts;
   }
 
-  fileQueue: Array<string> = []
+  fileQueue: Array<Object> = []
   onFileChange(filename){
       this.fileQueue.push(filename);
   }
 
   UpdatePANdetails() {
     if (this.panForm.invalid) {
+      this.toaster.error("Please correct the errors before submitting");
       return
     }
 
@@ -156,8 +172,7 @@ ref_states: Array<string>;
         if(res.success){
           this.toaster.success("PAN is updated successfully")
           setTimeout(() => {
-            this.PanDataToUpdate = _panData;
-            this.panservice.panupdated(_panData);
+            this.panservice.panupdated(res.data);
             this.modalService.dismissAll();
           }, 2000)
         }else{
@@ -170,7 +185,7 @@ ref_states: Array<string>;
       }
     )
     //upload files
-    this.uploaderService.uploadfiles(this.fileQueue, "");
+    this.uploaderService.uploadfiles(this.fileQueue);
 
   }
 
@@ -203,7 +218,8 @@ ref_states: Array<string>;
   }
 
   removeAccount(index){
-    this.addedBankAccounts = this.addedBankAccounts.filter((item, idx) => idx !== index);
+    this.addedBankAccounts.splice(index, 1);
+    //this.addedBankAccounts = this.addedBankAccounts.filter((item, idx) => idx !== index);
   }
 
   deleteAccount() {

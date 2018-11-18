@@ -24,20 +24,27 @@ export class FileUploadService{
     this.panno = panno;
   }
 
-  uploadfiles(fileQueue: Array<string>, vehicleno){
+  uploadfiles(fileQueue: Array<Object>){
 
     let filemap = new Map();
     let extraparams = {
       'panno': this.panno
     }
     this.uploader.queue.forEach((fileitem, idx) => {
-        fileitem.url = this.fileuploadurl + fileQueue[idx]
-        if(fileQueue[idx] === 'rccopy'){
-          extraparams["vehicleno"] = vehicleno;
+      let filetype = fileQueue[idx]['name'];
+        fileitem.url = this.fileuploadurl + filetype;
+        fileitem.withCredentials = false;
+        if(filetype === 'passbook'){
+          extraparams["accountno"] = fileQueue[idx]['accountno'];
+          // for passbook we need to add fileitem for each account hence can't add filetype direcly in map
+          filemap.set(fileQueue[idx]['accountno'], fileitem);
+        }else{
+          if(filetype === 'rccopy'){
+            extraparams["vehicleno"] = fileQueue[idx]['vehicleno'];
+          }
+          filemap.set(filetype, fileitem);
         }
         this.uploader.options.additionalParameter = extraparams;
-        fileitem.withCredentials = false;
-        filemap.set(fileQueue[idx], fileitem);
 
     })
     filemap.forEach(fileitem => {

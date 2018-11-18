@@ -182,20 +182,34 @@ openAddVehicleDialog(isUpdate){
 }
 
   removeVehicle(index){
-    confirm("Are you sure to remove Vehicle from PAN?\n\nNote- Vehicle will be removed only if there is no builty generated against it.");
-    this.vehicleList = this.vehicleList.filter((vehicle, idx) => idx !== index);
-    this.truckPanService.updateVehicles(this.panSelected.panNo, this.vehicleList).subscribe(
-      (res) => {
-        if(res.success){
-          this.toaster.success("Vehicle removed successfully")
-        }else{
-          this.toaster.error("Some problem while removing vehicle")
-        }
-      },
-      (error) => {
+    if(confirm("Are you sure to remove Vehicle from PAN?\n\nNote- Vehicle will be removed only if there is no builty generated against it.")){
+      //check if vehicle to be removed is used in any builty, if yes don't delete vehicle
+      let vehicleno = this.vehicleList[index];
+      this.truckPanService.ifVehicleCanBeDeleted(vehicleno).subscribe(
+        (res) => {
+          if(res.data){ // it means no builty generated foe this vehicle
+            this.vehicleList = this.vehicleList.filter((vehicle, idx) => idx !== index);
+            this.truckPanService.updateVehicles(this.panSelected.panNo, this.vehicleList).subscribe(
+              (res) => {
+                if(res.success){
+                  this.toaster.success("Vehicle removed successfully")
+                }else{
+                  this.toaster.error("Some problem while removing vehicle")
+                }
+              },
+              (error) => {
 
-      }
-    )
+              }
+            )
+          }else{
+            this.toaster.error("Vehicle can't be deleted as it has been used in builty")
+          }
+        },
+        (error) => {
+          this.toaster.error("Vehicle can't be deleted as eleigibility couldn't be checked")
+        }
+      )
+    }
   }
 
 addvehicle(rccopy){
@@ -203,7 +217,7 @@ addvehicle(rccopy){
     this.toaster.error("Operation not allowed as no PAN is selected");
     return;
   }
-  if(!this.selectedvehicle){
+  if(!this.selectedvehicle.vehicleNo){
     this.toaster.error("Vehicle number is mandatory to link vehicle");
     return;
   }
@@ -237,11 +251,11 @@ updateVehicles(){
       this.panSelected.vehicles.pop();
     }
   )
-  this.uploaderService.uploadfiles(['rccopy'], this.selectedvehicle.vehicleNo)
+  this.uploaderService.uploadfiles([{'name':'rccopy', 'vehicleno':this.selectedvehicle.vehicleNo}])
 }
 
 updatecopy(rccopy){
-  if(!this.selectedvehicle){
+  if(!this.selectedvehicle.vehicleNo){
     this.toaster.error("No vehicle selected to update")
     return
   }

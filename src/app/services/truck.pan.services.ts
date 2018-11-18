@@ -47,6 +47,10 @@ export class TruckPanService {
       return this.http.post(this.url + '/upload', input);
     }
 
+    ifVehicleCanBeDeleted(vehicleno: string): any{
+      return this.http.get(this.url + `/pan/vehicle/${vehicleno}/canbedeleted`)
+    }
+
     changeEmitted$ = this.eventsource.asObservable();
     pancreated(pan: any){
         this.eventsource.next(pan);

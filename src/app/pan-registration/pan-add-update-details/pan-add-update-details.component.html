@@ -44,6 +44,15 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
+                <label for="mobile">Mobile</label>
+                <input class="form-control" type="text" pattern="[0-9]*" formControlName="mobile">
+                <!-- <div *ngIf="submitted && f.panHolderName.errors" class="invalid-field">
+                    <div>Pan holder name is required</div>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
                 <label for="tds">TDS</label>
                 <select class="form-control" name="tds" id="tds" formControlName="tds">
                     <option value="false">No</option>
@@ -68,13 +77,13 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="panCopy">PAN Copy</label>
-                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader"  name="pancopy" (change)="onFileChange('pancopy')" formControlName="panCopy">
+                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader"  name="pancopy" (change)="onFileChange({'name':'pancopy'})" formControlName="panCopy">
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="declaration">Declaration</label>
-                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader" name="declaration" (change)="onFileChange('declaration')" formControlName="declaration">
+                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader" name="declaration" (change)="onFileChange({'name':'declaration'})" formControlName="declaration">
               </div>
             </div>
           </div>
@@ -144,6 +153,7 @@
                       <th><strong>IFSC</strong></th>
                       <th><strong>Bank Name</strong></th>
                       <th></th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -153,6 +163,7 @@
                       <td>{{account.ifscCode}}</td>
                       <td>{{account.bankName}}</td>
                       <td><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeAccount(i)"/></td>
+                      <td><a *ngIf="account.passbookAvailable" target="_blank" [href]="s3url+account.passbookLink"><img src="/assets/img/img_icon.png" width="20" height="20"/></a></td>
                     </tr>
                   </tbody>
                 </table>

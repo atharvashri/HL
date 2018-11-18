@@ -40,7 +40,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       panCopyLink: [],
       declarationLink: [],
       panHolderName: ['', Validators.required],
-      fatherName: [],
+      mobile:[],
       tds: [],
       city: [],
       state: [],
@@ -52,7 +52,8 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       bankname: [],
       adddedAccountName: [],
       panCopy: [],
-      declaration: []
+      declaration: [],
+      passbook: []
     })
     this.uploader = this.uploaderService.getFileUploader();
     this.ref_states = Refdata.getStates();
@@ -83,12 +84,13 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       account.bankName = this.panForm.controls.bankname.value;
       account.ifscCode = this.panForm.controls.ifscCode.value;
       account.accountHoldername = this.panForm.controls.accountHoldername.value;
-      this.addedBankAccounts.push(account);
       if(this.panForm.controls.passbook.value){
-        this.fileQueue.push('passbook')
+        this.uploaderService.setPanaNo(this.panForm.controls.panNo.value);
+        this.fileQueue.push({'name':'passbook', 'accountno': account.accountNo})
         account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.passbook.value, account.accountNo);
-        this.panForm.controls.passbook.setValue("");
       }
+      this.panForm.controls.passbook.setValue("");
+      this.addedBankAccounts.push(account);
       //this.toastrService.success("Account is added successfully.");
     }
   }
@@ -109,6 +111,8 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     this.panForm.controls.tds.setValue("false");
     this.panForm.controls.panCopy.setValue("");
     this.panForm.controls.declaration.setValue("");
+    this.panForm.controls.passbook.setValue("");
+    this.uploader.clearQueue();
     this.submitted = false;
   }
 
@@ -184,10 +188,10 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     )
     //upload files to server
 
-    this.uploaderService.uploadfiles(this.fileQueue, "");
+    this.uploaderService.uploadfiles(this.fileQueue);
 
   }
-  fileQueue: Array<string> = []
+  fileQueue: Array<Object> = []
   onFileChange(filename){
       this.fileQueue.push(filename);
   }
@@ -195,11 +199,11 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   updatePANdetails() {
     this.addedBankAccounts;
     this.PanDataToUpdate
-
   }
 
   get f(){ return this.panForm.controls}
   removeAccount(index){
-    this.addedBankAccounts = this.addedBankAccounts.filter((item, idx) => idx !== index);
+    this.addedBankAccounts.splice(index, 1);
+    // this.addedBankAccounts = this.addedBankAccounts.filter((item, idx) => idx !== index);
   }
 }
