@@ -25,6 +25,18 @@ export class BuiltyService {
         return this.http.get(this.url + '/builty?get=all');
     }
 
+    getSavedbuiltiesService() {
+        return this.http.get(this.url + '/builty/temp');
+    }
+
+    getAllVehicleList(){
+        return this.http.get(this.url + '/vehicle');
+    }
+
+    savebuiltiesService(data) {
+        return this.http.put(this.url + '/builty/temp', data);
+    }
+
     getCompletedBuiltiesService() {
 
     }

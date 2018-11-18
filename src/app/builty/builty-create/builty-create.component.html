@@ -4,26 +4,21 @@
       <div class="col-md-4">
         <strong>Select saved builties</strong>
         <div class="custom-control custom-radio">
-            <select class="form-control" name="grade" id="grade" formControlName="grade">
-                <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
-              </select>
+          <select class="form-control" name="savedbuilties" id="savedbuilties" (change)="showDataAfterSavedBuiltySelection($event)">
+            <option value="notSelected">-- New Builty --</option>
+            <option *ngFor="let sb of savedBuilties" [value]="sb.id">{{sb.doDisplay}}</option>
+          </select>
         </div>
       </div>
     </div>
   </div>
   <div class="panel-body">
-    <form [formGroup]="builtyForm" (ngSubmit)="submitBuilty()">
+    <form [formGroup]="builtyForm">
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
-            <label for="quantity">Builty No</label>
-            <input type="number" name="quantity" class="form-control" value="" formControlName="builtyNo">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
             <label for="selectDo">DO</label>
-            <select class="form-control" name="selectDo" id="selectDo" formControlName="doDisplay" (change)="ShowDataForBuiltyCreation()">
+            <select class="form-control" name="selectDo" id="selectDo" formControlName="doId" (change)="showDataAfterDoSelection(true)">
               <option *ngFor="let do of doList" [value]="do.id">{{do.areaDoNo}}/{{do.bspDoNo}} -
                 {{do.collary}} - {{do.quantity}}</option>
             </select>
@@ -37,46 +32,96 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="otBuiltyCompany">OT Builty Company</label>
-            <input type="text" name="otBuiltyCompany" class="form-control" value="" formControlName="otBuiltyCompany">
+            <label for="selectDestination">Party</label>
+            <select class="form-control" name="selectDestination" id="selectDestination" formControlName="party"
+              (change)="onChangeDestinationsData()" (click)="onChangeDestinationsData($event)">
+              <option *ngFor="let dest of destinationsParty" [value]="dest.name">{{dest.name}}</option>
+            </select>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="otBuiltyNumber">OT Builty Number</label>
-            <input type="number" name="otBuiltyNumber" class="form-control" value="" formControlName="otBuiltyNumber">
+            <label for="destination">Destination</label>
+            <select class="form-control" name="destination" id="destination" formControlName="destination">
+              <option *ngFor="let destNames of destinationNames" [value]="destNames">{{destNames}}</option>
+            </select>
+          </div>
+        </div>
+        <div *ngIf="isbuiltyCompanyAdded">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="otBuiltyCompany">OT Builty Company</label>
+              <input type="text" name="otBuiltyCompany" class="form-control" value="" formControlName="otBuiltyCompany">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="otBuiltyNumber">OT Builty Number</label>
+              <input type="number" name="otBuiltyNumber" class="form-control" value="" formControlName="otBuiltyNumber">
+            </div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="vehicleNo">Vehicle No.</label>
             <select class="form-control" name="vehicleNo" id="vehicleNo" formControlName="vehicleNo">
-              <option *ngFor="let do of doList" [value]="do.doId">Vehicle No.</option>
+              <option *ngFor="let vh of vehicleList" [value]="vh.vehicleNo">{{vh.vehicleNo}}</option>
             </select>
+            <!-- <input type="text" name="vehicleNo" class="form-control" value="" formControlName="vehicleNo" (keyup)="searchVehicleNumber($event)"> -->
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="quantity">Quantity</label>
+            <label for="quantity">Do Opening Balance</label>
             <input type="number" name="quantity" class="form-control" value="" formControlName="quantity">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="advance">Advance</label>
-            <input type="number" name="advance" class="form-control" value="" formControlName="inAdvance">
+            <label for="grossWeight">Gross Weight</label>
+            <input type="number" name="grossWeight" class="form-control" value="" formControlName="grossWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="tierWeight">Tier Weight</label>
+            <input type="number" name="tierWeight" class="form-control" value="" formControlName="tierWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="netWeight">Net Weight</label>
+            <input type="text" name="netWeight" value="" class="form-control" formControlName="netWeight">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="doClosingBalance">Do Closing Balance</label>
+            <input type="number" name="doClosingBalance" class="form-control" value="" formControlName="doClosingBalance">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="inAdvance">In Advance(DD)</label>
+            <input type="number" name="inAdvance" class="form-control" value="" formControlName="inAdvance" (keyup)="calculateTotalCashAdvance()">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="outAdvance">Out Advance</label>
-            <input type="number" name="outAdvance" class="form-control" value="" formControlName="outAdvance">
+            <input type="number" name="outAdvance" class="form-control" value="" formControlName="outAdvance" (keyup)="calculateTotalCashAdvance()">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="totalCashAdvance">Total Cash Advance</label>
+            <input type="number" name="totalCashAdvance" class="form-control" value="" formControlName="totalCashAdvance">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="diesel">Diesel</label>
-            <input type="number" name="diesel" class="form-control" value="" formControlName="diesel">
+            <input type="number" name="diesel" class="form-control" value="" formControlName="diesel" (keyup)="calculateTotalCashAdvance()">
           </div>
         </div>
         <div class="col-md-3">
@@ -85,6 +130,12 @@
             <select class="form-control" name="pumpName" id="pumpName" formControlName="pumpName">
               <option *ngFor="let do of doList" [value]="do.doId">Pump Name</option>
             </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="totalAdvance">Total Advance</label>
+            <input type="number" name="totalAdvance" class="form-control" value="" formControlName="totalAdvance">
           </div>
         </div>
         <div class="col-md-3">
@@ -98,13 +149,6 @@
             </select>
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="totalAdvance">Total Advance</label>
-            <input type="number" name="totalAdvance" class="form-control" value="" formControlName="totalAdvance">
-          </div>
-        </div>
-
         <div class="col-md-3">
           <div class="form-group">
             <label for="permitNo">Permit No</label>
@@ -155,24 +199,6 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="grossWeight">Gross Weight</label>
-            <input type="number" name="grossWeight" class="form-control" value="" formControlName="grossWeight">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="tierWeight">Tier Weight</label>
-            <input type="number" name="tierWeight" class="form-control" value="" formControlName="tierWeight">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="doBalance">Do Balance</label>
-            <input type="number" name="doBalance" class="form-control" value="" formControlName="doBalance">
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
             <label for="subTransporter">Sub Transporter</label>
             <select class="form-control" name="subTransporter" id="subTransporter" formControlName="subTransporter">
               <option *ngFor="let trs of transporter" [value]="trs.id">{{trs.firstName}}</option>
@@ -204,12 +230,7 @@
             <input type="number" name="receivedQuantity" value="" class="form-control" formControlName="receivedQuantity">
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="netWeight">Net Weight</label>
-            <input type="text" name="netWeight" value="" class="form-control" formControlName="netWeight">
-          </div>
-        </div>
+
         <div class="col-md-3">
           <div class="form-group">
             <label for="refund">Refund</label>
@@ -228,13 +249,286 @@
             <input type="text" name="freightToBePaidBy" value="" class="form-control" formControlName="freightToBePaidBy">
           </div>
         </div>
-        <div class="col-md-3">
+      </div>
+      <div class="row">
+        <div class="col-md-1 col-md-push-4">
           <div class="form-group">
-            <label for="inAdvanceLimit">In Advance Limit</label>
-            <input type="number" name="inAdvanceLimit" value="" class="form-control" formControlName="inAdvanceLimit">
+            <!-- <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createDo()">Submit</button> -->
+            <button type="submit" class="btn btn-primary margn-btn" (click)="submitBuiltyforConfirmation()">Create</button>
+          </div>
+        </div>
+        <div class="col-md-1 col-md-push-4">
+          <div class="form-group">
+            <button class="btn btn-primary margn-btn" name="Save" (click)="saveBuilty()">Save Builty</button>
           </div>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary">Create</button>
+
     </form>
   </div>
+
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-body">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-6">
+              <strong>Confirm DO Details</strong>
+            </div>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="doId">Do</label>
+                <br>
+                <span id="doId">{{builtyDataforConfirmModel.doDisplay}}</span>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="destinationsParty">Party</label>
+                <br>
+                <span id="destinationsParty">{{builtyDataforConfirmModel.party}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="destinations">Destinations</label>
+                <br>
+                <span id="destinations">{{builtyDataforConfirmModel.destination}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="builtyDate">Builty Date</label>
+                <br>
+                <span id="builtyDate">{{builtyDataforConfirmModel.builtyDate}}</span>
+              </div>
+            </div>
+            <div *ngIf="isbuiltyCompanyAdded">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="otBuiltyCompany">Builty Company</label>
+                  <br>
+                  <span id="otBuiltyCompany">{{builtyDataforConfirmModel.otBuiltyCompany}}</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="otBuiltyNumber"> BuiltyNumber</label>
+                  <br>
+                  <span id="otBuiltyNumber">{{builtyDataforConfirmModel.otBuiltyNumber}}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="vehicleNo">Vehicle No</label>
+                <br>
+                <span id="vehicleNo">{{builtyDataforConfirmModel.vehicleNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <br>
+                <span id="quantity">{{builtyDataforConfirmModel.quantity}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="outAdvance">Out Advance</label>
+                <br>
+                <span id="outAdvance">{{builtyDataforConfirmModel.outAdvance}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="diesel">Diesel</label>
+                <br>
+                <span id="diesel">{{builtyDataforConfirmModel.diesel}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="pumpName">Pump Name</label>
+                <br>
+                <span id="pumpName">{{builtyDataforConfirmModel.pumpName}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="freight">Freight</label>
+                <br>
+                <span id="freight">{{builtyDataforConfirmModel.freight}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="totalAdvance">Total Advance</label>
+                <br>
+                <span id="totalAdvance">{{builtyDataforConfirmModel.totalAdvance}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="permitNo">Permit No</label>
+                <br>
+                <span id="permitNo">{{builtyDataforConfirmModel.permitNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="permitBalance">Permit Balance</label>
+                <br>
+                <span id="permitBalance">{{builtyDataforConfirmModel.permitBalance}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="permitEndDate">Permit EndDate</label>
+                <br>
+                <span id="permitEndDate">{{builtyDataforConfirmModel.permitEndDate}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="igpNo">Igp No</label>
+                <br>
+                <span id="igpNo">{{builtyDataforConfirmModel.igpNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="invoiceNo">Invoice No</label>
+                <br>
+                <span id="invoiceNo">{{builtyDataforConfirmModel.invoiceNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="invoiceValue">Invoice Value</label>
+                <br>
+                <span id="invoiceValue">{{builtyDataforConfirmModel.invoiceValue}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="driverName">Driver Name</label>
+                <br>
+                <span id="driverName">{{builtyDataforConfirmModel.driverName}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="driverMobile">Driver Mobile</label>
+                <br>
+                <span id="driverMobile">{{builtyDataforConfirmModel.driverMobile}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="grossWeight">Gross Weight</label>
+                <br>
+                <span id="grossWeight">{{builtyDataforConfirmModel.grossWeight}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="tierWeight">Tier Weight</label>
+                <br>
+                <span id="tierWeight">{{builtyDataforConfirmModel.tierWeight}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="doBalance">Do Closing Balance</label>
+                <br>
+                <span id="doBalance">{{builtyDataforConfirmModel.doClosingBalance}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="subTransporter">SubTransporter</label>
+                <br>
+                <span id="subTransporter">{{builtyDataforConfirmModel.subTransporter.firstName }}
+                  {{builtyDataforConfirmModel.subTransporter.lastName}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="waybillNo">Waybill No</label>
+                <br>
+                <span id="waybillNo">{{builtyDataforConfirmModel.waybillNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="tpNo">TP No</label>
+                <br>
+                <span id="tpNo">{{builtyDataforConfirmModel.tpNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="receivedDate">Received Date</label>
+                <br>
+                <span id="receivedDate">{{builtyDataforConfirmModel.receivedDate}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="receivedQuantity">Received Quantity</label>
+                <br>
+                <span id="receivedQuantity">{{builtyDataforConfirmModel.receivedQuantity}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="netWeight">Net Weight</label>
+                <br>
+                <span id="netWeight">{{builtyDataforConfirmModel.netWeight}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="refund">Refund</label>
+                <br>
+                <span id="refund">{{builtyDataforConfirmModel.refund}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="assesibleValue">Assesible Value</label>
+                <br>
+                <span id="assesibleValue">{{builtyDataforConfirmModel.assesibleValue}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="freightToBePaidBy">Freight To Be PaidBy</label>
+                <br>
+                <span id="freightToBePaidBy">{{builtyDataforConfirmModel.freightToBePaidBy}}</span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-1 col-md-push-4">
+              <div class="form-group">
+                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createBuilty()">Submit</button>
+              </div>
+            </div>
+            <div class="col-md-1 col-md-push-4">
+              <div class="form-group">
+                <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>

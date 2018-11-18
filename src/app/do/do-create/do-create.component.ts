@@ -157,6 +157,7 @@ export class DoCreateComponent implements OnInit {
     this.getSelectedParty().then((data) => {
 
       doCreationData.party = data;
+      doCreationData.doDisplay = doCreationData.areaDoNo + "/" + doCreationData.bspDoNo + "-" + doCreationData.collary + "-" + doCreationData.quantity
       this.createDoOnConfirmData = {};
       this.doDataForConfirmationModel = {};
 
@@ -165,6 +166,7 @@ export class DoCreateComponent implements OnInit {
 
       this.doDataForConfirmationModel.inAdvanceMultiple = this.addedInAdvanceLimit.join(', ');
       this.doDataForConfirmationModel.partyName = this.doCreateForm.controls.party.value;
+
       this.modalService.open(this.content);
 
     })
@@ -216,10 +218,10 @@ export class DoCreateComponent implements OnInit {
     )
   }
 
-  loadpermit(){
+  loadpermit() {
     this.permitservice.getpermits().subscribe(
       (res) => {
-        if(res.success){
+        if (res.success) {
           this.permits = res.data;
         }
       }
@@ -570,5 +572,5 @@ export class DoCreateComponent implements OnInit {
     };
   }
 
-  get f(){return this.doCreateForm.controls;}
+  get f() { return this.doCreateForm.controls; }
 }
