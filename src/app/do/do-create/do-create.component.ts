@@ -31,7 +31,7 @@ export class DoCreateComponent implements OnInit {
   Freights = [];
 
   ref_collaryList: Array<string>;
-  ref_areaList: Array<string>
+  ref_areaList: Array<any>
   ref_partyData = []
   ref_destinationData = []
   ref_transporters = []
@@ -40,7 +40,8 @@ export class DoCreateComponent implements OnInit {
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
-  changedDestination
+  changedDestination;
+  selecteddo;
 
   isfrightEntryAdded: boolean = false;
   createDoOnConfirmData;
@@ -74,10 +75,13 @@ export class DoCreateComponent implements OnInit {
 
   ngOnInit() {
 
-    this.doDetails = new DODetails()
-
+    this.doDetails = new DODetails();
+    this.ref_areaList = [];
+    this.ref_collaryList = [];
     this.route.queryParams.subscribe(
       (params) => {
+        this.selecteddo = null;
+        this.loadrefDataForDOCreate();
         let _updateDOID = params['update'];
         if (_updateDOID != undefined) {
           this.getDOForUpdate(_updateDOID);
@@ -85,7 +89,6 @@ export class DoCreateComponent implements OnInit {
         else {
           this.applyCreateMode();
         }
-        this.loadrefDataForDOCreate();
         this.loadpermit();
       }
     );
@@ -199,7 +202,7 @@ export class DoCreateComponent implements OnInit {
     // this.getSelectedTransporter(doCreationData.transporter).
     //   then((data) => {
     //     doCreationData.transporter = data
-    //     
+    //
     //   })
     return doCreationData;
 
@@ -219,12 +222,11 @@ export class DoCreateComponent implements OnInit {
     this.doService.getdoRefData().subscribe(
       (res) => {
         this.refData = res["data"];
-        console.log(res["data"]);
-        this.ref_areaList = res["data"]["areaList"];
-        this.ref_collaryList = res["data"]["collaryList"];
-        this.ref_partyData = res["data"]["partyList"];
-        this.ref_destinationData = res["data"]["partyList"]
+        this.ref_areaList = this.refData["areaList"];
+        this.ref_partyData = this.refData["partyList"];
+        this.ref_destinationData = this.refData["partyList"]
         this.refData['builtyCompany'] = ['mumbai', 'pune'];
+        this.populatecollary();
       },
       (error) => {
         this.toaster.error("error occured while retrieving refdata");
@@ -266,9 +268,9 @@ export class DoCreateComponent implements OnInit {
 
   getDOForUpdate(id) {
     this.doService.getDoByIDService(id).subscribe((res) => {
-      console.log(res);
       this.applyUpdateMode();
-      this.setDataToUpdateForm(res['data']);
+      this.selecteddo = res['data'];
+      this.setDataToUpdateForm(this.selecteddo);
     },
       () => {
         this.toaster.error("not able to find the required DO information");
@@ -346,6 +348,7 @@ export class DoCreateComponent implements OnInit {
     this.showDestinationandFreightDataForTable(this.destinationParty);
     this.doCreateForm.controls.transporter.setValue(data.transporter);
 
+    this.populatecollary();
     this.setEMDAMt();
     this.setlepseQuantity()
     this.setDOAMtPMT();
@@ -601,6 +604,14 @@ export class DoCreateComponent implements OnInit {
 
   }
 
+  populatecollary(){
+      this.ref_areaList.forEach(item => {
+        if(item.name === this.doCreateForm.controls.area.value){
+          this.ref_collaryList = item.collaries;
+        }
+      })
+  }
+
   updateDO(doCreationData, _updateDOID) {
     this.doService.updateDoService(doCreationData).subscribe((data) => {
       this.toaster.success('Do is updated, Redirecting to running do');
@@ -610,6 +621,17 @@ export class DoCreateComponent implements OnInit {
         this.toaster.error('do is not updated, please contact admin');
       }
     )
+  }
+
+  resolveAreaSelection(area: string){
+    return new Promise((resolve) => {
+      this.ref_areaList.forEach(item => {
+        if(item.name === area){
+          this.ref_collaryList = item.collaries;
+          resolve(item);
+        }
+      })
+    })
   }
 
   reloadPage() {

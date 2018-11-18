@@ -4,15 +4,27 @@ import { AppConfig } from '../app-config';
 
 
 @Injectable()
-export class PartyService {
+export class DataService {
 
     url: string = AppConfig.API_ENDPOINT;
     constructor(public http: HttpClient) {
 
     }
 
-    createPartyService(data) {
+    createParty(data) {
         return this.http.post(this.url + '/party', data);
+    }
+
+    createArea(data): any{
+      return this.http.post(this.url + '/area', data);
+    }
+
+    getAreaList(): any{
+      return this.http.get(this.url + '/area');
+    }
+
+    updateArea(data): any{
+      return this.http.put(this.url + '/area', data);
     }
 
 }

@@ -56,7 +56,7 @@ import { DoService } from './services/do.service'
 import { UserService } from './services/user.service'
 import { ReportService } from './services/report.service'
 import { LoginService } from './services/login.service'
-import { PartyService } from './services/party.service'
+import { DataService } from './services/data.service'
 import { AddHeaderInterceptor } from './interceptor/header.interceptor'
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
 import { ToastrModule } from 'ngx-toastr';
@@ -67,6 +67,7 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { FileUploadService } from './services/fileupload.service';
 import { PermitComponent } from './permit/permit.component';
 import { PermitService } from './services/permit.service';
+import { AreaComponent } from './area/area.component';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { PermitService } from './services/permit.service';
     PartyResourceComponent,
     PanUpdateDetailsComponent,
     FileSelectDirective,
-    PermitComponent
+    PermitComponent,
+    AreaComponent
 
   ],
   imports: [
@@ -142,7 +144,7 @@ import { PermitService } from './services/permit.service';
     DoService,
     UserService,
     LoginService,
-    PartyService,
+    DataService,
     FileUploadService,
     PermitService,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }

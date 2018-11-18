@@ -2,7 +2,7 @@ import { Component, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
-import { PartyService } from '../services/party.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'party-resource',
@@ -18,7 +18,7 @@ export class PartyResourceComponent implements OnInit {
 
   constructor(private partyFormbuilder: FormBuilder,
       private toaster: ToastrService,
-      private partyService: PartyService) {
+      private service: DataService) {
 
   }
 
@@ -49,7 +49,7 @@ export class PartyResourceComponent implements OnInit {
       "name": this.partyForm.controls.partyname.value,
       "destinations": this.destinationsData
     }
-    this.partyService.createPartyService(party).subscribe(
+    this.service.createParty(party).subscribe(
       (success) => {
         console.log(success);
         this.partyForm.reset();

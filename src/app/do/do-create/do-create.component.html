@@ -79,8 +79,8 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="area">Area</label>
-              <select class="form-control" name="area" id="area" formControlName="area">
-                <option *ngFor="let al of ref_areaList" [value]="al">{{al}}</option>
+              <select class="form-control" name="area" id="area" formControlName="area" (change)="populatecollary()">
+                <option *ngFor="let al of ref_areaList" [value]="al.name">{{al.name}}</option>
               </select>
               <div *ngIf="submitted && f.area.errors" class="invalid-field">
                 <div *ngIf="f.area.errors.required">Area is required</div>
