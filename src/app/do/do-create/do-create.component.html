@@ -79,7 +79,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="area">Area</label>
-              <select class="form-control" name="area" id="area" formControlName="area" (change)="populatecollary()">
+              <select class="form-control" name="area" id="area" formControlName="area" (change)="populatecollary(true)">
                 <option *ngFor="let al of ref_areaList" [value]="al.name">{{al.name}}</option>
               </select>
               <div *ngIf="submitted && f.area.errors" class="invalid-field">
@@ -128,15 +128,21 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="builtyCompany">Builty Company (Multi select)</label>
-              <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany">
+              <label for="builtyCompany">Builty Company</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="builtyCompanyOptions"
+                formControlName="otBuiltyCompany"
+                [settings]="multiDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany"> -->
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="transporter">Transporter</label>
               <select class="form-control" id="transporter" formControlName="transporter">
-                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter">
+                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter.username">
                   {{transporter.firstName}} {{transporter.lastName}}
                 </option>
               </select>
@@ -245,9 +251,15 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="permissionNo">Permission No</label>
-              <select class="form-control" id="permissionNo" formControlName="permissionNo">
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="permits"
+                formControlName="permitNos"
+                [settings]="permitDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <select class="form-control" id="permissionNo" formControlName="permissionNo">
                 <option *ngFor="let permit of permits" [value]="permit.permitnumber">{{permit.permitnumber}}</option>
-              </select>
+              </select> -->
             </div>
           </div>
 
@@ -374,9 +386,16 @@
             <div class="form-group">
               <label for="freightToBePaidBy">Freight to be paid By</label>
               <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
-              <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
+
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="freightToBePaidByOptions"
+                formControlName="freightToBePaidBy"
+                [settings]="multiDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
                 <option *ngFor="let freightspaid of freightToBePaidBy" [value]='freightspaid'>{{freightspaid}}</option>
-              </select>
+              </select> -->
             </div>
           </div>
           <!-- Only when edit DO  - END-->
@@ -460,7 +479,7 @@
             <div class="form-group">
               <label for="bspNo">DO Date</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.dueDate}}</span>
+              <span id="bspNo">{{doDataForConfirmationModel.doDate}}</span>
             </div>
           </div>
           <div class="col-md-3">
@@ -507,16 +526,16 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="bspNo">Builty Company (Multi select)</label>
+              <label for="bspNo">Builty Company</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.builtyCompany}}</span>
+              <span id="bspNo">{{doDataForConfirmationModel.otBuiltyCompany}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Transporter</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.transporter.firstName}}</span>
+              <span id="bspNo">{{doDataForConfirmationModel.transporter.firstName +' ' + doDataForConfirmationModel.transporter.lastName}}</span>
             </div>
           </div>
           <div class="col-md-3">
@@ -530,7 +549,7 @@
             <div class="form-group">
               <label for="bspNo">Permission No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.permissionNo}}</span>
+              <span id="bspNo">{{doDataForConfirmationModel.permitNos}}</span>
             </div>
           </div>
           <div class="col-md-3">

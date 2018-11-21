@@ -68,6 +68,7 @@ import { FileUploadService } from './services/fileupload.service';
 import { PermitComponent } from './permit/permit.component';
 import { PermitService } from './services/permit.service';
 import { AreaComponent } from './area/area.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
 
 @NgModule({
   declarations: [
@@ -127,6 +128,7 @@ import { AreaComponent } from './area/area.component';
     FixedPluginModule,
     CommonModule,
     NgbModule,
+    NgMultiSelectDropDownModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-top-right',

@@ -66,8 +66,13 @@ export class DoCreateComponent implements OnInit {
   doQuantityUpdate;
   quantityDeductionUpdate;
   lepseQuantityUpdate;
-  freightToBePaidBy = ["DO Owner", "Builty Owner"];
+  freightToBePaidByOptions = ["DO Owner", "Builty Company"];
+  // TODO get list from backend
+  builtyCompanyOptions = ["Hindustan Logistics", "Surya Logistics"];
   inAdvanceLimitEntries = [];
+
+  multiDropDownSettings = {}
+  permitDropDownSettings = {}
 
   @ViewChild('content') content;
 
@@ -92,6 +97,17 @@ export class DoCreateComponent implements OnInit {
         this.loadpermit();
       }
     );
+
+    this.multiDropDownSettings = {
+      itemsShowLimit: 1,
+      enableCheckAll: false
+    }
+    this.permitDropDownSettings = {
+      itemsShowLimit: 1,
+      enableCheckAll: false,
+      idField: 'permitnumber',
+      textField: 'permitnumber'
+    }
   }
 
   doCreateForm = this.doFormBuilder.group({
@@ -114,12 +130,12 @@ export class DoCreateComponent implements OnInit {
     //   max: []
     // }),
     freight: [],
-    permissionNo: [],
+    permitNos: [],
     area: ['', Validators.required],
     collary: ['', Validators.required],
     grade: ['', Validators.required],
     by: [],
-    builtyCompany: [],
+    otBuiltyCompany: [],
     transporter: [],
     emd: [],
     emdAmt: [{ value: '', disabled: true }],
@@ -199,19 +215,18 @@ export class DoCreateComponent implements OnInit {
     // let _freightToBePaidBy = doCreationData.freightToBePaidBy;
     // doCreationData.freightToBePaidBy = [];
     // doCreationData.freightToBePaidBy.push(_freightToBePaidBy);
-    // this.getSelectedTransporter(doCreationData.transporter).
-    //   then((data) => {
-    //     doCreationData.transporter = data
-    //
-    //   })
+    this.getSelectedTransporter(doCreationData.transporter).
+       then((data) => {
+         doCreationData.transporter = data;
+    })
     return doCreationData;
 
   }
 
-  getSelectedTransporter(id) {
+  getSelectedTransporter(username) {
     return new Promise((resolve, reject) => {
       this.ref_transporters.forEach(element => {
-        if (element.id == id) {
+        if (element.username === username) {
           resolve(element);
         }
       });
@@ -226,7 +241,7 @@ export class DoCreateComponent implements OnInit {
         this.ref_partyData = this.refData["partyList"];
         this.ref_destinationData = this.refData["partyList"]
         this.refData['builtyCompany'] = ['mumbai', 'pune'];
-        this.populatecollary();
+        this.populatecollary(false);
       },
       (error) => {
         this.toaster.error("error occured while retrieving refdata");
@@ -302,6 +317,7 @@ export class DoCreateComponent implements OnInit {
   }
 
   setDataToUpdateForm(data) {
+    this.populatecollary(false);
     this.doCreateForm.controls.bspDoNo.setValue(data.bspDoNo);
     this.doCreateForm.controls.areaDoNo.setValue(data.areaDoNo);
     this.doCreateForm.controls.auctionNo.setValue(data.auctionNo)
@@ -314,9 +330,9 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.size.setValue(data.size)
     this.doCreateForm.controls.area.setValue(data.area)
     this.doCreateForm.controls.by.setValue(data.by)
-    this.doCreateForm.controls.builtyCompany.setValue(data.builtyCompany)
+    this.doCreateForm.controls.otBuiltyCompany.setValue(data.otBuiltyCompany)
 
-    this.doCreateForm.controls.permissionNo.setValue(data.permissionNo)
+    this.doCreateForm.controls.permitNos.setValue(this.resolvePermits(data.permitNos))
     this.doCreateForm.controls.emd.setValue(data.emd)
 
     this.doCreateForm.controls.doAmt.setValue(data.doAmt)
@@ -346,9 +362,9 @@ export class DoCreateComponent implements OnInit {
     this.isfrightEntryAdded = true;
     this.destinationParty = data.destinationparty
     this.showDestinationandFreightDataForTable(this.destinationParty);
-    this.doCreateForm.controls.transporter.setValue(data.transporter);
 
-    this.populatecollary();
+    this.doCreateForm.controls.transporter.setValue(data.transporter ? data.transporter.username : data.transporter);
+
     this.setEMDAMt();
     this.setlepseQuantity()
     this.setDOAMtPMT();
@@ -596,7 +612,14 @@ export class DoCreateComponent implements OnInit {
     );
 
     doCreationData.id = _updateDOID;
-
+    //TODO find better way to fix it
+    if(doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object){
+      let permitnumbers = [];
+      doCreationData.permitNos.forEach(item => {
+        permitnumbers.push(item.permitnumber);
+      })
+      doCreationData.permitNos = permitnumbers;
+    }
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
       this.updateDO(doCreationData, _updateDOID);
@@ -604,12 +627,15 @@ export class DoCreateComponent implements OnInit {
 
   }
 
-  populatecollary(){
+  populatecollary(setCollary){
       this.ref_areaList.forEach(item => {
         if(item.name === this.doCreateForm.controls.area.value){
           this.ref_collaryList = item.collaries;
         }
       })
+      if(setCollary && this.ref_collaryList && this.ref_collaryList.length){
+        this.doCreateForm.controls.collary.setValue(this.ref_collaryList[0]);
+      }
   }
 
   updateDO(doCreationData, _updateDOID) {
@@ -623,15 +649,18 @@ export class DoCreateComponent implements OnInit {
     )
   }
 
-  resolveAreaSelection(area: string){
-    return new Promise((resolve) => {
-      this.ref_areaList.forEach(item => {
-        if(item.name === area){
-          this.ref_collaryList = item.collaries;
-          resolve(item);
-        }
+  resolvePermits(permitNos: Array<number>){
+    let selectpermits = [];
+    if(permitNos && permitNos.length){
+      permitNos.forEach(item => {
+        this.permits.forEach(permit => {
+          if(permit.permitnumber === item){
+            selectpermits.push(permit);
+          }
+        })
       })
-    })
+    }
+    return selectpermits;
   }
 
   reloadPage() {
