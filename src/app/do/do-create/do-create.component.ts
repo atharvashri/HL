@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PermitService } from '../../services/permit.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 
 @Component({
@@ -53,7 +54,8 @@ export class DoCreateComponent implements OnInit {
     private toaster: ToastrService,
     private route: ActivatedRoute,
     private router: Router,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal,
+    private spinner: NgxSpinnerService) { }
 
   refData = {};
   modeSelect = "Create DO";
@@ -80,9 +82,11 @@ export class DoCreateComponent implements OnInit {
 
   ngOnInit() {
 
-    this.doDetails = new DODetails();
     this.ref_areaList = [];
     this.ref_collaryList = [];
+    this.spinner.show()
+    this.doDetails = new DODetails()
+
     this.route.queryParams.subscribe(
       (params) => {
         this.selecteddo = null;
@@ -216,9 +220,9 @@ export class DoCreateComponent implements OnInit {
     // doCreationData.freightToBePaidBy = [];
     // doCreationData.freightToBePaidBy.push(_freightToBePaidBy);
     this.getSelectedTransporter(doCreationData.transporter).
-       then((data) => {
-         doCreationData.transporter = data;
-    })
+      then((data) => {
+        doCreationData.transporter = data;
+      })
     return doCreationData;
 
   }
@@ -242,6 +246,10 @@ export class DoCreateComponent implements OnInit {
         this.ref_destinationData = this.refData["partyList"]
         this.refData['builtyCompany'] = ['mumbai', 'pune'];
         this.populatecollary(false);
+
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500)
       },
       (error) => {
         this.toaster.error("error occured while retrieving refdata");
@@ -613,7 +621,7 @@ export class DoCreateComponent implements OnInit {
 
     doCreationData.id = _updateDOID;
     //TODO find better way to fix it
-    if(doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object){
+    if (doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
       let permitnumbers = [];
       doCreationData.permitNos.forEach(item => {
         permitnumbers.push(item.permitnumber);
@@ -627,16 +635,23 @@ export class DoCreateComponent implements OnInit {
 
   }
 
-  populatecollary(setCollary){
-      this.ref_areaList.forEach(item => {
-        if(item.name === this.doCreateForm.controls.area.value){
-          this.ref_collaryList = item.collaries;
-        }
-      })
-      if(setCollary && this.ref_collaryList && this.ref_collaryList.length){
-        this.doCreateForm.controls.collary.setValue(this.ref_collaryList[0]);
+  populatecollary(setCollary) {
+    this.ref_areaList.forEach(item => {
+      if (item.name === this.doCreateForm.controls.area.value) {
+        this.ref_collaryList = item.collaries;
       }
+    })
+    if (setCollary && this.ref_collaryList && this.ref_collaryList.length) {
+      this.doCreateForm.controls.collary.setValue(this.ref_collaryList[0]);
+    }
   }
+  // populatecollary() {
+  //   this.ref_areaList.forEach(item => {
+  //     if (item.name === this.doCreateForm.controls.area.value) {
+  //       this.ref_collaryList = item.collaries;
+  //     }
+  //   })
+  // }
 
   updateDO(doCreationData, _updateDOID) {
     this.doService.updateDoService(doCreationData).subscribe((data) => {
@@ -649,18 +664,29 @@ export class DoCreateComponent implements OnInit {
     )
   }
 
-  resolvePermits(permitNos: Array<number>){
+  resolvePermits(permitNos: Array<number>) {
     let selectpermits = [];
-    if(permitNos && permitNos.length){
+    if (permitNos && permitNos.length) {
       permitNos.forEach(item => {
         this.permits.forEach(permit => {
-          if(permit.permitnumber === item){
+          if (permit.permitnumber === item) {
             selectpermits.push(permit);
           }
         })
       })
     }
-    return selectpermits;
+  }
+
+  resolveAreaSelection(area: string) {
+    return new Promise((resolve) => {
+      this.ref_areaList.forEach(item => {
+        if (item.name === area) {
+          this.ref_collaryList = item.collaries;
+          resolve(item);
+        }
+      })
+    })
+    //return selectpermits;
   }
 
   reloadPage() {

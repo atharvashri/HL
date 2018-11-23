@@ -61,6 +61,7 @@ import { AddHeaderInterceptor } from './interceptor/header.interceptor'
 import { MatFormFieldModule, MatDialogModule, MatInputModule, MatButtonModule, MatSelectModule, MatIconModule } from '@angular/material'
 import { ToastrModule } from 'ngx-toastr';
 import { TagInputModule } from 'ngx-chips';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 import { ModalComponent } from './modal/modal.component';
 import { FileSelectDirective } from 'ng2-file-upload';
@@ -127,6 +128,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
     FooterModule,
     FixedPluginModule,
     CommonModule,
+    NgxSpinnerModule,
     NgbModule,
     NgMultiSelectDropDownModule.forRoot(),
     ToastrModule.forRoot({

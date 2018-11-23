@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BuiltyService } from '../../services/builty.service'
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface Builtys {
   builtyNo: number;
@@ -21,16 +22,25 @@ export class BuiltyReceiptComponent implements OnInit {
   builtiesAddedbyChecks: Array<any> = [];
   selectedAll: boolean;
 
-  constructor(private builtyService: BuiltyService) { }
+  constructor(private builtyService: BuiltyService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    //start spinner
+    this.spinner.show();
     this.builtyService.getAllbuiltiesService().subscribe(
       (res) => {
         console.log(res);
         this.builtyList = res['data'];
+        //stop spinner
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500)
       },
       (err) => {
-
+        //stop spinner
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500)
       }
     );
   }

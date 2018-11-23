@@ -1,5 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { DoService } from '../../services/do.service'
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface RunningDo {
   doId: number;
@@ -24,13 +25,19 @@ export class DoRunningComponent implements OnInit {
   runningDosInTable: Array<any> = [];
   doAddedbyChecks: Array<any> = []
 
-  constructor(private doService: DoService) { }
+  constructor(private doService: DoService, private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    //start spinner
+    this.spinner.show();
     this.doService.getAllDosService().subscribe(
       (res) => {
         console.log(res.data);
         this.activeDoList = res.data;
+        //stop spinner
+        setTimeout(() => {
+          this.spinner.hide();
+        }, 1500)
       },
       (err) => {
 

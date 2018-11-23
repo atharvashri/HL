@@ -41,6 +41,7 @@
     "ng2-toastr": "^4.1.2",
     "ngx-chips": "^1.9.8",
     "ngx-pagination": "^3.2.1",
+    "ngx-spinner": "^6.1.2",
     "ngx-toastr": "^9.1.0",
     "rxjs": "~6.2.0",
     "zone.js": "~0.8.26"
