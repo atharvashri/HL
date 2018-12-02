@@ -27,6 +27,7 @@ import { AuthGuard,LoginGuard } from './authorization/auth.guards'
 import { PartyResourceComponent } from './party/party.resource'
 import { PermitComponent } from './permit/permit.component';
 import { AreaComponent } from './area/area.component';
+import { BuiltyListComponent } from './builty/builty-list/builty-list.component';
 
 export const AppRoutes: Routes = [
     {
@@ -72,12 +73,12 @@ export const AppRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: "builtyreceipt",
-        component: BuiltyReceiptComponent,
+        path: "builtylist",
+        component: BuiltyListComponent,
         canActivate: [AuthGuard]
     },
     {
-        path: "builtycreate",
+        path: "builty",
         component: BuiltyCreateComponent,
         canActivate: [AuthGuard]
     },
@@ -90,6 +91,11 @@ export const AppRoutes: Routes = [
         path: "billgenerate",
         component: BillGenerateComponent,
         canActivate: [AuthGuard]
+    },
+    {
+      path: "builtyreceipt",
+      component: BuiltyReceiptComponent,
+      canActivate: [AuthGuard]
     },
     {
         path: "truckownerreport",

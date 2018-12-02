@@ -23,4 +23,8 @@ export class PermitService {
       return this.http.get(this.url + '/permit?get=' + filter);
     }
 
+    getPermit(permitnumber: number): any{
+      return this.http.get(this.url + '/permit/' + permitnumber);
+    }
+
 }

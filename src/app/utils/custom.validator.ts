@@ -13,4 +13,14 @@ export class CustomValidator{
 
   }
 
+  static mobileValidator(number){
+    const mobileregex = /^(?!0)\d{10}$/;
+    if(mobileregex.test(number.value)){
+      return null;
+    }
+    return{
+      invalidmobile: true
+    }
+  }
+
 }

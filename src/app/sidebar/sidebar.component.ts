@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AppUtil } from '../utils/app.util';
 
 declare var $: any;
 
@@ -16,8 +17,8 @@ export const ROUTES: RouteInfo[] = [
     { path: 'completedo', title: 'Complete DO', icon: 'ti-panel', class: '' },
     { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
     { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
-    { path: 'builtyreceipt', title: 'Builty report', icon: 'ti-panel', class: '' },
-    { path: 'builtycreate', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+    { path: 'builtylist', title: 'Builty report', icon: 'ti-panel', class: '' },
+    { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
     { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
     { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },
     { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },
@@ -56,15 +57,15 @@ export class SidebarComponent implements OnInit {
 
     setRoutesForMenu(profile) {
         switch (profile) {
-            case "ROLE_OFFICE":
+            case AppUtil.ROLE_OFFICE:
                 return this.getOfficeMenuRoutes();
-            case "ROLE_FIELD":
+            case AppUtil.ROLE_FIELD:
                 return this.getFieldMenuRoutes();
-            case "ROLE_PARTY":
+            case AppUtil.ROLE_CUSTOMER:
                 return this.getCustomerMenuRoutes();
-            case "ROLE_TRUCK":
+            case AppUtil.ROLE_TRUCK_OWNER:
                 return this.getTruckMenuRoutes();
-            case "ROLE_ADMIN":
+            case AppUtil.ROLE_ADMIN:
                 return this.getMasterMenuRoutes();
             default:
                 break;
@@ -78,10 +79,11 @@ export class SidebarComponent implements OnInit {
             { path: 'do', title: 'DO', icon: 'ti-panel', class: '' },
             { path: 'runningdo', title: 'Running DO', icon: 'ti-user', class: '' },
             { path: 'completedo', title: 'Complete DO', icon: 'ti-view-list-alt', class: '' },
-            { path: 'register_truck', title: 'Truck Registration', icon: 'ti-panel', class: '' },
+            { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-user', class: '' },
-            { path: 'builtyreceipt', title: 'builty report', icon: 'ti-view-list-alt', class: '' },
-            { path: 'fieldentry', title: 'field entry', icon: 'ti-view-list-alt', class: '' }
+            { path: 'builtylist', title: 'Builty report', icon: 'ti-view-list-alt', class: '' },
+            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'fieldentry', title: 'Field Entry', icon: 'ti-view-list-alt', class: '' }
         ];
         console.log(officeRoutes)
         return officeRoutes;
@@ -89,9 +91,9 @@ export class SidebarComponent implements OnInit {
 
     getFieldMenuRoutes() {
         const fieldRoutes: RouteInfo[] = [
-            { path: 'builtycreate', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
             { path: 'fieldreport', title: 'Report', icon: 'ti-user', class: '' },
-            { path: 'register_truck', title: 'Truck Registration', icon: 'ti-panel', class: '' },
+            { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-user', class: '' },
             { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-view-list-alt', class: '' },
         ];
@@ -119,8 +121,8 @@ export class SidebarComponent implements OnInit {
             { path: 'completedo', title: 'Complete DO', icon: 'ti-panel', class: '' },
             { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
-            { path: 'builtyreceipt', title: 'Builty report', icon: 'ti-panel', class: '' },
-            { path: 'builtycreate', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'builtylist', title: 'Builty report', icon: 'ti-panel', class: '' },
+            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
             { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },
             { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },

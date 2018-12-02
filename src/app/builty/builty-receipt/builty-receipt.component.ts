@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BuiltyService } from '../../services/builty.service'
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '../../../../node_modules/@angular/router';
+import { Observable } from '../../../../node_modules/rxjs';
 
 export interface Builtys {
   builtyNo: number;
@@ -22,27 +24,33 @@ export class BuiltyReceiptComponent implements OnInit {
   builtiesAddedbyChecks: Array<any> = [];
   selectedAll: boolean;
 
-  constructor(private builtyService: BuiltyService, private spinner: NgxSpinnerService) { }
+  constructor(private builtyService: BuiltyService, private spinner: NgxSpinnerService,
+      private router: Router) { }
 
   ngOnInit() {
     //start spinner
-    this.spinner.show();
-    this.builtyService.getAllbuiltiesService().subscribe(
-      (res) => {
-        console.log(res);
-        this.builtyList = res['data'];
-        //stop spinner
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500)
-      },
-      (err) => {
-        //stop spinner
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500)
-      }
-    );
+
+    let _return = this.builtyService.getActiveBuilties();
+    if(_return instanceof Observable){
+      this.spinner.show();
+      _return.subscribe(
+        (res) => {
+          this.builtyList = res['data'];
+          //stop spinner
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500)
+        },
+        (err) => {
+          //stop spinner
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500)
+        }
+      );
+    }else{
+      this.builtyList = _return;
+    }
   }
 
   builtyListProperties: string[] = [
@@ -51,7 +59,7 @@ export class BuiltyReceiptComponent implements OnInit {
 
   builtyList = []
 
-  showAllRunningDo() {
+  showSelectedBuilties() {
 
     if (this.builtiesAddedbyChecks.length > 0) {
       this.builtyListProperties = [
@@ -131,6 +139,10 @@ export class BuiltyReceiptComponent implements OnInit {
     for (var i = 0; i < this.builtyList.length; i++) {
       this.builtyList[i].selected = this.selectedAll;
     }
+  }
+
+  cancel(){
+    this.router.navigate(['builtylist']);
   }
 
 }

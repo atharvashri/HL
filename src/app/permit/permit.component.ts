@@ -41,7 +41,7 @@ export class PermitComponent implements OnInit {
       return;
     }
     let permitdata = this.permitform.getRawValue();
-    permitdata.enddate = AppUtil.transfordate(permitdata.enddate);
+    permitdata.enddate = AppUtil.transformdate(permitdata.enddate);
     this.permitservice.createpermit(permitdata).subscribe(
       (res) => {
         if(res.success){
@@ -64,7 +64,7 @@ export class PermitComponent implements OnInit {
     }
     let permitdata = this.permitform.getRawValue();
     permitdata.id = this.selectedpermit.id;
-    permitdata.enddate = AppUtil.transfordate(permitdata.enddate);
+    permitdata.enddate = AppUtil.transformdate(permitdata.enddate);
     this.permitservice.updatepermit(permitdata).subscribe(
       (res) => {
         if(res.success){
@@ -87,7 +87,7 @@ export class PermitComponent implements OnInit {
     this.selectedpermit.index = index;
     this.permitform.controls.permitnumber.setValue(this.selectedpermit.permitnumber);
     this.permitform.controls.quantity.setValue(this.selectedpermit.quantity);
-    this.permitform.controls.enddate.setValue(AppUtil.transfordate(this.selectedpermit.enddate));
+    this.permitform.controls.enddate.setValue(AppUtil.transformdate(this.selectedpermit.enddate));
   }
 
 }

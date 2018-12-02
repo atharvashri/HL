@@ -1,12 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { DO } from '../../model/do.model';
-import { Builty } from '../../model/builty.model';
 import { DoService } from '../../services/do.service'
 import { BuiltyService } from '../../services/builty.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms'
+import { FormBuilder, Validators } from '@angular/forms'
+import { PermitService } from '../../services/permit.service';
+import { AppUtil } from '../../utils/app.util';
+import { ActivatedRoute, Router } from '../../../../node_modules/@angular/router';
+import { CustomValidator } from '../../utils/custom.validator';
 //import { resolve } from 'path';
 
 @Component({
@@ -22,92 +24,90 @@ export class BuiltyCreateComponent implements OnInit {
   constructor(public builtyFormBuilder: FormBuilder,
     private doService: DoService,
     private builtyService: BuiltyService,
+    private permitService: PermitService,
     private modalService: NgbModal,
-    private toaster: ToastrService
+    private toaster: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
-  optionsSelect;
   activeDoList;
   destinationsParty = [];
   destinationNames = [];
   isbuiltyCompanyAdded: boolean = false;
   builtyDataforConfirmModel = {};
-  currentdoDisplayName = "";
   savedBuilties = [];
   vehicleList = [];
+  selectedDo;
+  submitted: boolean = false;
+  updateMode: boolean;
+  builtyToUpdate;
 
   @ViewChild('content') content;
 
   ngOnInit() {
-    this.getAllDOs();
-    this.getAllSavedBuilties();
+    console.log('ngOninit called');
+    this.route.queryParams.subscribe(
+      (params) => {
+        this.builtyToUpdate = this.builtyService.getBuiltyToUpdate();
+        this.updateMode = params['update'];
+        if(this.updateMode && !this.builtyToUpdate){
+          this.router.navigate(['builtylist']);
+          return;
+        }
+
+        this.getAllDOs();
+        if(!this.updateMode){
+          this.getAllSavedBuilties();
+        }else{
+          this.builtyForm.controls.doId.disable();
+          //this.populateBuiltyDetails(this.builtyToUpdate);
+          //this.showDataAfterDoSelection(false);
+        }
+      }
+    )
     this.getVehicleList();
   }
 
   builtyForm = this.builtyFormBuilder.group({
-
     builtyNo: [],
-    doId: [],
+    doId: ['', Validators.required],
     doDisplay: [],
-    // party: new FormGroup({
-    //   id: [],
-    //   name: [],
-    //   destinations: [],
-    //   freightRanges: [],
-
-    // }),
-    party: [],
-    destination: [],
-    builtyDate: [],
+    party: ['', Validators.required],
+    destination: ['', Validators.required],
+    builtyDate: ['', Validators.required],
     otBuiltyCompany: [],
     otBuiltyNumber: [],
-    vehicleNo: [],
+    vehicleNo: ['', Validators.required],
     doOpeningbalance: [{ value: '', disabled: true }],
     inAdvance: [],
-    outAdvance: [],
+    outAdvance: ['', Validators.required],
     totalCashAdvance: [{ value: '', disabled: true }],
-    diesel: [],
-    pumpName: [],
-    freight: [],
+    diesel: ['', Validators.required],
+    pumpName: ['', Validators.required],
+    freight: ['', Validators.required],
     totalAdvance: [{ value: '', disabled: true }],
-    permitNo: [],
-    permitBalance: [],
-    permitEndDate: [],
-    igpNo: [],
-    invoiceNo: [],
-    invoiceValue: [],
-    driverName: [],
-    driverMobile: [],
-    grossWeight: [],
-    tierWeight: [],
+    permitNo: ['', Validators.required],
+    permitBalance: [{ value: '', disabled: true }],
+    permitEndDate: [{ value: '', disabled: true }],
+    igpNo: ['', Validators.required],
+    invoiceNo: ['', Validators.required],
+    invoiceValue: ['', Validators.required],
+    driverName: ['', Validators.required],
+    driverMobile: ['', [Validators.required, CustomValidator.mobileValidator]],
+    grossWeight: ['', Validators.required],
+    tierWeight: ['', Validators.required],
     doClosingBalance: [{ value: '', disabled: true }],
-    // transporter: new FormGroup({
-    //   userName: [],
-    //   firstName: [],
-    //   lastName: [],
-    //   password: [],
-    //   role: [],
-    //   active: []
-    // }),
-    // subTransporter: new FormGroup({
-    //   userName: [],
-    //   firstName: [],
-    //   lastName: [],
-    //   password: [],
-    //   role: [],
-    //   active: []
-    // }),
     transporter: [],
     subTransporter: [],
-    waybillNo: [],
-    tpNo: [],
+    waybillNo: ['', Validators.required],
+    tpNo: ['', Validators.required],
+    netWeight: [{ value: '', disabled: true }],
+    refund: ['', Validators.required],
+    assesibleValue: ['', Validators.required],
+    freightToBePaidBy: ['', Validators.required],
     receivedDate: [],
-    receivedQuantity: [],
-    netWeight: [],
-    refund: [],
-    assesibleValue: [],
-    freightToBePaidBy: [],
-
+    receivedQuantity: []
   })
 
   getDataOnDoselect() {
@@ -135,7 +135,7 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   getAllSavedBuilties() {
-    this.builtyService.getSavedbuiltiesService().subscribe(
+    this.builtyService.getSavedbuilties().subscribe(
       (res) => {
         this.savedBuilties = res['data'];
         console.log(res);
@@ -146,15 +146,16 @@ export class BuiltyCreateComponent implements OnInit {
     )
   }
 
-  getdoDisplayName() {
-    return this.currentdoDisplayName;
-  }
-
   getAllDOs() {
     this.doService.getAllDosService().subscribe(
       (res) => {
         console.log(res.data);
         this.doList = res.data;
+        if(this.updateMode){
+          this.populateBuiltyDetails(this.builtyToUpdate);
+          this.showDataAfterDoSelection(false);
+          this.populateDependentOptions();
+        }
       },
       (err) => {
 
@@ -163,25 +164,17 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   showDataAfterDoSelection(isDoChanged) {
-    let _selectedDO = this.builtyForm.controls.doId.value;
+    let _selectedDOId = this.builtyForm.controls.doId.value;
     if (isDoChanged) {
       this.builtyForm.reset();
-      this.builtyForm.controls.doId.setValue(_selectedDO);
+      this.builtyForm.controls.doId.setValue(_selectedDOId);
     }
     this.doList.forEach((element) => {
-      if (element.id == _selectedDO) {
-        this.currentdoDisplayName = element.areaDoNo + "/" + element.bspDoNo + "-" + element.collary + "-" + element.quantity;
-
-        this.builtyForm.controls.doOpeningbalance.setValue(element.quantity);
-        this.builtyForm.controls.receivedDate.setValue(element.receivedDate);
+      if (element.id == _selectedDOId) {
+        this.selectedDo = element;
+        this.builtyForm.controls.doOpeningbalance.setValue(element.doBalance);
         this.transporter = [];
-        this.transporter.push(element.transporter);
-        this.destinationsParty = element.destinationparty;
-        let _recvDate = element.receivedDate.split('-').reverse().join('-')
-        this.builtyForm.controls.receivedDate.setValue(_recvDate)
-
-        if (element.builtyCompany != undefined && element.builtyCompany != null) {
-          this.builtyForm.controls.otBuiltyCompany.setValue(element.builtyCompany);
+        if (element.builtyCompany && element.builtyCompany.length) {
           this.isbuiltyCompanyAdded = true;
         }
         else {
@@ -202,74 +195,86 @@ export class BuiltyCreateComponent implements OnInit {
     this.savedBuilties.forEach(element => {
 
       if (element.id == evt.target.value) {
-
-        if (element.otBuiltyCompany != undefined && element.otBuiltyCompany != null) {
-          this.builtyForm.controls.otBuiltyCompany.setValue(element.otBuiltyCompany);
-          this.isbuiltyCompanyAdded = true;
-        }
-        else {
-          this.isbuiltyCompanyAdded = false;
-        }
-
-        this.builtyForm.controls.doId.setValue(element.doId);
-        this.builtyForm.controls.builtyDate.setValue(element.builtyDate)
-        this.builtyForm.controls.otBuiltyCompany.setValue(element.otBuiltyCompany);
-        this.builtyForm.controls.otBuiltyNumber.setValue(element.otBuiltyNumber);
-        this.builtyForm.controls.vehicleNo.setValue(element.vehicleNo);
-        this.builtyForm.controls.doOpeningbalance.setValue(element.doBalance);
-        this.builtyForm.controls.outAdvance.setValue(element.outAdvance);
-        this.builtyForm.controls.inAdvance.setValue(element.inAdvance);
-        this.builtyForm.controls.diesel.setValue(element.diesel);
-        this.builtyForm.controls.pumpName.setValue(element.pumpName);
-        this.builtyForm.controls.freight.setValue(element.freight);
-        this.builtyForm.controls.totalAdvance.setValue(element.totalAdvance);
-        this.builtyForm.controls.permitNo.setValue(element.permitNo);
-        this.builtyForm.controls.permitBalance.setValue(element.permitBalance);
-        this.builtyForm.controls.igpNo.setValue(element.igpNo);
-        this.builtyForm.controls.invoiceValue.setValue(element.invoiceValue);
-        this.builtyForm.controls.invoiceNo.setValue(element.invoiceNo);
-        this.builtyForm.controls.driverName.setValue(element.driverName);
-        this.builtyForm.controls.driverMobile.setValue(element.driverMobile);
-        this.builtyForm.controls.grossWeight.setValue(element.grossWeight);
-        this.builtyForm.controls.tierWeight.setValue(element.tierWeight);
-        this.builtyForm.controls.doClosingBalance.setValue(element.doClosingBalance);
-        this.transporter = [];
-        this.transporter.push(element.subTransporter);
-        this.builtyForm.controls.subTransporter.setValue(element.subTransporter.id);
-        this.builtyForm.controls.waybillNo.setValue(element.waybillNo);
-        this.builtyForm.controls.tpNo.setValue(element.tpNo);
-        this.builtyForm.controls.receivedDate.setValue(element.receivedDate);
-        this.builtyForm.controls.receivedQuantity.setValue(element.receivedQuantity);
-        this.builtyForm.controls.netWeight.setValue(element.netWeight);
-        this.builtyForm.controls.refund.setValue(element.refund);
-        this.builtyForm.controls.assesibleValue.setValue(element.assesibleValue);
-        this.builtyForm.controls.freightToBePaidBy.setValue(element.freightToBePaidBy);
-        this.builtyForm.controls.permitEndDate.setValue(element.permitEndDate);
-
+        this.populateBuiltyDetails(element);
         this.showDataAfterDoSelection(false);
+        this.populateDependentOptions();
         this.calculateDoClosingBalance();
         this.calculateTotalCashAdvance();
       }
     });
   }
 
+  populateBuiltyDetails(element: any){
+    if (element.otBuiltyCompany) {
+      this.isbuiltyCompanyAdded = true;
+    }
+    else {
+      this.isbuiltyCompanyAdded = false;
+    }
+
+    this.builtyForm.controls.doId.setValue(element.doId);
+    this.builtyForm.controls.builtyDate.setValue(AppUtil.transformdate(element.builtyDate))
+    this.builtyForm.controls.otBuiltyCompany.setValue(element.otBuiltyCompany);
+    this.builtyForm.controls.otBuiltyNumber.setValue(element.otBuiltyNumber);
+    this.builtyForm.controls.party.setValue(element.party);
+    this.builtyForm.controls.destination.setValue(element.destination);
+    this.builtyForm.controls.vehicleNo.setValue(element.vehicleNo);
+    this.builtyForm.controls.doOpeningbalance.setValue(element.doOpeningbalance);
+    this.builtyForm.controls.outAdvance.setValue(element.outAdvance);
+    this.builtyForm.controls.inAdvance.setValue(element.inAdvance);
+    this.builtyForm.controls.diesel.setValue(element.diesel);
+    this.builtyForm.controls.pumpName.setValue(element.pumpName);
+    this.builtyForm.controls.freight.setValue(element.freight);
+    this.builtyForm.controls.totalCashAdvance.setValue(element.totalCashAdvance);
+    this.builtyForm.controls.totalAdvance.setValue(element.totalAdvance);
+    this.builtyForm.controls.permitNo.setValue(element.permitNo);
+    this.builtyForm.controls.permitBalance.setValue(element.permitBalance);
+    this.builtyForm.controls.permitEndDate.setValue(AppUtil.transformdate(element.permitEndDate));
+    this.builtyForm.controls.igpNo.setValue(element.igpNo);
+    this.builtyForm.controls.invoiceValue.setValue(element.invoiceValue);
+    this.builtyForm.controls.invoiceNo.setValue(element.invoiceNo);
+    this.builtyForm.controls.driverName.setValue(element.driverName);
+    this.builtyForm.controls.driverMobile.setValue(element.driverMobile);
+    this.builtyForm.controls.grossWeight.setValue(element.grossWeight);
+    this.builtyForm.controls.tierWeight.setValue(element.tierWeight);
+    this.builtyForm.controls.doClosingBalance.setValue(element.doClosingBalance);
+    this.transporter = [];
+    //this.transporter.push(element.subTransporter);
+    //this.builtyForm.controls.subTransporter.setValue(element.subTransporter.id);
+    this.builtyForm.controls.waybillNo.setValue(element.waybillNo);
+    this.builtyForm.controls.tpNo.setValue(element.tpNo);
+    this.builtyForm.controls.receivedDate.setValue(AppUtil.transformdate(element.receivedDate));
+    this.builtyForm.controls.receivedQuantity.setValue(element.receivedQuantity);
+    this.builtyForm.controls.netWeight.setValue(element.netWeight);
+    this.builtyForm.controls.refund.setValue(element.refund);
+    this.builtyForm.controls.assesibleValue.setValue(element.assesibleValue);
+    this.builtyForm.controls.freightToBePaidBy.setValue(element.freightToBePaidBy);
+  }
+
   submitBuiltyforConfirmation() {
-    let _builtyData = this.builtyForm.value;
+    if(this.builtyForm.invalid){
+      this.toaster.error("Please correct the errors in form and then proceed");
+      return;
+    }
+    let _builtyData = this.builtyForm.getRawValue();
     let _subtransporter = this.builtyForm.controls.subTransporter.value
 
     if (_subtransporter == null) {
       _subtransporter = (<HTMLInputElement>document.getElementById('subTransporter')).value;
     }
-    this.getTransporterForSelectedDo(_subtransporter, this.transporter)
-      .then((_trnsdata) => {
-        _builtyData.subTransporter = _trnsdata
-        return this.getDObyId(_builtyData.doId);
-      })
-      .then((element) => {
-        this.builtyDataforConfirmModel = _builtyData;
-        this.builtyDataforConfirmModel['doDisplay'] = element['areaDoNo'] + "/" + element['bspDoNo'] + "-" + element['collary'] + "-" + element['quantity'];
-        this.modalService.open(this.content);
-      })
+    this.builtyDataforConfirmModel = _builtyData;
+    this.builtyDataforConfirmModel['doDisplay'] = this.selectedDo.doDisplay;
+    this.modalService.open(this.content);
+    // this.getTransporterForSelectedDo(_subtransporter, this.transporter)
+    //   .then((_trnsdata) => {
+    //     _builtyData.subTransporter = _trnsdata
+    //     return this.getDObyId(_builtyData.doId);
+    //   })
+    //   .then((element) => {
+    //     this.builtyDataforConfirmModel = _builtyData;
+    //     this.builtyDataforConfirmModel['doDisplay'] = element['areaDoNo'] + "/" + element['bspDoNo'] + "-" + element['collary'] + "-" + element['quantity'];
+    //     this.modalService.open(this.content);
+    //   })
   }
 
   getTransporterForSelectedDo(_selectedvalue, arrayTo) {
@@ -283,63 +288,101 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   createBuilty() {
-    this.builtyService.createBuiltyService(this.builtyDataforConfirmModel).subscribe(
+    this.builtyService.createBuilty(this.builtyDataforConfirmModel).subscribe(
       (res) => {
+        if(res.success){
+            this.toaster.success(res.message);
+            this.selectedDo.doBalance = res.data.doClosingBalance;
+            this.clearBuiltyForm();
+            this.submitted = false;
+            alert("Builty Number is " + res.data.builtyNo);
+        }else{
+            this.toaster.error(res.message);
+        }
         this.modalService.dismissAll();
-        this.toaster.success("builty is created successfully");
+
       },
       (error) => {
-        this.toaster.success("error in builty creation");
+        this.toaster.error("error in builty creation");
       })
   }
 
   saveBuilty() {
-    let _builtyData = this.builtyForm.value;
-    this.getTransporterForSelectedDo(this.builtyForm.controls.subTransporter.value, this.transporter)
-      .then((_trnsdata) => {
-        _builtyData.subTransporter = _trnsdata
+    let _builtyData = this.builtyForm.getRawValue();
+    // this.getTransporterForSelectedDo(this.builtyForm.controls.subTransporter.value, this.transporter)
+    //   .then((_trnsdata) => {
+    //     _builtyData.subTransporter = _trnsdata
 
         //this.builtyDataforConfirmModel = _builtyData
-        _builtyData.doDisplay = this.currentdoDisplayName;
-        this.builtyService.savebuiltiesService(_builtyData).subscribe(
+        _builtyData.doDisplay = this.selectedDo.doDisplay;
+        _builtyData.builtyDate = AppUtil.transformdate(_builtyData.builtyDate);
+        _builtyData.permitEndDate = AppUtil.transformdate(_builtyData.permitEndDate);
+        this.builtyService.savebuilties(_builtyData).subscribe(
           (res) => {
-            this.toaster.success("builty is saved successfully");
+            if(res.success){
+              this.toaster.success("builty is saved successfully");
+            }else{
+                this.toaster.error(res.message);
+            }
           },
           (error) => {
             this.toaster.error("builty is not saved, please contact admin");
           }
         )
-      })
+      //})
   }
 
-  //evt is required for onclick event.
-  onChangeDestinationsParty(evt) {
+updateBuilty(){
+  if(this.builtyForm.invalid){
+    this.toaster.error("Please correct the errors in form and then proceed");
+    return;
+  }
+  let _builty = this.builtyForm.getRawValue();
+  _builty.id = this.builtyToUpdate.id;
+  _builty.doDisplay = this.builtyToUpdate.doDisplay;
+  _builty.approved = this.builtyToUpdate.approved;
+  _builty.builtyNo = this.builtyToUpdate.builtyNo;
+  _builty.createdBy = this.builtyToUpdate.createdBy;
+  _builty.createdDateTime = this.builtyToUpdate.createdDateTime;
+  this.builtyService.updateBuilty(_builty).subscribe(
+    (res) => {
+      if(res.success){
+        this.toaster.success(res.message);
+        //this.builtyToUpdate = res.data;
+        this.router.navigate(['builtylist']);
+      }else{
+        this.toaster.error(res.message);
+      }
+    }
+  )
+}
 
+  populateDependentOptions(){
+      this.onChangeDestinationsParty();
+      this.onChangeDestinations();
+  }
+  //evt is required for onclick event.
+  onChangeDestinationsParty() {
     this.destinationNames = [];
-    this.destinationsParty.forEach(element => {
-      if (evt != undefined) {
-        if (evt.target.value == element.name) {
-          element.destinations.forEach(element => {
-            this.destinationNames.push(element.name);
-          });
-        }
+    this.updatedFrights = [];
+    this.selectedDo.destinationparty.forEach(element => {
+      if (this.builtyForm.controls.party.value == element.name) {
+        element.destinations.forEach(dest => {
+          this.destinationNames.push(dest.name);
+        });
       }
     });
   }
 
-  onChangeDestinations(evt) {
+  onChangeDestinations() {
     this.updatedFrights = [];
-    //reactive forms control in not working so using javascript syntax to retrive the value.
-    //let _selectedDestParty = this.builtyForm.controls.party.value;
-    let _selectedDestParty = (<HTMLInputElement>document.getElementById('selectDestinationParty')).value;
-    this.destinationsParty.forEach(element_destinationParty => {
-      if (evt != undefined) {
-        if (_selectedDestParty == element_destinationParty.name) {
-          element_destinationParty.destinations.forEach(element_destinations => {
-            if (evt.target.value == element_destinations.name)
-              this.updatedFrights = element_destinations.freight;
-          });
-        }
+    let _selectedDestParty = this.builtyForm.controls.party.value;
+    this.selectedDo.destinationparty.forEach(element_destinationParty => {
+      if (_selectedDestParty == element_destinationParty.name) {
+        element_destinationParty.destinations.forEach(element_destinations => {
+          if (this.builtyForm.controls.destination.value == element_destinations.name)
+            this.updatedFrights = element_destinations.freight;
+        });
       }
     });
   }
@@ -364,7 +407,11 @@ export class BuiltyCreateComponent implements OnInit {
     let _inadvnace = this.builtyForm.controls.inAdvance.value;
     let _outadvnace = this.builtyForm.controls.outAdvance.value;
     let _diesel = this.builtyForm.controls.diesel.value;
-
+    if(_inadvnace){
+        _inadvnace = parseInt(_inadvnace);
+    }else{
+      _inadvnace = 0;
+    }
     this.builtyForm.controls.totalCashAdvance.setValue(_inadvnace + _outadvnace)
     this.builtyForm.controls.totalAdvance.setValue(_inadvnace + _outadvnace + _diesel)
   }
@@ -377,35 +424,33 @@ export class BuiltyCreateComponent implements OnInit {
 
   }
 
+  calculateNetWeight(){
+    let _grossweight = this.builtyForm.controls.grossWeight.value,
+        _tierweight = this.builtyForm.controls.tierWeight.value;
+    this.builtyForm.controls.netWeight.setValue(_grossweight - _tierweight);
+    this.calculateDoClosingBalance();
+  }
   clearBuiltyForm() {
     this.builtyForm.reset();
-    // this.builtyForm.controls.doId.setValue('');
-    // this.builtyForm.controls.otBuiltyCompany.setValue('');
-    // this.builtyForm.controls.vehicleNo.setValue('');
-    // this.builtyForm.controls.quantity.setValue('');
-    // this.builtyForm.controls.outAdvance.setValue('');
-    // this.builtyForm.controls.diesel.setValue('');
-    // this.builtyForm.controls.pumpName.setValue('');
-    // this.builtyForm.controls.freight.setValue('');
-    // this.builtyForm.controls.totalAdvance.setValue('');
-    // this.builtyForm.controls.permitNo.setValue('');
-    // this.builtyForm.controls.permitBalance.setValue('');
-    // this.builtyForm.controls.igpNo.setValue('');
-    // this.builtyForm.controls.invoiceNo.setValue('');
-    // this.builtyForm.controls.driverName.setValue('');
-    // this.builtyForm.controls.driverMobile.setValue('');
-    // this.builtyForm.controls.grossWeight.setValue('');
-    // this.builtyForm.controls.tierWeight.setValue(element.tierWeight);
-    // this.builtyForm.controls.doBalance.setValue(element.doBalance);
-    // this.builtyForm.controls.subTransporter.setValue(element.subTransporter);
-    // this.builtyForm.controls.waybillNo.setValue(element.waybillNo);
-    // this.builtyForm.controls.tpNo.setValue(element.tpNo);
-    // this.builtyForm.controls.receivedDate.setValue(element.receivedDate);
-    // this.builtyForm.controls.receivedQuantity.setValue(element.receivedQuantity);
-    // this.builtyForm.controls.netWeight.setValue(element.netWeight);
-    // this.builtyForm.controls.refund.setValue(element.refund);
-    // this.builtyForm.controls.assesibleValue.setValue(element.assesibleValue);
-    // this.builtyForm.controls.freightToBePaidBy.setValue(element.freightToBePaidBy);
-    // this.builtyForm.controls.permitEndDate.setValue(element.permitEndDate);
   }
+
+  getPermitDetails(){
+    let _permitnumber = this.builtyForm.controls.permitNo.value;
+    this.permitService.getPermit(parseInt(_permitnumber)).subscribe(
+      (res) => {
+        if(res.success){
+          this.builtyForm.controls.permitBalance.setValue(res.data.permitbalance);
+          this.builtyForm.controls.permitEndDate.setValue(AppUtil.transformdate(res.data.enddate));
+        }else{
+          console.log(res.message);
+        }
+      }
+    )
+  }
+
+  cancel(){
+      this.router.navigate(['builtylist']);
+  }
+
+  get f(){ return this.builtyForm.controls;}
 }

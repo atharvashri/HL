@@ -280,7 +280,7 @@ export class DoCreateComponent implements OnInit {
     this.doService.createDoService(this.createDoOnConfirmData).subscribe(
       (data) => {
         this.modalService.dismissAll();
-        this.reloadPage();
+        this.doCreateForm.reset();
         this.toaster.success("DO is successfully created");
       },
       (err) => {

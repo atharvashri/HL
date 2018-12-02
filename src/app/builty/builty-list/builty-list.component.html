@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Active Builties</strong>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary right" (click)="showupdatereceiptform()">Update Receipt</button>
+                </div>
+                <div class="col-md-3">
+                    <button *ngIf="viewactive" type="button" class="btn btn-primary right" (click)="showCompletedBuilties()">View Completed Builties</button>
+                    <button *ngIf="!viewactive" type="button" class="btn btn-primary right" (click)="showActiveBuilties()">View Active Builties</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive" *ngIf="builtylist?.length;else nobuilties">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th><strong>Builty No.</strong></th>
+                  <th><strong>DO</strong></th>
+                  <th><strong>Builty Date</strong></th>
+                  <th><strong>Vehicle Number</strong></th>
+                  <th><strong>Net Weight</strong></th>
+                  <th><strong>Party</strong></th>
+                  <th><strong>Destination</strong></th>
+                  <th><strong>Freight</strong></th>
+                  <th><strong>Driver</strong></th>
+                  <th><strong>Mobile</strong></th>
+                  <th *ngIf="canedit()"></th>
+                  <th *ngIf="viewactive"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let builty of builtylist; let i=index">
+                  <td>{{builty.builtyNo}}</td>
+                  <td>{{builty.doDisplay}}</td>
+                  <td>{{builty.builtyDate}}</td>
+                  <td>{{builty.vehicleNo}}</td>
+                  <td>{{builty.netWeight}}</td>
+                  <td>{{builty.party}}</td>
+                  <td>{{builty.destination}}</td>
+                  <td>{{builty.freight}}</td>
+                  <td>{{builty.driverName}}</td>
+                  <td>{{builty.driverMobile}}</td>
+                  <td *ngIf="canedit()"><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="showupdateform(i)" title="Edit"></td>
+                  <td *ngIf="viewactive"><img class="link" src="/assets/img/delete-icon.png" width="20" height="20" (click)="deletebuilty(i)" title="Delete"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #nobuilties>
+            <div class="row">
+              <div *ngIf="viewactive" class="col-md-6">
+                  Currently no builties are active.
+              </div>
+              <div *ngIf="!viewactive" class="col-md-6">
+                  No builties are completed in last 3 months.
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>

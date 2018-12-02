@@ -69,7 +69,8 @@ import { FileUploadService } from './services/fileupload.service';
 import { PermitComponent } from './permit/permit.component';
 import { PermitService } from './services/permit.service';
 import { AreaComponent } from './area/area.component';
-import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
 
 @NgModule({
   declarations: [
@@ -105,7 +106,8 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
     PanUpdateDetailsComponent,
     FileSelectDirective,
     PermitComponent,
-    AreaComponent
+    AreaComponent,
+    BuiltyListComponent
 
   ],
   imports: [

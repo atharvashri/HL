@@ -2,7 +2,21 @@
     <div class="header">
         <h4 class="title">Selected Builty Nos</h4>
     </div>
-    <div class="">
+    <form [formGroup]="receiptForm">
+      <div formArrayName="builtyitems">
+        <!-- <div *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index">
+          <div class="row" [formGroupName]="i">
+            <div class="col-md-3 right">
+              <input type="text" class="form-control" formControlName="builtyNo">
+            </div>
+            <div class="col-md-3 right">
+              <input type="date" class="form-control" formControlName="receivedDate">
+            </div>
+            <div class="col-md-3 right">
+              <input type="number" class="form-control" formControlName="receivedQuantity">
+            </div>
+          </div>
+        </div> -->
         <table class="table table-bordered">
             <thead class="p-back-color">
                 <tr>
@@ -10,13 +24,35 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let builtys of builtyList">
-                    <td> <input type="number" name="tpNo" class="form-control" value="{{builtys.builtyNo}}" disabled></td>
-                    <td><input type="date" name="tpNo" class="form-control" value="{{builtys.receivedDate}}"></td>
-                    <td><input type="number" name="tpNo" class="form-control" value="{{builtys.receivedQuantity}}"></td>
+                <tr *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index" [formGroupName]="i">
+                    <td> <input type="text" class="form-control" formControlName="builtyNo"></td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
                 </tr>
             </tbody>
         </table>
-        <button class="btn btn-primary">Update</button>
-    </div>
+
+
+      </div>
+
+
+        <!-- <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let builtyProp of builtyListProperties" ><span class="p-txt ">{{ builtyProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+              <div *ngFor="let builty of receiptForm.controls.builtyitems.controls; let i=index" class="form-group" [formGroupName]="i">
+                <tr >
+                    <td> <input type="text" class="form-control" formControlName="builtyNo"></td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
+                </tr>
+              </div>
+            </tbody>
+        </table> -->
+        <button class="btn btn-primary" (click)="updateReceipt()">Update</button>
+
+    </form>
 </div>
