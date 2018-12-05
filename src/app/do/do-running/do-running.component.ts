@@ -58,6 +58,7 @@ export class DoRunningComponent implements OnInit {
         'Balance',
         'DO Owner',
         'Destination Party',
+        '',
         ''
       ];
 

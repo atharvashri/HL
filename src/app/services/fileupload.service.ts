@@ -41,6 +41,9 @@ export class FileUploadService{
         }else{
           if(filetype === 'rccopy'){
             extraparams["vehicleno"] = fileQueue[idx]['vehicleno'];
+          }else if(filetype === 'docopy'){
+            extraparams["bspdo"] = fileQueue[idx]['bspdo'];
+            extraparams["areado"] = fileQueue[idx]['areado'];
           }
           filemap.set(filetype, fileitem);
         }
@@ -84,9 +87,18 @@ export class FileUploadService{
     if(filename){
       let ext = this.getFileExtension(filename);
       return `${this.panno}_${accountno}`.toUpperCase() + ext;
+    }else{
+      return "";
     }
   }
 
+  getFileNameForDO(filename: string, bspdo: number, areado: number){
+    if(filename){
+      return `DO_${bspdo}_${areado}`.toUpperCase() + this.getFileExtension(filename);
+    }else{
+      return "";
+    }
+  }
   getFileExtension(filename){
     return filename.substring(filename.lastIndexOf("."), filename.length);
   }

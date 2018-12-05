@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router'
+import { AppConfig } from '../../../app-config';
 
 export interface RunningDo {
     doId: number;
@@ -20,10 +21,11 @@ export class DoRunningListComponent implements OnInit {
     constructor(private router: Router) { }
 
     ngOnInit() {
+      this.s3url = AppConfig.AWS_S3_BUCKET;
     }
 
     isrunningDoTablevisible: boolean = false;
-
+    s3url;
     @Input() activeDoProperties: any
     @Input() activeDoList: any
 

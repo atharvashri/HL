@@ -17,7 +17,9 @@
                     <td>{{activeDO.doBalance}}</td>
                     <td>{{activeDO.party?.name}}</td>
                     <td><span *ngFor="let destination of activeDO.destinationparty; let i=index;  let len=count">{{destination.name + (len-1 == i ? '' : ', ')}}</span></td>
-                    <td><button class="btn btn-primary hl-user-update-btn" id="{{activeDO.id}}" (click)="onUpdateDO($event)">Update</button></td>
+                    <!-- <td><button class="btn btn-primary hl-user-update-btn" id="{{activeDO.id}}" (click)="onUpdateDO($event)">Update</button></td> -->
+                    <td><a *ngIf="activeDO.doCopy" target="_blank" [href]="s3url+activeDO.doCopy"><img src="/assets/img/img_icon.png" width="20" height="20" title="View DO Copy"/></a></td>
+                    <td><img class="link" src="/assets/img/edit-icon.png" id="{{activeDO.id}}" width="20" height="20" (click)="onUpdateDO($event)" title="Edit"></td>
                 </tr>
             </tbody>
         </table>

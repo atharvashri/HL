@@ -10,6 +10,8 @@ import { UserService } from '../../services/user.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PermitService } from '../../services/permit.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { FileUploader } from '../../../../node_modules/ng2-file-upload';
+import { FileUploadService } from '../../services/fileupload.service';
 
 
 @Component({
@@ -28,7 +30,7 @@ export class DoCreateComponent implements OnInit {
     "Destinations",
     "Freights"
   ]
-
+  uploader: FileUploader;
   Freights = [];
 
   ref_collaryList: Array<string>;
@@ -55,7 +57,8 @@ export class DoCreateComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private modalService: NgbModal,
-    private spinner: NgxSpinnerService) { }
+    private spinner: NgxSpinnerService,
+    private uploaderService: FileUploadService) { }
 
   refData = {};
   modeSelect = "Create DO";
@@ -101,7 +104,14 @@ export class DoCreateComponent implements OnInit {
         this.loadpermit();
       }
     );
-
+    this.uploader = this.uploaderService.getFileUploader();
+    // add a event listner which will check the queue and delete any existing file in fileQueue
+    // because there should be always 1 file in DO.
+    this.uploader.onAfterAddingFile = file => {
+      if(this.uploader.queue.length > 1){
+        this.uploader.removeFromQueue(this.uploader.queue[0]);
+      }
+    }
     this.multiDropDownSettings = {
       itemsShowLimit: 1,
       enableCheckAll: false
@@ -158,7 +168,8 @@ export class DoCreateComponent implements OnInit {
     finishDate: [],
     remarks: [],
     inAdvanceLimit: [],
-    freightToBePaidBy: []
+    freightToBePaidBy: [],
+    doCopy: []
   })
 
   addTags(evt) {
@@ -244,8 +255,8 @@ export class DoCreateComponent implements OnInit {
         this.ref_areaList = this.refData["areaList"];
         this.ref_partyData = this.refData["partyList"];
         this.ref_destinationData = this.refData["partyList"]
-        this.refData['builtyCompany'] = ['mumbai', 'pune'];
         this.populatecollary(false);
+
 
         setTimeout(() => {
           this.spinner.hide();
@@ -277,16 +288,23 @@ export class DoCreateComponent implements OnInit {
   }
 
   createDo() {
+    this.createDoOnConfirmData.doCopy = this.uploaderService.getFileNameForDO(this.createDoOnConfirmData.doCopy, this.createDoOnConfirmData.bspDoNo, this.createDoOnConfirmData.areaDoNo);
     this.doService.createDoService(this.createDoOnConfirmData).subscribe(
-      (data) => {
+      (res) => {
         this.modalService.dismissAll();
-        this.doCreateForm.reset();
-        this.toaster.success("DO is successfully created");
+        if(res.success){
+          this.submitted = false;
+          this.doCreateForm.reset();
+          this.toaster.success(res.message);
+        }else{
+            this.toaster.error(res.message);
+        }
       },
-      (err) => {
-        this.toaster.error("error in DO creation");
+      () => {
+        this.toaster.error("Internal Server error!");
       }
     )
+    this.initiateFileUpload();
   }
 
   getDOForUpdate(id) {
@@ -327,6 +345,7 @@ export class DoCreateComponent implements OnInit {
   setDataToUpdateForm(data) {
     this.populatecollary(false);
     this.doCreateForm.controls.bspDoNo.setValue(data.bspDoNo);
+    this.doCreateForm.controls.bspDoNo.disable();
     this.doCreateForm.controls.areaDoNo.setValue(data.areaDoNo);
     this.doCreateForm.controls.auctionNo.setValue(data.auctionNo)
     this.doCreateForm.controls.collary.setValue(data.collary)
@@ -619,9 +638,19 @@ export class DoCreateComponent implements OnInit {
       }
     );
 
-    doCreationData.id = _updateDOID;
+    doCreationData.id = this.selecteddo.id;
+    doCreationData.createdBy = this.selecteddo.createdBy;
+    doCreationData.createdDateTime = this.selecteddo.createdDateTime;
+    if(this.uploader.queue && this.uploader.queue.length){
+      doCreationData.doCopy = this.uploaderService.getFileNameForDO(this.doCreateForm.controls.doCopy.value, doCreationData.bspDoNo, doCreationData.areaDoNo);
+    }else{
+      doCreationData.doCopy = this.selecteddo.doCopy;
+    }
+    if(this.selecteddo.finishDate){
+      doCreationData.finishDate = this.selecteddo.finishDate;
+    }
     //TODO find better way to fix it
-    if (doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
+    if (doCreationData.permitNos && doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
       let permitnumbers = [];
       doCreationData.permitNos.forEach(item => {
         permitnumbers.push(item.permitnumber);
@@ -654,14 +683,21 @@ export class DoCreateComponent implements OnInit {
   // }
 
   updateDO(doCreationData, _updateDOID) {
-    this.doService.updateDoService(doCreationData).subscribe((data) => {
-      this.toaster.success('Do is updated, Redirecting to running do');
-      this.router.navigate(['runningdo']);
+    this.doService.updateDoService(doCreationData).subscribe((res) => {
+      if(res.success){
+        this.submitted = false;
+        this.toaster.success('Do is updated, Redirecting to running do');
+        this.router.navigate(['runningdo']);
+      }else{
+        this.toaster.error(res.message);
+      }
+
     },
-      (error) => {
-        this.toaster.error('do is not updated, please contact admin');
+      () => {
+        this.toaster.error('DO is not updated. Internal server error!');
       }
     )
+    this.initiateFileUpload();
   }
 
   resolvePermits(permitNos: Array<number>) {
@@ -689,6 +725,16 @@ export class DoCreateComponent implements OnInit {
     //return selectpermits;
   }
 
+  initiateFileUpload(){
+    if(this.uploader.queue && this.uploader.queue.length){
+      let _docopy = {
+        name: 'docopy',
+        bspdo: this.doCreateForm.controls.bspDoNo.value,
+        areado: this.doCreateForm.controls.areaDoNo.value
+      }
+      this.uploaderService.uploadfiles([_docopy]);
+    }
+  }
   reloadPage() {
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
