@@ -11,7 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
 
-    constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router,private toaster:ToastrService ) { }
+    constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router, private toaster: ToastrService) { }
 
     ngOnInit() {
     }
@@ -33,10 +33,10 @@ export class LoginComponent implements OnInit {
     }
 
     submitLogin() {
-        console.log(this.loginForm.get('userName').value)
         if (this.loginForm.get('userName').value == null ||
             this.loginForm.get('password').value == null ||
             this.loginForm.get('company').value == null) {
+            this.toaster.error("Please provide the complete datails to procced");
             return;
         }
 
@@ -60,9 +60,9 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['/do']);
             },
             (error) => {
-                this.toaster.error(error +"Please check your username and password","wrong UserName password error",{
+                this.toaster.error("Please check your username and password", "wrong UserName password error", {
                     timeOut: 3000
-                  });
+                });
 
             })
     }

@@ -1,8 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
+@media (min-width: 991px) {
 html,
 body {
     height: 100%;
-    font-size: 12px !important;
+    font-size: 12px;
 }
 /*.container {
     height: 100%;
@@ -83,4 +84,5 @@ button.right{
 
 .table tbody tr td, .table thead tr th, .table tfoot tr td{
   padding: 4px !important;
+}
 }

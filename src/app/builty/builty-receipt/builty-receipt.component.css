@@ -7,3 +7,11 @@ input[type="date"]::-webkit-search-decoration,
 input[type="date"]::-webkit-search-cancel-button,
 input[type="date"]::-webkit-search-results-button,
 input[type="date"]::-webkit-search-results-decoration { display: none; }
+
+
+@media(max-width: 991px){
+    .list-resp {
+        margin-left: 30%;
+        width: 600px;
+    }
+}

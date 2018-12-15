@@ -108,7 +108,7 @@ export class DoCreateComponent implements OnInit {
     // add a event listner which will check the queue and delete any existing file in fileQueue
     // because there should be always 1 file in DO.
     this.uploader.onAfterAddingFile = file => {
-      if(this.uploader.queue.length > 1){
+      if (this.uploader.queue.length > 1) {
         this.uploader.removeFromQueue(this.uploader.queue[0]);
       }
     }
@@ -263,6 +263,7 @@ export class DoCreateComponent implements OnInit {
         }, 1500)
       },
       (error) => {
+        this.spinner.hide()
         this.toaster.error("error occured while retrieving refdata");
       }
     )
@@ -292,12 +293,12 @@ export class DoCreateComponent implements OnInit {
     this.doService.createDoService(this.createDoOnConfirmData).subscribe(
       (res) => {
         this.modalService.dismissAll();
-        if(res.success){
+        if (res.success) {
           this.submitted = false;
           this.doCreateForm.reset();
           this.toaster.success(res.message);
-        }else{
-            this.toaster.error(res.message);
+        } else {
+          this.toaster.error(res.message);
         }
       },
       () => {
@@ -641,12 +642,12 @@ export class DoCreateComponent implements OnInit {
     doCreationData.id = this.selecteddo.id;
     doCreationData.createdBy = this.selecteddo.createdBy;
     doCreationData.createdDateTime = this.selecteddo.createdDateTime;
-    if(this.uploader.queue && this.uploader.queue.length){
+    if (this.uploader.queue && this.uploader.queue.length) {
       doCreationData.doCopy = this.uploaderService.getFileNameForDO(this.doCreateForm.controls.doCopy.value, doCreationData.bspDoNo, doCreationData.areaDoNo);
-    }else{
+    } else {
       doCreationData.doCopy = this.selecteddo.doCopy;
     }
-    if(this.selecteddo.finishDate){
+    if (this.selecteddo.finishDate) {
       doCreationData.finishDate = this.selecteddo.finishDate;
     }
     //TODO find better way to fix it
@@ -684,11 +685,11 @@ export class DoCreateComponent implements OnInit {
 
   updateDO(doCreationData, _updateDOID) {
     this.doService.updateDoService(doCreationData).subscribe((res) => {
-      if(res.success){
+      if (res.success) {
         this.submitted = false;
         this.toaster.success('Do is updated, Redirecting to running do');
         this.router.navigate(['runningdo']);
-      }else{
+      } else {
         this.toaster.error(res.message);
       }
 
@@ -725,8 +726,8 @@ export class DoCreateComponent implements OnInit {
     //return selectpermits;
   }
 
-  initiateFileUpload(){
-    if(this.uploader.queue && this.uploader.queue.length){
+  initiateFileUpload() {
+    if (this.uploader.queue && this.uploader.queue.length) {
       let _docopy = {
         name: 'docopy',
         bspdo: this.doCreateForm.controls.bspDoNo.value,

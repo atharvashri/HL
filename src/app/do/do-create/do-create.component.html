@@ -13,8 +13,8 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
-              <label for="bspDoNo" class="test">BSP DO No.</label>
-              <input type="number" class="form-control" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
+              <label for="bspDoNo">BSP DO No.</label>
+              <input type="number" class="form-control input-resp" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
               <div *ngIf="submitted && f.bspDoNo.errors" class="invalid-field">
                 <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
               </div>
@@ -23,7 +23,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="areaDoNo">Area DO No.</label>
-              <input type="text" class="form-control" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
+              <input type="text" class="form-control input-resp" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
               <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-field">
                 <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
               </div>
@@ -32,19 +32,19 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="doNo">DO No</label>
-              <input type="text" class="form-control" id="doNo" formControlName="doNo" value="{{areaNO}}/{{bspNO}}">
+              <input type="text" class="form-control input-resp" id="doNo" formControlName="doNo" value="{{areaNO}}/{{bspNO}}">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doNo">Auction No</label>
-              <input type="number" class="form-control" id="doNo" formControlName="auctionNo">
+              <input type="number" class="form-control input-resp" id="doNo" formControlName="auctionNo">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="quantity">Quantity</label>
-              <input type="number" class="form-control" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
+              <input type="number" class="form-control input-resp" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
               <div *ngIf="submitted && f.quantity.errors" class="invalid-field">
                 <div *ngIf="f.quantity.errors.required">Quantity is required</div>
               </div>
@@ -53,7 +53,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="receivedDate">Received Date</label>
-              <input type="date" class="form-control" id="receivedDate" formControlName="receivedDate">
+              <input type="date" class="form-control input-resp" id="receivedDate" formControlName="receivedDate">
               <div *ngIf="submitted && f.receivedDate.errors" class="invalid-field">
                 <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
               </div>
@@ -62,7 +62,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="doDate">DO Date</label>
-              <input type="date" class="form-control" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
+              <input type="date" class="form-control input-resp" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
                 (change)="updateDate()">
               <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
                 <div *ngIf="f.doDate.errors.required">DO date is required</div>
@@ -72,7 +72,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="dueDate">Due Date</label>
-              <input type="date" class="form-control" id="dueDate" formControlName="dueDate">
+              <input type="date" class="form-control input-resp" id="dueDate" formControlName="dueDate">
             </div>
           </div>
 
@@ -154,7 +154,7 @@
               <label for="partyName">DO Owner Name</label>
               <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
                     ngOptions="party.name for party in partyData"></select>-->
-              <select class="form-control" name="partyName" id="partyName" formControlName="party">
+              <select class="form-control input-resp" name="partyName" id="partyName" formControlName="party">
                 <option *ngFor="let pd of ref_partyData" [ngValue]="pd.name">{{pd.name}}</option>
               </select>
               <div *ngIf="submitted && f.party.errors" class="invalid-field">
@@ -188,7 +188,7 @@
           <div class="col-md-2">
             <div class="form-group">
               <label for="freight">Freight</label>
-              <input type="number" class="form-control" formControlName="freight">
+              <input type="number" class="form-control input-resp" formControlName="freight">
             </div>
           </div>
           <div class="col-md-2">
@@ -266,37 +266,37 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="emd">EMD</label>
-              <input type="text" class="form-control" id="emd" formControlName="emd" (keyup)="setEMDAMt()">
+              <input type="text" class="form-control input-resp" id="emd" formControlName="emd" (keyup)="setEMDAMt()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="emdAmt">EMD Amt</label>
-              <input type="text" class="form-control" id="emdAmt" formControlName="emdAmt">
+              <input type="text" class="form-control input-resp" id="emdAmt" formControlName="emdAmt">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doAmt">DO Amt</label>
-              <input type="text" class="form-control" id="doAmt" formControlName="doAmt" (keyup)="setDOAMtPMT()">
+              <input type="text" class="form-control input-resp" id="doAmt" formControlName="doAmt" (keyup)="setDOAMtPMT()">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doAmtPMt">DO Amt P. MT</label>
-              <input type="text" class="form-control" id="doAmtPMt" formControlName="doAmtpmt">
+              <input type="text" class="form-control input-resp" id="doAmtPMt" formControlName="doAmtpmt">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doRate">DO Basic Rate</label>
-              <input type="text" class="form-control" id="doRate" formControlName="doRate">
+              <input type="text" class="form-control input-resp" id="doRate" formControlName="doRate">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="doRateTcs">TCS Amount</label>
-              <input type="text" class="form-control" id="doRateTcs" formControlName="doRateTcs">
+              <input type="text" class="form-control input-resp" id="doRateTcs" formControlName="doRateTcs">
             </div>
           </div>
           <div class="col-md-3">
@@ -313,7 +313,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="liftedQuantity">Lifted Quantity</label>
-                <input type="number" class="form-control" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
+                <input type="number" class="form-control input-resp" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
               </div>
             </div>
           </div>
@@ -321,7 +321,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="quantityDeduction">Quantity Deduction</label>
-                <input type="number" class="form-control" id="quantityDeduction" formControlName="quantityDeduction"
+                <input type="number" class="form-control input-resp" id="quantityDeduction" formControlName="quantityDeduction"
                   (keyup)="setlepseQuantity()">
               </div>
             </div>
@@ -330,7 +330,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="lepseQuantity">Lepse Quantity</label>
-                <input type="number" class="form-control" id="lepseQuantity" formControlName="lepseQuantity">
+                <input type="number" class="form-control input-resp" id="lepseQuantity" formControlName="lepseQuantity">
               </div>
             </div>
           </div>
@@ -344,7 +344,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="refundAmt">Refund Amt</label>
-                <input type="text" class="form-control" id="refundAmt" formControlName="refundAmt">
+                <input type="text" class="form-control input-resp" id="refundAmt" formControlName="refundAmt">
               </div>
             </div>
           </div>
@@ -352,7 +352,7 @@
             <div class="col-md-3">
               <div class="form-group">
                 <label for="refundDate">Refund Date</label>
-                <input type="date" class="form-control" id="refundDate" formControlName="refundDate">
+                <input type="date" class="form-control input-resp" id="refundDate" formControlName="refundDate">
               </div>
             </div>
           </div>
@@ -379,7 +379,7 @@
           <div class="col-md-3">
             <div class="form-group">
               <label for="remarks">Remarks</label>
-              <input type="text" class="form-control" id="remarks" formControlName="remarks">
+              <input type="text" class="form-control input-resp" id="remarks" formControlName="remarks">
             </div>
           </div>
           <div class="col-md-3">
@@ -409,7 +409,7 @@
           <div class="col-md-6">
             <div class="form-group">
               <label for="website">Website</label>
-              <input type="text" class="form-control" id="website" formControlName="website">
+              <input type="text" class="form-control input-resp" id="website" formControlName="website">
             </div>
           </div>
         </div>
@@ -660,8 +660,6 @@
     </div>
   </div>
 </ng-template>
-<<<<<<< Updated upstream
-=======
+
 
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#337ab7" type="ball-circus"></ngx-spinner>
->>>>>>> Stashed changes

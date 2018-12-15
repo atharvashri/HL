@@ -1,3 +1,10 @@
 .do-run-list{
     background-color: white
 }
+
+@media(max-width: 991px){
+    .list-resp {
+        margin-left: 30%;
+        width: 600px;
+    }
+}

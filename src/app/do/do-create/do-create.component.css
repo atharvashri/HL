@@ -1,7 +1,16 @@
-.margin-btn{
-    margin-left:10% 
+@media(min-width: 991px){
+    .margin-btn{
+        margin-left:10% 
+    }
+    
+    .margin-btn-left{
+        margin-top:16% 
+    }
 }
 
-.margin-btn-left{
-    margin-top:16% 
+@media(max-width: 991px){
+    .margin-btn{
+        margin-left:35% ;
+        margin-top: 5%
+    }
 }

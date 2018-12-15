@@ -51,7 +51,7 @@
 
 /* On mouse-over, add a grey background color */
 .checkboxcontainer:hover input ~ .checkmark {
-    background-color: #ccc;
+    background-color: #413d3d;
 }
 
 /* When the checkbox is checked, add a blue background */
@@ -85,7 +85,7 @@
 }
 
 .scrollbar{
-    max-height: 250px;
+    /* max-height: 250px; */
     overflow-y: scroll
 }
 
@@ -1163,7 +1163,7 @@ hr {
   /* border: medium none; */
   border-radius: 4px;
   /* color: #66615b; */
-  font-size: 14px;
+  /* font-size: 14px; */
   transition: background-color 0.3s ease 0s;
   padding: 7px 18px;
   height: 40px;
@@ -1248,7 +1248,7 @@ hr {
 }
 
 .border-input .input-group-addon {
-  border: solid 1px #CCC5B9;
+  border: solid 1px #413d3d;
 }
 
 .input-group {
@@ -3191,26 +3191,73 @@ Copyright (c) 2015 Daniel Eden
     display: none;
   }
 
+  .btn-primary{
+      font-size: 35px
+  }
+
   .main-panel {
     width: 100%;
   }
 
+  .modal-body{
+    margin-top:800px
+  }
+
+  .modal-content {
+    margin-top: 30%;
+  }
+
+  .modal.fade .modal-dialog {
+    width:750px
+  }
+
   .form-control {
-    size: 100px;
+    height:75px;
+    font-size: 35px;
+  }
+
+  .navbar .navbar-brand{
+    font-weight: 600;
+    margin: 15px;
+    margin-right: 100px;
+    padding: 20px 15px;
+    font-size: 35px;
+  }
+
+  .input-resp {
+    font-size:30px
   }
 
   .navbar-transparent {
     padding-top: 15px;
-    background-color: rgba(0, 0, 0, 0.45);
+    background-color: rgba(92, 37, 37, 0.45);
   }
 
   body {
+    font-size: 35px;
     position: relative;
   }
 
   h6 {
     font-size: 1em;
   }
+
+  .margin-btn-left[_ngcontent-c1]{
+    margin:0px
+  }
+
+  .sidebar .nav p {
+    font-size: 25px;
+    color: #FFFFFF
+    /* line-height: 1.4em; */
+  }
+
+  .p-txt {
+    font-size: 35px;
+    color: #FFFFFF
+    /* line-height: 1.4em; */
+  }
+  
 
   .wrapper {
     -webkit-transform: translate3d(0px, 0, 0);
@@ -3255,7 +3302,7 @@ Copyright (c) 2015 Daniel Eden
     display: block;
     top: 0;
     height: 100%;
-    width: 230px;
+    width: 500px;
     right: 0;
     left: auto;
     z-index: 1032;
@@ -3266,11 +3313,11 @@ Copyright (c) 2015 Daniel Eden
     text-align: left;
     padding-right: 0px;
     padding-left: 0;
-    -webkit-transform: translate3d(230px, 0, 0);
-    -moz-transform: translate3d(230px, 0, 0);
-    -o-transform: translate3d(230px, 0, 0);
-    -ms-transform: translate3d(230px, 0, 0);
-    transform: translate3d(230px, 0, 0);
+    -webkit-transform: translate3d(500px, 0, 0);
+    -moz-transform: translate3d(500px, 0, 0);
+    -o-transform: translate3d(500px, 0, 0);
+    -ms-transform: translate3d(500px, 0, 0);
+    transform: translate3d(500px, 0, 0);
     -webkit-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
     -moz-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
     -o-transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
@@ -3278,6 +3325,7 @@ Copyright (c) 2015 Daniel Eden
     transition: all 0.33s cubic-bezier(0.685, 0.0473, 0.346, 1);
   }
   .sidebar .sidebar-wrapper {
+    width:500px;
     position: relative;
     z-index: 3;
     overflow-y: scroll;
@@ -3289,7 +3337,7 @@ Copyright (c) 2015 Daniel Eden
     padding: 10px 15px 0;
   }
   .sidebar .nav > li > a {
-    margin: 0px 0px;
+    margin: 25px 5px;
     color: black;
     text-transform: uppercase;
     font-weight: 600;
@@ -3382,24 +3430,24 @@ Copyright (c) 2015 Daniel Eden
   }
 
   .nav-open .navbar .container {
-    left: -230px;
+    left: -500px;
   }
 
   .nav-open .wrapper {
     left: 0;
-    -webkit-transform: translate3d(-230px, 0, 0);
-    -moz-transform: translate3d(-230px, 0, 0);
-    -o-transform: translate3d(-230px, 0, 0);
-    -ms-transform: translate3d(-230px, 0, 0);
-    transform: translate3d(-230px, 0, 0);
+    -webkit-transform: translate3d(-500px, 0, 0);
+    -moz-transform: translate3d(-500px, 0, 0);
+    -o-transform: translate3d(-500px, 0, 0);
+    -ms-transform: translate3d(-500px, 0, 0);
+    transform: translate3d(-500px, 0, 0);
   }
 
   .navbar-toggle .icon-bar {
     display: block;
     position: relative;
     background: #fff;
-    width: 24px;
-    height: 2px;
+    width: 35px;
+    height: 5px;
     border-radius: 1px;
     margin: 0 auto;
   }
@@ -3413,7 +3461,7 @@ Copyright (c) 2015 Daniel Eden
   .bar1,
   .bar2,
   .bar3 {
-    outline: 1px solid transparent;
+    outline: 3px solid transparent;
   }
 
   .bar1 {
@@ -3441,7 +3489,7 @@ Copyright (c) 2015 Daniel Eden
   }
 
   .toggled .bar1 {
-    top: 6px;
+    top: 12px;
     -webkit-animation: topbar-x 500ms linear 0s;
     -moz-animation: topbar-x 500ms linear 0s;
     animation: topbar-x 500ms 0s;
@@ -3706,7 +3754,7 @@ Copyright (c) 2015 Daniel Eden
     opacity: 0;
     top: 0;
     left: auto;
-    right: 230px;
+    right: 500px;
     content: "";
     z-index: 9999;
     overflow-x: hidden;
@@ -3796,6 +3844,7 @@ Copyright (c) 2015 Daniel Eden
     -ms-overflow-style: -ms-autohiding-scrollbar;
     -webkit-overflow-scrolling: touch;
   }
+  
 }
 /* fixed plugin on the right */
 .fixed-plugin li > a,
