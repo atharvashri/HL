@@ -137,6 +137,9 @@
               <option hidden value=""></option>
               <option *ngFor="let limit of selectedDo?.inAdvanceLimit" [value]="limit" (change)="calculateTotalCashAdvance()">{{limit}}</option>
             </select>
+            <div *ngIf="submitted && f.inAdvance.errors" class="invalid-field">
+              <div *ngIf="f.inAdvance.errors.required">In Advance is required</div>
+            </div>
             <!-- <input type="number" name="inAdvance" class="form-control" value="" formControlName="inAdvance" (keyup)="calculateTotalCashAdvance()"> -->
           </div>
         </div>
@@ -146,6 +149,15 @@
             <input type="number" name="outAdvance" class="form-control" formControlName="outAdvance" (keyup)="calculateTotalCashAdvance()">
             <div *ngIf="submitted && f.outAdvance.errors" class="invalid-field">
               <div *ngIf="f.outAdvance.errors.required">Out Advance is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="refund">Refund</label>
+            <input type="number" name="refund" class="form-control" formControlName="refund" (keyup)="calculateTotalCashAdvance()">
+            <div *ngIf="submitted && f.refund.errors" class="invalid-field">
+              <div *ngIf="f.refund.errors.required">Refund is required</div>
             </div>
           </div>
         </div>
@@ -260,7 +272,7 @@
             <input type="number" placeholder="Do not start with 0" name="driverMobile" class="form-control" formControlName="driverMobile">
             <div *ngIf="submitted && f.driverMobile.errors" class="invalid-field">
               <div *ngIf="f.driverMobile.errors.required">Driver Mobile is required</div>
-              <div *ngIf="f.driverMobile.errors.invalidmobile">Mobile is not in correct format</div>
+              <div *ngIf="f.driverMobile.errors.invalidmobile">Enter 10 digit mobile, don't start with 0</div>
             </div>
           </div>
         </div>
@@ -291,15 +303,6 @@
           </div>
         </div>
 
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="refund">Refund</label>
-            <input type="number" name="refund" class="form-control" formControlName="refund">
-            <div *ngIf="submitted && f.refund.errors" class="invalid-field">
-              <div *ngIf="f.refund.errors.required">Refund is required</div>
-            </div>
-          </div>
-        </div>
         <div class="col-md-3">
           <div class="form-group">
             <label for="assesibleValue">Assesible Value</label>

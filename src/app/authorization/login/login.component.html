@@ -30,9 +30,8 @@
                         <div class="form-group">
                             <label for="company">Company</label>
                             <select class="form-control" name="company" id="company" formControlName="company">
-                                 <option value="hl"selected>Hindustan Logistics</option>
-                                 <option>Hindustan Logistics XYZ</option>
-                                 <option>Hindustan Logistics PQR</option>
+                                 <option hidden value=""></option>
+                                 <option *ngFor="let company of companies" [value]="company.uniqueShortName">{{company.companyName}}</option>
                             </select>
                         </div>
                     </div>

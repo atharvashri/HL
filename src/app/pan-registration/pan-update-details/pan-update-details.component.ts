@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TruckPanService } from '../../services/truck.pan.services'
 import { ToastrService } from 'ngx-toastr';
@@ -8,6 +8,7 @@ import { FileUploader } from '../../../../node_modules/ng2-file-upload';
 import { FileUploadService } from '../../services/fileupload.service';
 import { Refdata } from '../../utils/refdata.service';
 import { AppConfig } from '../../app-config';
+import { CustomValidator } from '../../utils/custom.validator';
 
 @Component({
   selector: 'app-pan-update-details',
@@ -19,27 +20,31 @@ export class PanUpdateDetailsComponent implements OnInit {
 uploader: FileUploader;
 ref_states: Array<string>;
 s3url: string;
-  constructor(public truckUpdate: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal,
+submitted: boolean;
+addaccountclicked: boolean;
+  constructor(public _fb: FormBuilder, public accountsInfo: FormBuilder, private modalService: NgbModal,
     private panservice: TruckPanService, private toaster: ToastrService,
     private uploaderService: FileUploadService) { }
 
-    panForm = this.truckUpdate.group({
+    panForm = this._fb.group({
       panNo: [],
       panHolderName: ['', Validators.required],
-      mobile:[],
+      mobile:['', CustomValidator.mobileValidator],
       tds: [],
       city: [],
       state: [],
-      accountNumber: [],
-      confirmAccountNumber: [],
-      accountHoldername: [],
-      ifscCode: [],
-      confirmIfscCode: [],
-      bankName: [],
+      account: this.initAccountGroup(),
+      // accountNumber: ['', [this.customrequired.bind(this)]],
+      // confirmAccountNumber: ['', [this.customrequired.bind(this)]],
+      // accountHoldername: ['', [this.customrequired.bind(this)]],
+      // ifscCode: ['', CustomValidator.ifsccodeValidator],
+      // confirmIfscCode: ['', CustomValidator.ifsccodeValidator],
+      // bankName: ['', [this.customrequired.bind(this)]],
       adddedAccountName: [],
       declaration: [],
       panCopy: [],
-      passbook: [],
+      // passbook: [],
+      // branchName: ['', [this.customrequired.bind(this)]],
       Added_bankName: [{ value: [], disabled: true }]
     })
     accounts: Array<Account> = [];
@@ -48,6 +53,8 @@ s3url: string;
     this.uploader = this.uploaderService.getFileUploader();
     this.ref_states = Refdata.getStates();
     this.s3url = AppConfig.AWS_S3_BUCKET;
+    this.submitted = false;
+    this.addaccountclicked = false;
   }
 
   @ViewChild('content') content
@@ -59,10 +66,15 @@ s3url: string;
   selectedValue = "AM";
 
   addAccountByBankName() {
-
-    if (this.panForm.controls.accountNumber.value == null ||
-      this.panForm.controls.accountHoldername.value == null ||
-      this.panForm.controls.ifscCode.value == null){
+    this.addaccountclicked = true;
+    this.checkAccountValidators();
+    if(this.panForm.invalid){
+      this.toaster.error("Please correct the errors in account details");
+      return;
+    }
+    if (this.panForm.controls.account.controls.accountNumber.value == null ||
+      this.panForm.controls.account.controls.accountHoldername.value == null ||
+      this.panForm.controls.account.controls.ifscCode.value == null){
 
       this.toaster.error("Please provide the required details")
       return;
@@ -71,26 +83,28 @@ s3url: string;
       this.toaster.error("This account number is already added")
       return;
     }else {
-      if(this.panForm.controls.accountNumber.value !== parseInt(this.panForm.controls.confirmAccountNumber.value)){
+      if(parseInt(this.panForm.controls.account.controls.accountNumber.value) !== this.panForm.controls.account.controls.confirmAccountNumber.value){
         this.toaster.error("Account Number and Confirm Account Number do not match");
         return;
-      }else if(this.panForm.controls.confirmIfscCode.value !== this.panForm.controls.ifscCode.value){
+      }else if(this.panForm.controls.account.controls.confirmIfscCode.value !== this.panForm.controls.account.controls.ifscCode.value){
         this.toaster.error("IFSC Code and Confirm IFSC do not match");
         return;
       }
 
       let account = new Account();
-      account.accountNo = this.panForm.controls.accountNumber.value;
-      account.bankName = this.panForm.controls.bankName.value;
-      account.ifscCode = this.panForm.controls.ifscCode.value;
-      account.accountHoldername = this.panForm.controls.accountHoldername.value;
-      if(this.panForm.controls.passbook.value){
-        this.uploaderService.setPanaNo(this.panForm.controls.panNo.value);
+      account.accountNo = this.panForm.controls.account.controls.accountNumber.value;
+      account.bankName = this.panForm.controls.account.controls.bankName.value;
+      account.ifscCode = this.panForm.controls.account.controls.ifscCode.value;
+      account.accountHoldername = this.panForm.controls.account.controls.accountHoldername.value;
+      account.branchName = this.panForm.controls.account.controls.branchName.value;
+      if(this.panForm.controls.account.controls.passbook.value){
+        this.uploaderService.setPanaNo(this.panForm.controls.account.controls.panNo.value);
         this.fileQueue.push({'name':'passbook', 'accountno': account.accountNo})
-        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.passbook.value, account.accountNo);
+        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.account.controls.passbook.value, account.accountNo);
       }
-      this.panForm.controls.passbook.setValue("");
+      this.panForm.controls.account.controls.passbook.setValue("");
       this.addedBankAccounts.push(account);
+      this.clearAccountSection();
       //this.toastrService.success("Account is added successfully.");
     }
   }
@@ -98,7 +112,7 @@ s3url: string;
   isAccountPresent() {
     let result = false;
     this.addedBankAccounts.forEach((element) => {
-      if (element.accountNo == this.panForm.controls.accountNumber.value) {
+      if (element.accountNo == this.panForm.controls.account.controls.accountNumber.value) {
         result = true;
       }
     });
@@ -115,7 +129,7 @@ s3url: string;
     this.panForm.controls.tds.setValue(this.PanDataToUpdate.tds ? "true" : "false");
     this.panForm.controls.panCopy.setValue("");
     this.panForm.controls.declaration.setValue("");
-    this.panForm.controls.passbook.setValue("");
+    this.panForm.controls.account.reset();
     this.uploader.clearQueue();
     this.addedBankAccounts = this.PanDataToUpdate.accounts;
   }
@@ -126,6 +140,10 @@ s3url: string;
   }
 
   UpdatePANdetails() {
+    // first clear account section so that validation is ignored for these fields
+    this.clearAccountSection();
+    this.checkAccountValidators();
+    this.submitted = true;
     if (this.panForm.invalid) {
       this.toaster.error("Please correct the errors before submitting");
       return
@@ -138,10 +156,6 @@ s3url: string;
     }
 
     let _panData = this.panForm.value;
-    delete _panData.accountNumber;
-    delete _panData.accountHoldername;
-    delete _panData.ifscCode;
-    delete _panData.bankname;
     delete _panData.adddedAccountName;
     delete _panData.vehicleNo;
 
@@ -239,34 +253,59 @@ s3url: string;
     })
   }
 
-  getFileNameForRC(filename: string): string{
-    if(filename){
-      let ext = this.getFileExtension(filename);
-      return `${this.panForm.controls.panNo}_${this.panForm.controls.vehicleNo}`.toUpperCase() + ext;
+  clearAccountSection(){
+    this.addaccountclicked = false;
+      this.panForm.controls.account.reset();
+  }
+
+  customrequired(control: AbstractControl){
+    if(this.addaccountclicked){
+      if(control.value){
+        return null;
+      }else{
+        return {required: true};
+      }
     }else{
-      return "";
+      return null;
     }
   }
 
-  getFileNameForPan(filename: string): string{
-    if(filename){
-      let ext = this.getFileExtension(filename);
-      return `${this.panForm.controls.panNo}`.toUpperCase() + ext;
+  checkAccountValidators(){
+    let _ifscValidators = [this.customrequired.bind(this), CustomValidator.ifsccodeValidator];
+    let accountCntrl = this.panForm.controls.account;
+    if(this.addaccountclicked){
+      Object.keys(this.panForm.controls.account.controls).forEach(key => {
+        if(key != 'passbook'){
+          if(key == 'ifscCode'){
+            accountCntrl.controls[key].setValidators(_ifscValidators);
+          }else{
+            accountCntrl.controls[key].setValidators(this.customrequired.bind(this));
+          }
+        }
+        accountCntrl.controls[key].updateValueAndValidity();
+      })
     }else{
-      return "";
+      Object.keys(this.panForm.controls.account.controls).forEach(key => {
+        accountCntrl.controls[key].setValidators([]);
+        accountCntrl.controls[key].updateValueAndValidity();
+      })
     }
+
   }
 
-  getFileNameForDeclaration(filename: string): string{
-    if(filename){
-      let ext = this.getFileExtension(filename);
-      return `${this.panForm.controls.panNo}_declaration`.toUpperCase() + ext;
-    }else{
-      return "";
-    }
+  initAccountGroup(){
+    const group = this._fb.group({
+      accountNumber: [''],
+      confirmAccountNumber: [''],
+      accountHoldername: [''],
+      ifscCode: ['', CustomValidator.ifsccodeValidator],
+      confirmIfscCode: ['', CustomValidator.ifsccodeValidator],
+      bankName: [''],
+      passbook: [],
+      branchName: ['']
+    })
+    return group;
   }
-
-  getFileExtension(filename){
-    return filename.substring(filename.lastIndexOf("."), filename.length);
-  }
+  get f(){ return this.panForm.controls}
+  get a(){ return this.panForm.controls.account.controls}
 }

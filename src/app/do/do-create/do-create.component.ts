@@ -712,6 +712,7 @@ export class DoCreateComponent implements OnInit {
         })
       })
     }
+    return selectpermits;
   }
 
   resolveAreaSelection(area: string) {

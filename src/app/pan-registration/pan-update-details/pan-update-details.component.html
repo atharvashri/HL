@@ -24,12 +24,18 @@
               <div class="form-group">
                 <label for="panHolderName">Pan Holder Name</label>
                 <input class="form-control" type="text" [value]="PanDataToUpdate.panHolderName" formControlName="panHolderName">
+                <div *ngIf="submitted && f.panHolderName.errors" class="invalid-field">
+                    <div>Pan holder name is required</div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
               <div class="form-group">
                 <label for="mobile">Mobile</label>
                 <input class="form-control" type="text" [value]="PanDataToUpdate.mobile" pattern="[0-9]*" formControlName="mobile">
+                <div *ngIf="submitted && f.mobile.errors" class="invalid-field">
+                    <div>Enter 10 digit number, don't start with 0</div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">
@@ -74,55 +80,85 @@
           <strong><u>Add Bank Information</u></strong>
           <br>
           <br>
-          <div class="row">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="accountNumber">Bank A/C No</label>
-                <input class="form-control" type="number" id="accountNumber" value="" formControlName="accountNumber">
+          <div formGroupName="account">
+            <div class="row">
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="accountNumber">Bank A/C No</label>
+                  <input class="form-control" type="password" id="accountNumber" formControlName="accountNumber">
+                  <div *ngIf="a.accountNumber.errors" class="invalid-field">
+                      <div>Account no. is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="confirmaccountNumber">Confirm A/C No</label>
+                  <input class="form-control" type="number" id="confirmaccountNumber" formControlName="confirmAccountNumber">
+                  <div *ngIf="a.confirmAccountNumber.errors" class="invalid-field">
+                      <div>Confirm account no. is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="accountHoldername">Account Holder Name</label>
+                  <input class="form-control" type="text" id="accountHoldername" formControlName="accountHoldername">
+                  <div *ngIf="a.accountHoldername.errors" class="invalid-field">
+                      <div>Account holder name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="ifscCode">IFSC Code</label>
+                  <input class="form-control" type="password" id="ifscCode" formControlName="ifscCode">
+                  <div *ngIf="addaccountclicked && a.ifscCode.errors" class="invalid-field">
+                      <div>IFSC code is invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="confirmifscCode">Confirm IFSC Code</label>
+                  <input class="form-control" type="text" id="confirmifscCode" formControlName="confirmIfscCode">
+                  <div *ngIf="addaccountclicked && a.confirmIfscCode.errors" class="invalid-field">
+                      <div>Confirm IFSC code is invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="bankname">Bank Name</label>
+                  <input class="form-control" type="text" id="bankname" formControlName="bankName">
+                  <div *ngIf="a.bankName.errors" class="invalid-field">
+                      <div>Bank name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="branchname">Branch Name</label>
+                  <input class="form-control" type="text" id="branchname" formControlName="branchName">
+                  <div *ngIf="a.branchName.errors" class="invalid-field">
+                      <div>Branch name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label for="passbook">Passbook</label>
+                  <input type="file" name="passbook" ng2FileSelect [uploader]="uploader" formControlName="passbook" >
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary margn-btn" id="addAccount" (click)="addAccountByBankName()">Add
+                    Account</button>
+                </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="confirmaccountNumber">Confirm A/C No</label>
-                <input class="form-control" type="password" id="confirmaccountNumber" formControlName="confirmAccountNumber">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="accountHoldername">Account Holder Name</label>
-                <input class="form-control" type="text" id="accountHoldername" formControlName="accountHoldername">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="ifscCode">IFSC Code</label>
-                <input class="form-control" type="text" id="ifscCode" value="" formControlName="ifscCode">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="confirmifscCode">Confirm IFSC Code</label>
-                <input class="form-control" type="password" id="confirmifscCode" formControlName="confirmIfscCode">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="bankname">Bank Name</label>
-                <input class="form-control" type="text" id="bankname" value="" formControlName="bankName">
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="passbook">Passbook</label>
-                <input type="file" name="passbook" ng2FileSelect [uploader]="uploader" formControlName="passbook" >
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <button type="button" class="btn btn-primary margn-btn" id="addAccount" (click)="addAccountByBankName()">Add
-                  Account</button>
-              </div>
-            </div>
+          <!-- formgroup close-->
           </div>
           <hr>
           <div class="row" *ngIf="accountsAvailable()">
@@ -135,6 +171,7 @@
                       <th><strong>Account Holder</strong></th>
                       <th><strong>IFSC</strong></th>
                       <th><strong>Bank Name</strong></th>
+                      <th><strong>Branch Name</strong></th>
                       <th></th>
                       <th></th>
                     </tr>
@@ -145,8 +182,9 @@
                       <td>{{account.accountHoldername}}</td>
                       <td>{{account.ifscCode}}</td>
                       <td>{{account.bankName}}</td>
-                      <td><a><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeAccount(i)"/></a></td>
-                      <td><a *ngIf="account.passbookAvailable" target="_blank" [href]="s3url+account.passbookLink"><img src="/assets/img/img_icon.png" width="20" height="20"/></a></td>
+                      <td>{{account.branchName}}</td>
+                      <td><a><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeAccount(i)" title="Delete"/></a></td>
+                      <td><a *ngIf="account.passbookAvailable" target="_blank" [href]="s3url+account.passbookLink"><img src="/assets/img/img_icon.png" width="20" height="20" title="View passbook"/></a></td>
                     </tr>
                   </tbody>
                 </table>

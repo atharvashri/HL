@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs'
+import { Subject, Observable } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { AppConfig } from '../app-config';
 
@@ -18,7 +18,9 @@ export class LoginService {
 
     }
 
-
+    getCompanies(): Observable<any>{
+      return this.http.get(this.url + '/company');
+    }
 
     login(data) {
         return this.http.post(this.url + '/auth', data)

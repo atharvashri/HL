@@ -3,5 +3,6 @@ export class Account{
   public ifscCode: string;
   public bankName: string;
   public accountHoldername: string;
+  public branchName: string;
   public passbookLink: string;
 }

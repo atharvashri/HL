@@ -68,7 +68,7 @@
               <td *ngIf="!noVehicle">{{vehicle.panHolderName}}</td>
               <td>{{vehicle.oldOwner ? 'YES' : 'NO'}}</td>
               <td><a *ngIf="vehicle.rcCopyLink" target="_blank" [href]="s3url+vehicle.rcCopyLink"><img src="/assets/img/img_icon.png" width="20" height="20"/></a></td>
-              <td><a [href]="" (click)="selectedvehicle=vehicle;openAddVehicleDialog(true)">update</a></td>
+              <td><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="selectedvehicle=vehicle;openAddVehicleDialog(true)"/></td>
               <td *ngIf="isUpdatePan"><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeVehicle(i)"/></td>
             </tr>
           <!--</div>-->

@@ -11,17 +11,27 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class LoginComponent implements OnInit {
 
-    constructor(private fb: FormBuilder, private loginService: LoginService, private router: Router, private toaster: ToastrService) { }
+    constructor(private fb: FormBuilder, private loginService: LoginService,
+        private router: Router,private toaster:ToastrService) { }
 
     ngOnInit() {
+      this.loginService.getCompanies().subscribe(
+        (res) => {
+          if(res.success){
+            this.companies = res.data;
+          }else{
+            this.toaster.error(res.message);
+          }
+        }
+      )
     }
 
     @Output() showsidebar = new EventEmitter<any>();
-
+    companies:Array<any>;
     loginForm = this.fb.group({
-        userName: [],
-        password: [],
-        company: []
+        userName: ['', Validators.required],
+        password: ['', Validators.required],
+        company: ['', Validators.required]
     })
 
     changeViewOnloggedIn(status) {
@@ -33,10 +43,8 @@ export class LoginComponent implements OnInit {
     }
 
     submitLogin() {
-        if (this.loginForm.get('userName').value == null ||
-            this.loginForm.get('password').value == null ||
-            this.loginForm.get('company').value == null) {
-            this.toaster.error("Please provide the complete datails to procced");
+        if (this.loginForm.invalid) {
+          this.toaster.error("All fields are mandatory for login");
             return;
         }
 
@@ -59,10 +67,10 @@ export class LoginComponent implements OnInit {
                 this.changeViewOnloggedIn(true);
                 this.router.navigate(['/do']);
             },
-            (error) => {
-                this.toaster.error("Please check your username and password", "wrong UserName password error", {
-                    timeOut: 3000
-                });
+            () => {
+                this.toaster.error("Please check your username and password","wrong UserName password error",{
+                    timeOut: 5000
+                  });
 
             })
     }

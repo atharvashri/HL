@@ -407,13 +407,14 @@ updateBuilty(){
     let _inadvnace = this.builtyForm.controls.inAdvance.value;
     let _outadvnace = this.builtyForm.controls.outAdvance.value;
     let _diesel = this.builtyForm.controls.diesel.value;
+    let _refund = this.builtyForm.controls.refund.value;
     if(_inadvnace){
         _inadvnace = parseInt(_inadvnace);
     }else{
       _inadvnace = 0;
     }
-    this.builtyForm.controls.totalCashAdvance.setValue(_inadvnace + _outadvnace)
-    this.builtyForm.controls.totalAdvance.setValue(_inadvnace + _outadvnace + _diesel)
+    this.builtyForm.controls.totalCashAdvance.setValue(_inadvnace + _outadvnace +_refund)
+    this.builtyForm.controls.totalAdvance.setValue(this.builtyForm.controls.totalCashAdvance.value + _diesel)
   }
 
   calculateDoClosingBalance() {
