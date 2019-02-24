@@ -69,6 +69,14 @@ export class BuiltyService {
       return this.builtyToUpdate;
     }
 
+    getForPendingPayments(): any{
+      return this.http.get(this.url + '/builty/pendingPayments');
+    }
+
+    exportInstructions(builties): any{
+      return this.http.post(this.url + '/builty/payment/instruction', builties);
+    }
+
     setActiveBuilties(builtylist){
       this.activeBuilties = builtylist;
     }

@@ -62,12 +62,6 @@ export class BuiltyReceiptComponent implements OnInit {
   showSelectedBuilties() {
 
     if (this.builtiesAddedbyChecks.length > 0) {
-      this.builtyListProperties = [
-        "Builty No",
-        "Received Date",
-        "Received Quantity"
-      ];
-
       this.runningbuiltiesInTable = [];
 
       this.builtiesAddedbyChecks.forEach(element => {

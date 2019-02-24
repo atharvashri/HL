@@ -1,4 +1,14 @@
+import { AppConfig } from "../app-config";
+import { HttpClient } from "../../../node_modules/@angular/common/http";
+import { Injectable } from '@angular/core';
+
+@Injectable()
 export class Refdata{
+
+  url: string = AppConfig.API_ENDPOINT;
+  constructor(public http: HttpClient) {
+
+  }
   private static states: Array<string> = [
     "Andaman and Nicobar Islands",
     "Andhra Pradesh",
@@ -40,5 +50,9 @@ export class Refdata{
 
   static getStates(){
     return this.states;
+  }
+
+  getRefData() {
+      return this.http.get(this.url + '/refdata');
   }
 }

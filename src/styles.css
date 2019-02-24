@@ -1,4 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "ag-grid-community/dist/styles/ag-grid.css";
+@import "ag-grid-community/dist/styles/ag-theme-balham.css";
 @media (min-width: 991px) {
 html,
 body {
@@ -80,6 +83,14 @@ div.centered{
 button.right{
   float: right;
   margin-top: 0 !important;
+}
+
+.disabled-row{
+  background-color: lightpink !important;
+}
+
+.btn.float-left{
+  margin-left: 0 !important;
 }
 
 .table tbody tr td, .table thead tr th, .table tfoot tr td{

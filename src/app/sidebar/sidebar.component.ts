@@ -123,6 +123,7 @@ export class SidebarComponent implements OnInit {
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
             { path: 'builtylist', title: 'Builty report', icon: 'ti-panel', class: '' },
             { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'freightPayment', title: 'Freight Payment', icon: 'ti-panel', class: ''},
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
             { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },
             { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },

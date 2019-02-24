@@ -9,7 +9,7 @@ export class AppUtil{
 
   static currentdate(){
     let now = new Date();
-    let _datestr = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+    let _datestr = now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear();
     return _datestr;
   }
 

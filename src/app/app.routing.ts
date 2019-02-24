@@ -28,6 +28,8 @@ import { PartyResourceComponent } from './party/party.resource'
 import { PermitComponent } from './permit/permit.component';
 import { AreaComponent } from './area/area.component';
 import { BuiltyListComponent } from './builty/builty-list/builty-list.component';
+import { PaymentInstructionComponent } from './payment/payment-instruction/payment-instruction.component';
+
 
 export const AppRoutes: Routes = [
     {
@@ -170,6 +172,11 @@ export const AppRoutes: Routes = [
     {
       path: 'area',
       component: AreaComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'freightPayment',
+      component: PaymentInstructionComponent,
       canActivate: [AuthGuard]
     }
 ]

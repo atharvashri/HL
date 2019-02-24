@@ -1,0 +1,21 @@
+<div class="" id="pendingPaymentGrid">
+  <ag-grid-angular
+    class="ag-theme-balham"
+    rowSelection="multiple"
+    [rowData]="rowData"
+    [isRowSelectable]="isRowSelectable"
+    [defaultColDef]="defaultColDef"
+    [rowClassRules]="rowClassRules"
+    suppressCellSelection="true"
+    [columnDefs]="columnDefs"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button type="button" class="btn btn-primary float-left" (click)="generateInstructions()">Generate Payment Instructions</button>
+    </div>
+    <!-- <div class="col-md-6">
+      <button type="button" class="btn btn-primary float-left">Cancel</button>
+    </div> -->
+  </div>
+</div>

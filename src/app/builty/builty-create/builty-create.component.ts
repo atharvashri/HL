@@ -107,7 +107,9 @@ export class BuiltyCreateComponent implements OnInit {
     assesibleValue: ['', Validators.required],
     freightToBePaidBy: ['', Validators.required],
     receivedDate: [],
-    receivedQuantity: []
+    receivedQuantity: [],
+    savedReferenceNumber: [],
+    id: []
   })
 
   getDataOnDoselect() {
@@ -211,7 +213,8 @@ export class BuiltyCreateComponent implements OnInit {
     else {
       this.isbuiltyCompanyAdded = false;
     }
-
+    this.builtyForm.controls.id.setValue(element.id);
+    this.builtyForm.controls.savedReferenceNumber.setValue(element.savedReferenceNumber);
     this.builtyForm.controls.doId.setValue(element.doId);
     this.builtyForm.controls.builtyDate.setValue(AppUtil.transformdate(element.builtyDate))
     this.builtyForm.controls.otBuiltyCompany.setValue(element.otBuiltyCompany);

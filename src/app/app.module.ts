@@ -6,6 +6,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxPaginationModule} from 'ngx-pagination';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -71,6 +72,9 @@ import { PermitService } from './services/permit.service';
 import { AreaComponent } from './area/area.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
+import { Refdata } from './utils/refdata.service';
+import { PaymentInstructionComponent } from './payment/payment-instruction/payment-instruction.component';
+import { WindowRef } from './utils/window.ref';
 
 @NgModule({
   declarations: [
@@ -107,7 +111,8 @@ import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
     FileSelectDirective,
     PermitComponent,
     AreaComponent,
-    BuiltyListComponent
+    BuiltyListComponent,
+    PaymentInstructionComponent
 
   ],
   imports: [
@@ -137,7 +142,8 @@ import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
       timeOut: 5000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-    })
+    }),
+    AgGridModule.withComponents([])
     // required animations module
 
   ],
@@ -153,6 +159,8 @@ import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
     DataService,
     FileUploadService,
     PermitService,
+    Refdata,
+    WindowRef,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],

@@ -4,6 +4,7 @@ import { Router } from '../../../../../node_modules/@angular/router';
 import { ToastrService } from '../../../../../node_modules/ngx-toastr';
 import { FormBuilder, Validators, FormArray } from '../../../../../node_modules/@angular/forms';
 import { AppUtil } from '../../../utils/app.util';
+import { Refdata } from '../../../utils/refdata.service';
 
 @Component({
   selector: 'app-builty-receipt-update',
@@ -13,16 +14,38 @@ import { AppUtil } from '../../../utils/app.util';
 export class BuiltyReceiptUpdateComponent implements OnInit {
 
   constructor(private builtyService: BuiltyService, private router: Router,
-      private toaster: ToastrService, private _fb: FormBuilder) { }
+      private toaster: ToastrService, private _fb: FormBuilder, private refService: Refdata) { }
 
   @Input() builtyList;
-  @Input() builtyListProperties;
   receiptForm;
+  shortageLimits: Array<any> = [];
+  deductionRates: Array<any> = [];
+  commissions: Array<any> = [];
+
+  // columnDefs = [
+  //       {headerName: 'Builty No', field: 'builtyNo' },
+  //       {headerName: 'Received Date', field: 'receivedDate' },
+  //       {headerName: 'Received Quantity', field: 'receivedQuantity'}
+  //   ];
+
+    rowData: Array<any> = [];
   ngOnInit() {
     this.receiptForm = this._fb.group({
       builtyitems: this._fb.array([])
     })
+    this.refService.getRefData().subscribe(
+      (res) => {
+        let freightData = res['data']['freightData'];
+        if(freightData){
+          this.shortageLimits = freightData['shortageLimit'];
+          this.deductionRates = freightData['deductionRate'];
+          this.commissions = freightData['commission'];
+          this.setDefaultValues();
+        }
+      }
+    )
     this.setBuiltyItems();
+
   }
 
   setBuiltyItems(){
@@ -32,10 +55,39 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
         id: [<string>item.id],
         builtyNo: [{value: <string>item.builtyNo, disabled: true}],
         receivedDate: [AppUtil.currentdate(), Validators.required],
-        receivedQuantity: [<number>item.receivedQuantity, Validators.required]
+        receivedQuantity: [<number>item.receivedQuantity, Validators.required],
+        allowedShortage: [],
+        deductionRate: [],
+        commission: []
       });
       _control.push(_fg);
     });
+  }
+
+  setDefaultValues(){
+    let _control = <FormArray>this.receiptForm.controls.builtyitems;
+    let shortageLimitDefault = this.findDefault(this.shortageLimits);
+    let deductionRateDefault = this.findDefault(this.deductionRates);
+    let commissionDefault = this.findDefault(this.commissions);
+
+    _control.controls.forEach(group => {
+      group.controls.allowedShortage.setValue(shortageLimitDefault);
+      group.controls.deductionRate.setValue(deductionRateDefault);
+      group.controls.commission.setValue(commissionDefault);
+    })
+  }
+
+  findDefault(inputArr){
+    let defaultVal;
+    if(inputArr){
+      inputArr.some(item => {
+        if(item.defaultValue){
+          defaultVal = item.value;
+          return true;
+        }
+      })
+    }
+    return defaultVal;
   }
 
   updateReceipt(){
@@ -64,14 +116,32 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
     let _builtyDTOs = [];
 
     let _formval = this.receiptForm.value;
-    _formval.builtyitems.forEach(item => {
+    _formval.builtyitems.forEach(function(item) {
       let tmp = {
         id: item.id,
         receivedDate: AppUtil.transformdate(item.receivedDate),
-        receivedQuantity: item.receivedQuantity
+        receivedQuantity: item.receivedQuantity,
+        freightBill: this.calculateFreightBill(item)
       }
       _builtyDTOs.push(tmp);
-    })
+    }, this)
     return _builtyDTOs;
+  }
+
+  calculateFreightBill(builty){
+    let finalBill;
+    this.builtyList.some(item => {
+      if(item.id == builty.id){
+        let quantity = item.netWeight;
+        // if received quantity is not within allowed shortage, not ok apply deduction rate on difference
+        if((quantity - builty.receivedQuantity) > builty.allowedShortage){
+          finalBill = (item.freight * quantity) - ((quantity - builty.receivedQuantity) * builty.deductionRate) - builty.commission - item.totalAdvance
+        }else{ //received quantity is within allowed shortage, ok and don't apply deduction rate
+          finalBill = (item.freight * quantity) - builty.commission - item.totalAdvance
+        }
+        return true;
+      }
+    })
+    return finalBill;
   }
 }
