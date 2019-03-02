@@ -12,6 +12,7 @@ import { PermitService } from '../../services/permit.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { FileUploader } from '../../../../node_modules/ng2-file-upload';
 import { FileUploadService } from '../../services/fileupload.service';
+import { AppUtil } from '../../utils/app.util';
 
 
 @Component({
@@ -211,6 +212,51 @@ export class DoCreateComponent implements OnInit {
     })
   }
 
+  onUpdateSubmit() {
+    this.submitted = true;
+    let _updateDOID
+
+    if (this.doCreateForm.invalid) {
+      this.toaster.error("Please correct the errors in form");
+      return;
+    }
+
+    let doCreationData = this.doCreateForm.getRawValue();
+    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
+
+    this.route.queryParams.subscribe(
+      (params) => {
+        _updateDOID = params['update'];
+      }
+    );
+
+    doCreationData.id = this.selecteddo.id;
+    doCreationData.createdBy = this.selecteddo.createdBy;
+    doCreationData.createdDateTime = this.selecteddo.createdDateTime;
+    doCreationData.doBalance = this.selecteddo.doBalance;
+    if (this.uploader.queue && this.uploader.queue.length) {
+      doCreationData.doCopy = this.uploaderService.getFileNameForDO(this.doCreateForm.controls.doCopy.value, doCreationData.bspDoNo, doCreationData.areaDoNo);
+    } else {
+      doCreationData.doCopy = this.selecteddo.doCopy;
+    }
+    if (this.selecteddo.finishDate) {
+      doCreationData.finishDate = this.selecteddo.finishDate;
+    }
+    //TODO find better way to fix it
+    if (doCreationData.permitNos && doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
+      let permitnumbers = [];
+      doCreationData.permitNos.forEach(item => {
+        permitnumbers.push(item.permitnumber);
+      })
+      doCreationData.permitNos = permitnumbers;
+    }
+    this.getSelectedParty().then((data) => {
+      doCreationData.party = data;
+      this.updateDO(doCreationData, _updateDOID);
+    })
+
+  }
+
   modifyDODataBeforeSubmit(doCreationData) {
     delete doCreationData.party;
     delete doCreationData.destinationParty;
@@ -220,9 +266,9 @@ export class DoCreateComponent implements OnInit {
     delete doCreationData.destinations;
 
     doCreationData.destinationparty = this.destinationParty;
-    doCreationData.dueDate = this.transformDate(doCreationData.dueDate);
-    doCreationData.receivedDate = this.transformDate(doCreationData.receivedDate);
-    doCreationData.doDate = this.transformDate(doCreationData.doDate);
+    doCreationData.dueDate = AppUtil.transformdate(doCreationData.dueDate);
+    doCreationData.receivedDate = AppUtil.transformdate(doCreationData.receivedDate);
+    doCreationData.doDate = AppUtil.transformdate(doCreationData.doDate);
 
     //TODO this is temporary solution to get it work.
     doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
@@ -290,7 +336,7 @@ export class DoCreateComponent implements OnInit {
 
   createDo() {
     this.createDoOnConfirmData.doCopy = this.uploaderService.getFileNameForDO(this.createDoOnConfirmData.doCopy, this.createDoOnConfirmData.bspDoNo, this.createDoOnConfirmData.areaDoNo);
-    this.doService.createDoService(this.createDoOnConfirmData).subscribe(
+    this.doService.createDo(this.createDoOnConfirmData).subscribe(
       (res) => {
         this.modalService.dismissAll();
         if (res.success) {
@@ -309,7 +355,7 @@ export class DoCreateComponent implements OnInit {
   }
 
   getDOForUpdate(id) {
-    this.doService.getDoByIDService(id).subscribe((res) => {
+    this.doService.getDoByID(id).subscribe((res) => {
       this.applyUpdateMode();
       this.selecteddo = res['data'];
       this.setDataToUpdateForm(this.selecteddo);
@@ -621,49 +667,6 @@ export class DoCreateComponent implements OnInit {
     this.dataToShowInFreightsTable = [];
   }
 
-  onUpdateSubmit() {
-    this.submitted = true;
-    let _updateDOID
-
-    if (this.doCreateForm.invalid) {
-      this.toaster.error("Please correct the errors in form");
-      return;
-    }
-
-    let doCreationData = this.doCreateForm.getRawValue();
-    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
-
-    this.route.queryParams.subscribe(
-      (params) => {
-        _updateDOID = params['update'];
-      }
-    );
-
-    doCreationData.id = this.selecteddo.id;
-    doCreationData.createdBy = this.selecteddo.createdBy;
-    doCreationData.createdDateTime = this.selecteddo.createdDateTime;
-    if (this.uploader.queue && this.uploader.queue.length) {
-      doCreationData.doCopy = this.uploaderService.getFileNameForDO(this.doCreateForm.controls.doCopy.value, doCreationData.bspDoNo, doCreationData.areaDoNo);
-    } else {
-      doCreationData.doCopy = this.selecteddo.doCopy;
-    }
-    if (this.selecteddo.finishDate) {
-      doCreationData.finishDate = this.selecteddo.finishDate;
-    }
-    //TODO find better way to fix it
-    if (doCreationData.permitNos && doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
-      let permitnumbers = [];
-      doCreationData.permitNos.forEach(item => {
-        permitnumbers.push(item.permitnumber);
-      })
-      doCreationData.permitNos = permitnumbers;
-    }
-    this.getSelectedParty().then((data) => {
-      doCreationData.party = data;
-      this.updateDO(doCreationData, _updateDOID);
-    })
-
-  }
 
   populatecollary(setCollary) {
     this.ref_areaList.forEach(item => {
@@ -684,7 +687,7 @@ export class DoCreateComponent implements OnInit {
   // }
 
   updateDO(doCreationData, _updateDOID) {
-    this.doService.updateDoService(doCreationData).subscribe((res) => {
+    this.doService.updateDo(doCreationData).subscribe((res) => {
       if (res.success) {
         this.submitted = false;
         this.toaster.success('Do is updated, Redirecting to running do');

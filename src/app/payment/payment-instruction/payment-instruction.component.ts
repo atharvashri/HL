@@ -3,6 +3,7 @@ import { ToastrService } from '../../../../node_modules/ngx-toastr';
 import { BuiltyService } from '../../services/builty.service';
 import { WindowRef } from '../../utils/window.ref';
 import { AppConfig } from '../../app-config';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-payment-instruction',
@@ -14,7 +15,8 @@ export class PaymentInstructionComponent implements OnInit {
 private gridApi: any;
   constructor(private builtyService: BuiltyService,
         private toaster: ToastrService,
-        private windowRef: WindowRef) { }
+        private windowRef: WindowRef,
+        private spinner: NgxSpinnerService) { }
 
   columnDefs = [
         {field: 'checkRow', checkboxSelection: true, headerCheckboxSelection:true, width: 40 },
@@ -34,8 +36,10 @@ private gridApi: any;
     rowData: Array<any> = [];
 
   ngOnInit() {
+    this.spinner.show();
     this.builtyService.getForPendingPayments().subscribe(
       (res) => {
+        this.spinner.hide();
         if(res.success){
           this.rowData = res.data;
           this.toaster.success(res.message);
@@ -44,6 +48,7 @@ private gridApi: any;
         }
       },
       () => {
+          this.spinner.hide();
           this.toaster.error("Error in retrieving builties for payments");
       }
     )
@@ -62,18 +67,20 @@ private gridApi: any;
   }
   generateInstructions(){
     let rows = this.gridApi.getSelectedRows();
+    this.spinner.show();
     this.builtyService.exportInstructions(rows).subscribe(
       (res) => {
+        this.spinner.hide();
         if(res.success){
           this.windowRef.nativeWindow.open(AppConfig.API_ENDPOINT + "/builty/payment/downloadInstruction?key=" + res.data, '_blank');
         }
-        console.log("Instructions generate successfully");
+        this.toaster.success("Payment instructions generated successfully");
       },
       () => {
-        console.log("Error while generating instruction");
+        this.spinner.hide();
+        this.toaster.error("Error while generating instruction");
       }
     )
-    console.log(rows);
   }
   customCellRenderer(param){
     return param.value ? "YES" : "NO";

@@ -6,7 +6,7 @@
                     <strong>Permit Resource</strong>
                 </div>
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-primary right" (click)="showform=true;updatemode=false">Create Permit</button>
+                    <button type="button" class="btn btn-primary right" (click)="showpermitform(false)">Create Permit</button>
                 </div>
             </div>
         </div>
@@ -26,7 +26,7 @@
                   <td>{{permit.permitnumber}}</td>
                   <td>{{permit.quantity}}</td>
                   <td>{{permit.enddate}}</td>
-                  <td><a (click)="showpermitform(i)">Update</a></td>
+                  <td><a (click)="showpermitform(true, i)">Update</a></td>
                 </tr>
               </tbody>
             </table>

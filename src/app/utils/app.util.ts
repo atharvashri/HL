@@ -9,8 +9,12 @@ export class AppUtil{
 
   static currentdate(){
     let now = new Date();
-    let _datestr = now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear();
-    return _datestr;
+    let gmtDate = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+
+    //let _datestr = now.getDate() + '-' + (now.getMonth()+1) + '-' + now.getFullYear();
+    //let _datestr = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+    //return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    return gmtDate.toISOString().substring(0, 10);
   }
 
   public static ROLE_OFFICE: string = "ROLE_OFFICE";

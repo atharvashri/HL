@@ -22,6 +22,7 @@
           <div class="form-group">
             <label for="selectDo">DO</label>
             <select class="form-control" name="selectDo" id="selectDo" formControlName="doId" (change)="showDataAfterDoSelection(true)">
+              <option value="0" hidden="true"></option>
               <option *ngFor="let do of doList" [value]="do.id">{{do.doDisplay}}</option>
             </select>
             <div *ngIf="submitted && f.doId.errors" class="invalid-field">

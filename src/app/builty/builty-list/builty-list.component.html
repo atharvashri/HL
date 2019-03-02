@@ -31,6 +31,7 @@
                   <th><strong>Mobile</strong></th>
                   <th *ngIf="canedit()"></th>
                   <th *ngIf="viewactive"></th>
+                  <th *ngIf="!viewactive"><strong>Reset Payment Instruction</strong></th>
                 </tr>
               </thead>
               <tbody>
@@ -47,6 +48,7 @@
                   <td>{{builty.driverMobile}}</td>
                   <td *ngIf="canedit()"><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="showupdateform(i)" title="Edit"></td>
                   <td *ngIf="viewactive"><img class="link" src="/assets/img/delete-icon.png" width="20" height="20" (click)="deletebuilty(i)" title="Delete"></td>
+                  <td *ngIf="!viewactive"><a *ngIf="builty.paymentInstructionDone" [routerLink]="" (click)="resetInstruction(builty.builtyNo)">reset</a></td>
                 </tr>
               </tbody>
             </table>

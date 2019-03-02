@@ -54,7 +54,7 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
       let _fg = this._fb.group({
         id: [<string>item.id],
         builtyNo: [{value: <string>item.builtyNo, disabled: true}],
-        receivedDate: [AppUtil.currentdate(), Validators.required],
+        receivedDate: [item.receivedDate ? AppUtil.transformdate(item.receivedDate) : AppUtil.currentdate(), Validators.required],
         receivedQuantity: [<number>item.receivedQuantity, Validators.required],
         allowedShortage: [],
         deductionRate: [],
@@ -134,14 +134,15 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
       if(item.id == builty.id){
         let quantity = item.netWeight;
         // if received quantity is not within allowed shortage, not ok apply deduction rate on difference
-        if((quantity - builty.receivedQuantity) > builty.allowedShortage){
-          finalBill = (item.freight * quantity) - ((quantity - builty.receivedQuantity) * builty.deductionRate) - builty.commission - item.totalAdvance
+        // allowed shortage is devided by 1000 because it is in kg and all other quantities are in mtonne
+        if((quantity - builty.receivedQuantity) > (builty.allowedShortage/1000)){
+          finalBill = (item.freight * quantity) - ((quantity - builty.receivedQuantity) * 1000 * builty.deductionRate) - builty.commission - item.totalAdvance
         }else{ //received quantity is within allowed shortage, ok and don't apply deduction rate
           finalBill = (item.freight * quantity) - builty.commission - item.totalAdvance
         }
         return true;
       }
     })
-    return finalBill;
+    return Math.ceil(finalBill);
   }
 }

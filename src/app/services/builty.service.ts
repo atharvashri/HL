@@ -77,6 +77,10 @@ export class BuiltyService {
       return this.http.post(this.url + '/builty/payment/instruction', builties);
     }
 
+    resetPaymentInstruction(builtyNo): any{
+      return this.http.put(this.url + '/builty/payment/reset/' + builtyNo, {});
+    }
+
     setActiveBuilties(builtylist){
       this.activeBuilties = builtylist;
     }

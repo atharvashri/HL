@@ -65,6 +65,9 @@ export class PermitComponent implements OnInit {
     let permitdata = this.permitform.getRawValue();
     permitdata.id = this.selectedpermit.id;
     permitdata.enddate = AppUtil.transformdate(permitdata.enddate);
+    permitdata.permitbalance = this.selectedpermit.permitbalance;
+    permitdata.createddate = this.selectedpermit.createddate;
+    permitdata.createdby = this.selectedpermit.createdby;
     this.permitservice.updatepermit(permitdata).subscribe(
       (res) => {
         if(res.success){
@@ -80,14 +83,19 @@ export class PermitComponent implements OnInit {
     )
   }
 
-  showpermitform(index){
-    this.updatemode = true;
+  showpermitform(updatemode, index){
+    this.updatemode = updatemode;
     this.showform = true;
-    this.selectedpermit = this.activepermits[index];
-    this.selectedpermit.index = index;
-    this.permitform.controls.permitnumber.setValue(this.selectedpermit.permitnumber);
-    this.permitform.controls.quantity.setValue(this.selectedpermit.quantity);
-    this.permitform.controls.enddate.setValue(AppUtil.transformdate(this.selectedpermit.enddate));
+    if(this.updatemode){
+      this.selectedpermit = this.activepermits[index];
+      this.selectedpermit.index = index;
+      this.permitform.controls.permitnumber.setValue(this.selectedpermit.permitnumber);
+      this.permitform.controls.quantity.setValue(this.selectedpermit.quantity);
+      this.permitform.controls.enddate.setValue(AppUtil.transformdate(this.selectedpermit.enddate));
+    }else{
+      this.permitform.reset();
+    }
+
   }
 
 }

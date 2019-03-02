@@ -11,27 +11,27 @@ export class DoService {
 
     }
 
-    createDoService(data): Observable<any> {
+    createDo(data): Observable<any> {
         return this.http.post(this.url + '/do', data);
     }
 
-    getActiveDosService(): Observable<any> {
-        return this.http.get(this.url + '/do/active');
-    }
-
-    getAllDosService(): Observable<any> {
+    getActiveDos(): Observable<any> {
         return this.http.get(this.url + '/do');
     }
 
-    getCompletedDosService(): Observable<any> {
-        return this.http.get(this.url + '/do/completed');
+    getAllDos(): Observable<any> {
+        return this.http.get(this.url + '/do?get=all');
     }
 
-    getDoByIDService(id): Observable<any> {
+    getCompletedDos(): Observable<any> {
+        return this.http.get(this.url + '/do?get=completed');
+    }
+
+    getDoByID(id): Observable<any> {
         return this.http.get(this.url + `/do/${id}`);
     }
 
-    updateDoService(data): Observable<any> {
+    updateDo(data): Observable<any> {
         return this.http.put(this.url + `/do`, data);
     }
 

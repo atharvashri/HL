@@ -46,7 +46,6 @@ export class BuiltyCreateComponent implements OnInit {
   @ViewChild('content') content;
 
   ngOnInit() {
-    console.log('ngOninit called');
     this.route.queryParams.subscribe(
       (params) => {
         this.builtyToUpdate = this.builtyService.getBuiltyToUpdate();
@@ -56,8 +55,10 @@ export class BuiltyCreateComponent implements OnInit {
           return;
         }
 
-        this.getAllDOs();
+        this.builtyForm.reset();
+        this.getActiveDOs();
         if(!this.updateMode){
+          this.builtyForm.controls.doId.enable();
           this.getAllSavedBuilties();
         }else{
           this.builtyForm.controls.doId.disable();
@@ -114,7 +115,7 @@ export class BuiltyCreateComponent implements OnInit {
 
   getDataOnDoselect() {
     let _selectedDO = this.builtyForm.controls.doId.value;
-    this.doService.getDoByIDService(_selectedDO).subscribe(
+    this.doService.getDoByID(_selectedDO).subscribe(
       (data) => {
 
       },
@@ -140,7 +141,6 @@ export class BuiltyCreateComponent implements OnInit {
     this.builtyService.getSavedbuilties().subscribe(
       (res) => {
         this.savedBuilties = res['data'];
-        console.log(res);
       },
       (error) => {
 
@@ -148,15 +148,22 @@ export class BuiltyCreateComponent implements OnInit {
     )
   }
 
-  getAllDOs() {
-    this.doService.getAllDosService().subscribe(
+  getActiveDOs() {
+    let doFunction;
+    if(this.updateMode){
+      doFunction = this.doService.getDoByID.bind(this.doService, this.builtyToUpdate.doId);
+    }else{
+      doFunction = this.doService.getActiveDos.bind(this.doService);
+    }
+    doFunction().subscribe(
       (res) => {
-        console.log(res.data);
-        this.doList = res.data;
-        if(this.updateMode){
+        if(this.updateMode){ // it will return single DO
+          this.doList.push(res.data);
           this.populateBuiltyDetails(this.builtyToUpdate);
           this.showDataAfterDoSelection(false);
           this.populateDependentOptions();
+        }else{ // it will return list of active DOs in response
+            this.doList = res.data;
         }
       },
       (err) => {
@@ -341,12 +348,21 @@ updateBuilty(){
     return;
   }
   let _builty = this.builtyForm.getRawValue();
+  // transform all date values
+  _builty.builtyDate = AppUtil.transformdate(_builty.builtyDate);
+  _builty.permitEndDate = AppUtil.transformdate(_builty.permitEndDate);
+  _builty.receivedDate = AppUtil.transformdate(_builty.receivedDate);
+
   _builty.id = this.builtyToUpdate.id;
   _builty.doDisplay = this.builtyToUpdate.doDisplay;
   _builty.approved = this.builtyToUpdate.approved;
   _builty.builtyNo = this.builtyToUpdate.builtyNo;
   _builty.createdBy = this.builtyToUpdate.createdBy;
   _builty.createdDateTime = this.builtyToUpdate.createdDateTime;
+  _builty.freightGenerated = this.builtyToUpdate.freightGenerated;
+  _builty.paymentInstructionDone = this.builtyToUpdate.paymentInstructionDone;
+  _builty.paymentInstructionDateTime = this.builtyToUpdate.paymentInstructionDateTime;
+  _builty.freightBill = this.builtyToUpdate.freightBill;
   this.builtyService.updateBuilty(_builty).subscribe(
     (res) => {
       if(res.success){

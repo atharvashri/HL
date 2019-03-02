@@ -96,4 +96,16 @@ export class BuiltyListComponent implements OnInit {
     return false;
   }
 
+  resetInstruction(builtyNo){
+    this.builtyservice.resetPaymentInstruction(builtyNo).subscribe(
+      (res) => {
+        if(res.success){
+          this.toasterservice.success(res.message);
+        }else{
+          this.toasterservice.error(res.message);
+        }
+      }
+    )
+  }
+
 }
