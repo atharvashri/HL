@@ -1,6 +1,6 @@
 <div class="col-md-12">
     <div class="header">
-        <h4 class="title">Selected Builty Nos</h4>
+        <h4 class="title">Selected Bilty Nos</h4>
     </div>
     <form [formGroup]="receiptForm">
       <div formArrayName="builtyitems">
@@ -20,17 +20,24 @@
         <table class="table table-bordered">
             <thead class="p-back-color">
                 <tr>
-                    <th><span class="p-txt ">Builty No.</span></th>
+                    <th><span class="p-txt ">Bilty No.</span></th>
+                    <th><span class="p-txt ">Vehicle No.</span></th>
+                    <th><span class="p-txt ">Quantity</span></th>
                     <th><span class="p-txt ">Received Date</span></th>
                     <th><span class="p-txt ">Received Quantity</span></th>
                     <th><span class="p-txt ">Allowed Shortage (in kg)</span></th>
                     <th><span class="p-txt ">Deduction Rate (per kg)</span></th>
                     <th><span class="p-txt ">Commission</span></th>
+                    <th><span class="p-txt ">Total Advance</span></th>
+                    <th><span class="p-txt ">Freight Rate</span></th>
+                    <th><span class="p-txt ">Total Freight</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index" [formGroupName]="i">
-                    <td> <input type="text" class="form-control" formControlName="builtyNo"></td>
+                    <td>{{builty.controls.builtyNo?.value}}</td>
+                    <td>{{builty.controls.vehicleNo?.value}}</td>
+                    <td>{{builty.controls.quantity?.value}}</td>
                     <td><input type="date" class="form-control" formControlName="receivedDate"></td>
                     <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
                     <td>
@@ -51,6 +58,9 @@
                         <option *ngFor="let commission of commissions" [value]="commission.value">{{commission.value}}</option>
                       </select>
                     </td>
+                    <td>{{builty.controls.totalAdvance?.value}}</td>
+                    <td>{{builty.controls.freightRate?.value}}</td>
+                    <td><strong>{{builty.controls.freightBill?.value}}</strong></td>
                 </tr>
             </tbody>
         </table>

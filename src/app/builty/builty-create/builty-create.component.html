@@ -2,16 +2,16 @@
   <div class="panel-heading">
     <div class="row">
       <div *ngIf="!updateMode" class="col-md-4">
-        <strong>Select saved builties</strong>
+        <strong>Select saved bilties</strong>
         <div class="custom-control custom-radio">
           <select class="form-control" name="savedbuilties" id="savedbuilties" (change)="showDataAfterSavedBuiltySelection($event)">
-            <option value="notSelected">-- New Builty --</option>
+            <option value="notSelected">-- New Bilty --</option>
             <option *ngFor="let sb of savedBuilties" [value]="sb.id">{{sb.doDisplay}}</option>
           </select>
         </div>
       </div>
       <div *ngIf="updateMode" class="col-md-6">
-        <strong>Builty Number: &nbsp;&nbsp;</strong>{{builtyToUpdate?.builtyNo}}
+        <strong>Bilty Number: &nbsp;&nbsp;</strong>{{builtyToUpdate?.builtyNo}}
       </div>
     </div>
   </div>
@@ -32,10 +32,10 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="builtyDate">Builty Date</label>
+            <label for="builtyDate">Bilty Date</label>
             <input type="date" class="form-control" name="builtyDate" id="date" formControlName="builtyDate">
             <div *ngIf="submitted && f.builtyDate.errors" class="invalid-field">
-              <div *ngIf="f.builtyDate.errors.required">Builty Date is required</div>
+              <div *ngIf="f.builtyDate.errors.required">Bilty Date is required</div>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
         <div *ngIf="isbuiltyCompanyAdded">
           <div class="col-md-3">
             <div class="form-group">
-              <label for="otBuiltyCompany">OT Builty Company</label>
+              <label for="otBuiltyCompany">OT Bilty Company</label>
               <select class="form-control" formControlName="otBuiltyCompany">
                 <option hidden value=""></option>
                 <option *ngFor="let company of selectedDo?.otBuiltyCompany" [value]="company">{{company}}</option>
@@ -78,7 +78,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="otBuiltyNumber">OT Builty Number</label>
+              <label for="otBuiltyNumber">OT Bilty Number</label>
               <input type="number" name="otBuiltyNumber" class="form-control" formControlName="otBuiltyNumber">
             </div>
           </div>
@@ -349,7 +349,7 @@
         </div>
         <div class="col-md-1 col-md-push-4">
           <div class="form-group">
-            <button *ngIf="!updateMode" class="btn btn-primary margn-btn-save" name="Save" (click)="saveBuilty()">Save Builty</button>
+            <button *ngIf="!updateMode" class="btn btn-primary margn-btn-save" name="Save" (click)="saveBuilty()">Save Bilty</button>
             <button *ngIf="updateMode" class="btn btn-primary margn-btn" name="Save" (click)="cancel()">Cancel</button>
           </div>
         </div>
@@ -395,7 +395,7 @@
             </div>
             <div class="col-md-3">
               <div class="form-group">
-                <label for="builtyDate">Builty Date</label>
+                <label for="builtyDate">Bilty Date</label>
                 <br>
                 <span id="builtyDate">{{builtyDataforConfirmModel.builtyDate}}</span>
               </div>
@@ -403,7 +403,7 @@
             <div *ngIf="isbuiltyCompanyAdded">
               <div class="col-md-3">
                 <div class="form-group">
-                  <label for="otBuiltyCompany">Builty Company</label>
+                  <label for="otBuiltyCompany">Bilty Company</label>
                   <br>
                   <span id="otBuiltyCompany">{{builtyDataforConfirmModel.otBuiltyCompany}}</span>
                 </div>

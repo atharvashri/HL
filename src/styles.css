@@ -96,4 +96,8 @@ button.right{
 .table tbody tr td, .table thead tr th, .table tfoot tr td{
   padding: 4px !important;
 }
+
+div.ag-overlay{
+  position: relative !important;
+}
 }

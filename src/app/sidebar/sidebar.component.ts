@@ -17,8 +17,8 @@ export const ROUTES: RouteInfo[] = [
     { path: 'completedo', title: 'Complete DO', icon: 'ti-panel', class: '' },
     { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
     { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
-    { path: 'builtylist', title: 'Builty report', icon: 'ti-panel', class: '' },
-    { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+    { path: 'builtylist', title: 'Bilty report', icon: 'ti-panel', class: '' },
+    { path: 'builty', title: 'Bilty Generation', icon: 'ti-panel', class: '' },
     { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
     { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },
     { path: 'freightreport', title: 'Freight Report', icon: 'ti-panel', class: '' },
@@ -81,8 +81,8 @@ export class SidebarComponent implements OnInit {
             { path: 'completedo', title: 'Complete DO', icon: 'ti-view-list-alt', class: '' },
             { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-user', class: '' },
-            { path: 'builtylist', title: 'Builty report', icon: 'ti-view-list-alt', class: '' },
-            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'builtylist', title: 'Bilty report', icon: 'ti-view-list-alt', class: '' },
+            { path: 'builty', title: 'Bilty Generation', icon: 'ti-panel', class: '' },
             { path: 'fieldentry', title: 'Field Entry', icon: 'ti-view-list-alt', class: '' }
         ];
         console.log(officeRoutes)
@@ -91,7 +91,7 @@ export class SidebarComponent implements OnInit {
 
     getFieldMenuRoutes() {
         const fieldRoutes: RouteInfo[] = [
-            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'builty', title: 'Bilty Generation', icon: 'ti-panel', class: '' },
             { path: 'fieldreport', title: 'Report', icon: 'ti-user', class: '' },
             { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-user', class: '' },
@@ -121,8 +121,8 @@ export class SidebarComponent implements OnInit {
             { path: 'completedo', title: 'Complete DO', icon: 'ti-panel', class: '' },
             { path: 'register_truck', title: 'PAN Registration', icon: 'ti-panel', class: '' },
             { path: 'truckownerreport', title: 'Truck Owner Report', icon: 'ti-panel', class: '' },
-            { path: 'builtylist', title: 'Builty report', icon: 'ti-panel', class: '' },
-            { path: 'builty', title: 'Builty Generation', icon: 'ti-panel', class: '' },
+            { path: 'builtylist', title: 'Bilty report', icon: 'ti-panel', class: '' },
+            { path: 'builty', title: 'Bilty Generation', icon: 'ti-panel', class: '' },
             { path: 'freightPayment', title: 'Freight Payment', icon: 'ti-panel', class: ''},
             { path: 'cashbalance', title: 'Cash Balance', icon: 'ti-panel', class: '' },
             { path: 'truckownerdetails', title: 'Truck Owner Details', icon: 'ti-panel', class: '' },

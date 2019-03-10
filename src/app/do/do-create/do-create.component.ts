@@ -72,7 +72,7 @@ export class DoCreateComponent implements OnInit {
   doQuantityUpdate;
   quantityDeductionUpdate;
   lepseQuantityUpdate;
-  freightToBePaidByOptions = ["DO Owner", "Builty Company"];
+  freightToBePaidByOptions = ["DO Owner", "Bilty Company"];
   // TODO get list from backend
   builtyCompanyOptions = ["Hindustan Logistics", "Surya Logistics"];
   inAdvanceLimitEntries = [];

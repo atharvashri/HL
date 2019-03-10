@@ -272,6 +272,9 @@ export class BuiltyCreateComponent implements OnInit {
     if (_subtransporter == null) {
       _subtransporter = (<HTMLInputElement>document.getElementById('subTransporter')).value;
     }
+
+    _builtyData.builtyDate = AppUtil.transformdate(_builtyData.builtyDate);
+    _builtyData.permitEndDate = AppUtil.transformdate(_builtyData.permitEndDate);
     this.builtyDataforConfirmModel = _builtyData;
     this.builtyDataforConfirmModel['doDisplay'] = this.selectedDo.doDisplay;
     this.modalService.open(this.content);
@@ -305,7 +308,7 @@ export class BuiltyCreateComponent implements OnInit {
             this.selectedDo.doBalance = res.data.doClosingBalance;
             this.clearBuiltyForm();
             this.submitted = false;
-            alert("Builty Number is " + res.data.builtyNo);
+            alert("Bilty Number is " + res.data.builtyNo);
         }else{
             this.toaster.error(res.message);
         }

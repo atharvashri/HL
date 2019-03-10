@@ -13,6 +13,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class PaymentInstructionComponent implements OnInit {
 
 private gridApi: any;
+private noRowMessage: String = "<span style='margin-top: 20px'>No bilties available for payment</span>"
   constructor(private builtyService: BuiltyService,
         private toaster: ToastrService,
         private windowRef: WindowRef,
@@ -20,7 +21,7 @@ private gridApi: any;
 
   columnDefs = [
         {field: 'checkRow', checkboxSelection: true, headerCheckboxSelection:true, width: 40 },
-        {headerName: 'Builty No', field: 'builtyNo', width: 120 },
+        {headerName: 'Bilty No', field: 'builtyNo', width: 120 },
         {headerName: 'Received Date', field: 'receivedDate', width: 140},
         {headerName: 'Received Quantity', field: 'receivedQuantity', width: 140},
         {headerName: 'Vehicle No.', field: 'vehicleNo', width: 120},

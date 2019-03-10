@@ -53,12 +53,17 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
     this.builtyList.forEach(item => {
       let _fg = this._fb.group({
         id: [<string>item.id],
-        builtyNo: [{value: <string>item.builtyNo, disabled: true}],
+        builtyNo: [<string>item.builtyNo],
+        vehicleNo: [<string>item.vehicleNo],
+        quantity: [<string>item.netWeight],
         receivedDate: [item.receivedDate ? AppUtil.transformdate(item.receivedDate) : AppUtil.currentdate(), Validators.required],
         receivedQuantity: [<number>item.receivedQuantity, Validators.required],
         allowedShortage: [],
         deductionRate: [],
-        commission: []
+        commission: [],
+        totalAdvance: [<number>item.totalAdvance],
+        freightRate: [<number>item.freight], // freight rate
+        freightBill: [item.freightBill ? <number>item.freightBill : '-']
       });
       _control.push(_fg);
     });
@@ -100,8 +105,9 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
       (res) => {
         if(res.success){
           this.toaster.success(res.message);
-          this.builtyService.setActiveBuilties([]);
-          this.router.navigate(['builtylist']);
+          // this.builtyService.setActiveBuilties([]);
+          // this.router.navigate(['builtylist']);
+
         }else{
           this.toaster.error(res.message);
         }
@@ -116,13 +122,14 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
     let _builtyDTOs = [];
 
     let _formval = this.receiptForm.value;
-    _formval.builtyitems.forEach(function(item) {
+    _formval.builtyitems.forEach(function(item, idx) {
       let tmp = {
         id: item.id,
         receivedDate: AppUtil.transformdate(item.receivedDate),
         receivedQuantity: item.receivedQuantity,
         freightBill: this.calculateFreightBill(item)
       }
+      this.receiptForm.controls.builtyitems.controls[idx].controls.freight.setValue(tmp.freightBill);
       _builtyDTOs.push(tmp);
     }, this)
     return _builtyDTOs;

@@ -3,14 +3,14 @@
         <div class="panel-heading">
             <div class="row">
                 <div class="col-md-6">
-                    <strong>Active Builties</strong>
+                    <strong>Active Bilties</strong>
                 </div>
                 <div class="col-md-3">
                     <button type="button" class="btn btn-primary right" (click)="showupdatereceiptform()">Update Receipt</button>
                 </div>
                 <div class="col-md-3">
-                    <button *ngIf="viewactive" type="button" class="btn btn-primary right" (click)="showCompletedBuilties()">View Completed Builties</button>
-                    <button *ngIf="!viewactive" type="button" class="btn btn-primary right" (click)="showActiveBuilties()">View Active Builties</button>
+                    <button *ngIf="viewactive" type="button" class="btn btn-primary right" (click)="showCompletedBuilties()">View Completed Bilties</button>
+                    <button *ngIf="!viewactive" type="button" class="btn btn-primary right" (click)="showActiveBuilties()">View Active Bilties</button>
                 </div>
             </div>
         </div>
@@ -19,9 +19,9 @@
             <table class="table table-striped">
               <thead>
                 <tr>
-                  <th><strong>Builty No.</strong></th>
+                  <th><strong>Bilty No.</strong></th>
                   <th><strong>DO</strong></th>
-                  <th><strong>Builty Date</strong></th>
+                  <th><strong>Bilty Date</strong></th>
                   <th><strong>Vehicle Number</strong></th>
                   <th><strong>Net Weight</strong></th>
                   <th><strong>Party</strong></th>
@@ -56,10 +56,10 @@
           <ng-template #nobuilties>
             <div class="row">
               <div *ngIf="viewactive" class="col-md-6">
-                  Currently no builties are active.
+                  Currently no bilties are active.
               </div>
               <div *ngIf="!viewactive" class="col-md-6">
-                  No builties are completed in last 3 months.
+                  No bilties are completed in last 3 months.
               </div>
             </div>
           </ng-template>

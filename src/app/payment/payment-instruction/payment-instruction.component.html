@@ -8,6 +8,7 @@
     [rowClassRules]="rowClassRules"
     suppressCellSelection="true"
     [columnDefs]="columnDefs"
+    [overlayNoRowsTemplate]="noRowMessage"
     (gridReady)="onGridReady($event)">
   </ag-grid-angular>
   <div class="row">
