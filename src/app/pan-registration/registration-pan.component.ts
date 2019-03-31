@@ -221,6 +221,10 @@ addvehicle(rccopy){
     this.toaster.error("Vehicle number is mandatory to link vehicle");
     return;
   }
+  if(!rccopy.value){
+    this.toaster.error("RC Copy is mandatory to regiter vehicle");
+    return;
+  }
   let obj = {
     vehicleNo: this.selectedvehicle.vehicleNo,
     rcCopyLink: this.getFileNameForRC(rccopy.value)

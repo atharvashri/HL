@@ -309,14 +309,14 @@
             </div>
           </div>
           <!-- Only when edit DO  - START-->
-          <div *ngIf="isShowDoUpdate">
+          <!-- <div *ngIf="isShowDoUpdate">
             <div class="col-md-3">
               <div class="form-group">
                 <label for="liftedQuantity">Lifted Quantity</label>
                 <input type="number" class="form-control input-resp" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
               </div>
             </div>
-          </div>
+          </div> -->
           <div *ngIf="isShowDoUpdate">
             <div class="col-md-3">
               <div class="form-group">
@@ -405,7 +405,12 @@
             </div>
           </div>
           <!-- Only when edit DO  - END-->
-
+          <div class="col-md-6">
+            <label for="subTransporter">Sub-Transporter (Multiple values)</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="subTransporter" (onAdd)="addTags($event, true)" (onRemove)="removeTag($event, true)" [(ngModel)]="subTransporterEntries"
+              formControlName="subTransporter"></tag-input>
+          </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="website">Website</label>

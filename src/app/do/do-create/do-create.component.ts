@@ -21,6 +21,7 @@ import { AppUtil } from '../../utils/app.util';
   styleUrls: ['./do-create.component.css']
 })
 export class DoCreateComponent implements OnInit {
+  doCreateForm
   doDetails: DODetails;
   submitted: boolean;
   isShowDoUpdate: boolean = false;
@@ -46,6 +47,7 @@ export class DoCreateComponent implements OnInit {
   selectedFreight = [];
   changedDestination;
   selecteddo;
+  enableDueDate;
 
   isfrightEntryAdded: boolean = false;
   createDoOnConfirmData;
@@ -64,6 +66,7 @@ export class DoCreateComponent implements OnInit {
   refData = {};
   modeSelect = "Create DO";
   addedInAdvanceLimit = []
+  subTransporterList = []
 
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
   sizes = ["ROM", "SLK", "STM"]
@@ -76,6 +79,7 @@ export class DoCreateComponent implements OnInit {
   // TODO get list from backend
   builtyCompanyOptions = ["Hindustan Logistics", "Surya Logistics"];
   inAdvanceLimitEntries = [];
+  subTransporterEntries = [];
 
   multiDropDownSettings = {}
   permitDropDownSettings = {}
@@ -90,6 +94,57 @@ export class DoCreateComponent implements OnInit {
     this.ref_collaryList = [];
     this.spinner.show()
     this.doDetails = new DODetails()
+
+    localStorage.getItem('currentRole') === AppUtil.ROLE_ADMIN ? this.enableDueDate=true : this.enableDueDate=false;
+
+    this.doCreateForm = this.doFormBuilder.group({
+      bspDoNo: ['', Validators.required],
+      areaDoNo: ['', Validators.required],
+      doNo: [{ value: [], disabled: true }],
+      auctionNo: [],
+      quantity: ['', Validators.required],
+      doDate: ['', Validators.required],
+      receivedDate: ['', Validators.required],
+      dueDate: [{ value: '', disabled: !this.enableDueDate }],
+      size: [],
+      party: ['', Validators.required],
+      destinationParty: [],
+      destinations: [],
+      addedDestinationParty: [],
+      addedDestinations: [],
+      // freight: new FormGroup({
+      //   min: [],
+      //   max: []
+      // }),
+      freight: [],
+      permitNos: [],
+      area: ['', Validators.required],
+      collary: ['', Validators.required],
+      grade: ['', Validators.required],
+      by: [],
+      otBuiltyCompany: [],
+      transporter: [],
+      emd: [],
+      emdAmt: [{ value: '', disabled: true }],
+      doAmt: [],
+      doAmtpmt: [{ value: '', disabled: true }],
+      doRate: [],
+      doRateTcs: [],
+      withinOutSide: [],
+      liftedQuantity: [],
+      quantityDeduction: [],
+      lepseQuantity: [{ value: '', disabled: true }],
+      doStatus: [],
+      refundAmt: [],
+      refundDate: [],
+      website: [],
+      finishDate: [],
+      remarks: [],
+      inAdvanceLimit: [],
+      freightToBePaidBy: [],
+      subTransporter:[],
+      doCopy: []
+    })
 
     this.route.queryParams.subscribe(
       (params) => {
@@ -125,62 +180,23 @@ export class DoCreateComponent implements OnInit {
     }
   }
 
-  doCreateForm = this.doFormBuilder.group({
-    bspDoNo: ['', Validators.required],
-    areaDoNo: ['', Validators.required],
-    doNo: [{ value: [], disabled: true }],
-    auctionNo: [],
-    quantity: ['', Validators.required],
-    doDate: ['', Validators.required],
-    receivedDate: ['', Validators.required],
-    dueDate: [{ value: '', disabled: true }],
-    size: [],
-    party: ['', Validators.required],
-    destinationParty: [],
-    destinations: [],
-    addedDestinationParty: [],
-    addedDestinations: [],
-    // freight: new FormGroup({
-    //   min: [],
-    //   max: []
-    // }),
-    freight: [],
-    permitNos: [],
-    area: ['', Validators.required],
-    collary: ['', Validators.required],
-    grade: ['', Validators.required],
-    by: [],
-    otBuiltyCompany: [],
-    transporter: [],
-    emd: [],
-    emdAmt: [{ value: '', disabled: true }],
-    doAmt: [],
-    doAmtpmt: [{ value: '', disabled: true }],
-    doRate: [],
-    doRateTcs: [],
-    withinOutSide: [],
-    liftedQuantity: [],
-    quantityDeduction: [],
-    lepseQuantity: [{ value: '', disabled: true }],
-    doStatus: [],
-    refundAmt: [],
-    refundDate: [],
-    website: [],
-    finishDate: [],
-    remarks: [],
-    inAdvanceLimit: [],
-    freightToBePaidBy: [],
-    doCopy: []
-  })
 
-  addTags(evt) {
+
+  addTags(evt, isSubTransporter) {
     //console.log(evt);
-    console.log(this.inAdvanceLimitEntries);
-    this.addedInAdvanceLimit.push(evt.value);
+    if(isSubTransporter){
+      this.subTransporterList.push(evt.value);
+    }else{
+      this.addedInAdvanceLimit.push(evt.value);
+    }
   }
 
-  removeTag(evt) {
-    this.addedInAdvanceLimit = this.addedInAdvanceLimit.filter((e => e != evt.value))
+  removeTag(evt, isSubTransporter) {
+    if(isSubTransporter){
+      this.subTransporterList = this.subTransporterList.filter((e => e != evt.value))
+    }else{
+      this.addedInAdvanceLimit = this.addedInAdvanceLimit.filter((e => e != evt.value))
+    }
   }
 
   onSubmitDo() {
@@ -272,6 +288,7 @@ export class DoCreateComponent implements OnInit {
 
     //TODO this is temporary solution to get it work.
     doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
+    doCreationData.subTransporter = this.subTransporterList;
     //doCreationData.freightToBePaidBy = ;
     // let _freightToBePaidBy = doCreationData.freightToBePaidBy;
     // doCreationData.freightToBePaidBy = [];
@@ -428,6 +445,8 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
     this.addedInAdvanceLimit = data.inAdvanceLimit;
     this.showInAdvanceLimitForUpdate(data.inAdvanceLimit)
+    this.subTransporterList = data.subTransporter;
+    this.showSubTransporter(data.subTransporter);
     //this.inAdvanceLimitEntries = data.inAdvanceLimit
     if (data.liftedQuantity != undefined && data.quantityDeduction != undefined && data.quantity) {
       this.doCreateForm.controls.lepseQuantity.setValue(data.quantity - data.liftedQuantity - data.quantityDeduction)
@@ -454,6 +473,20 @@ export class DoCreateComponent implements OnInit {
       })
       if (index == inAdvanceLimits.length - 1) {
         this.inAdvanceLimitEntries = _inAdvanceLimitsWithDisplay;
+        //this.doCreateForm.controls.inAdvanceLimit.setValue(_inAdvanceLimitsWithDisplay);
+      }
+    });
+  }
+
+  showSubTransporter(subTransporterList) {
+    let _subTransporterWithDisplay = [];
+    subTransporterList.forEach((element, index) => {
+      _subTransporterWithDisplay.push({
+        display: element.toString(),
+        value: element.toString()
+      })
+      if (index == subTransporterList.length - 1) {
+        this.subTransporterEntries = _subTransporterWithDisplay;
         //this.doCreateForm.controls.inAdvanceLimit.setValue(_inAdvanceLimitsWithDisplay);
       }
     });

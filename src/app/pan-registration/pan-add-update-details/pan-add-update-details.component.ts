@@ -54,7 +54,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       // confirmIfscCode: ['', CustomValidator.ifsccodeValidator],
       // bankname: [],
       // adddedAccountName: [],
-      panCopy: [],
+      panCopy: ['', Validators.required],
       declaration: [],
       //branchname: [],
       //passbook: []
@@ -151,10 +151,10 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       return;
     }
     let pan = this.panForm.controls.panNo.value;
-    if(!pan){
-      this.toastrService.error("Pan number is mandatory");
-      return;
-    }
+    // if(!pan){
+    //   this.toastrService.error("Pan number is mandatory");
+    //   return;
+    // }
 
     let _panData = this.panForm.value;
     delete _panData.adddedAccountName;
@@ -179,6 +179,10 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     }]*/
     _panData.accounts = this.addedBankAccounts;
 
+    if(!_panData.panCopyLink){
+      this.toastrService.error("PAN Copy is mandatory to register PAN");
+      return;
+    }
     this.panservice.registerPAN(_panData).subscribe(
       (res) => {
         console.log(res);

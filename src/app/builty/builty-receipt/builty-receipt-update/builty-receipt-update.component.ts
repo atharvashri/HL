@@ -129,7 +129,7 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
         receivedQuantity: item.receivedQuantity,
         freightBill: this.calculateFreightBill(item)
       }
-      this.receiptForm.controls.builtyitems.controls[idx].controls.freight.setValue(tmp.freightBill);
+      this.receiptForm.controls.builtyitems.controls[idx].controls.freightBill.setValue(tmp.freightBill);
       _builtyDTOs.push(tmp);
     }, this)
     return _builtyDTOs;

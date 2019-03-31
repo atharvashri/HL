@@ -36,7 +36,7 @@ export class BuiltyListComponent implements OnInit {
         this.builtylist = _return;
     }
     this.viewactive = true;
-    this.userrole = localStorage.getItem('currentUser');
+    this.userrole = localStorage.getItem('currentRole');
   }
 
   showupdateform(index){

@@ -40,7 +40,7 @@ export class SidebarComponent implements OnInit {
     public currentProfileIdentifier: String;
 
     ngOnInit() {
-        this.currentProfileIdentifier = localStorage.getItem('currentUser');
+        this.currentProfileIdentifier = localStorage.getItem('currentRole');
         this.menuItems = this.getcurrentProfileForRoutes(this.setRoutesForMenu.bind(this))
         //this.menuItems = ROUTES;//.filter(menuItem => menuItem);
     }
@@ -130,7 +130,8 @@ export class SidebarComponent implements OnInit {
             { path: 'adduser', title: 'User Management', icon: 'ti-user', class: '' },
             { path: 'party', title: 'Party', icon: 'ti-panel', class: '' },
             { path: 'permit', title: 'Permit', icon: 'ti-panel', class: '' },
-            { path: 'area', title: 'Area', icon: 'ti-panel', class: '' }
+            { path: 'area', title: 'Area', icon: 'ti-panel', class: '' },
+            { path: 'pump', title: 'Pump', icon: 'ti-panel', class: '' }
         ];
         return masterRoutes;
     }

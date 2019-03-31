@@ -53,7 +53,7 @@ export class DoRunningComponent implements OnInit {
     if (this.doAddedbyChecks.length > 0) {
       this.activeDoProperties = [
         'DO Id',
-        'Received Date',
+        'DO Date',
         'Due Date',
         'Balance',
         'DO Owner',

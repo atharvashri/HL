@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
     }
 
     logoutUser() {
-        localStorage.setItem('currentUser', null);
+        localStorage.setItem('currentRole', null);
         localStorage.setItem('token', null);
         this.router.navigate(['/login']);
     }

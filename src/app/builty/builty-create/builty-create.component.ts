@@ -4,11 +4,13 @@ import { BuiltyService } from '../../services/builty.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 
-import { FormBuilder, Validators } from '@angular/forms'
+import { FormBuilder, Validators, FormGroup } from '@angular/forms'
 import { PermitService } from '../../services/permit.service';
 import { AppUtil } from '../../utils/app.util';
 import { ActivatedRoute, Router } from '../../../../node_modules/@angular/router';
 import { CustomValidator } from '../../utils/custom.validator';
+import { AppConfig } from '../../app-config';
+import { DataService } from '../../services/data.service';
 //import { resolve } from 'path';
 
 @Component({
@@ -25,19 +27,22 @@ export class BuiltyCreateComponent implements OnInit {
     private doService: DoService,
     private builtyService: BuiltyService,
     private permitService: PermitService,
+    private dataService: DataService,
     private modalService: NgbModal,
     private toaster: ToastrService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
+
+  vehicleListUrl: string = AppConfig.API_ENDPOINT + "/vehicle";
   activeDoList;
   destinationsParty = [];
   destinationNames = [];
   isbuiltyCompanyAdded: boolean = false;
   builtyDataforConfirmModel = {};
   savedBuilties = [];
-  vehicleList = [];
+  pumps = [];
   selectedDo;
   submitted: boolean = false;
   updateMode: boolean;
@@ -67,7 +72,7 @@ export class BuiltyCreateComponent implements OnInit {
         }
       }
     )
-    this.getVehicleList();
+    this.getPumpNames();
   }
 
   builtyForm = this.builtyFormBuilder.group({
@@ -91,9 +96,9 @@ export class BuiltyCreateComponent implements OnInit {
     permitNo: ['', Validators.required],
     permitBalance: [{ value: '', disabled: true }],
     permitEndDate: [{ value: '', disabled: true }],
-    igpNo: ['', Validators.required],
-    invoiceNo: ['', Validators.required],
-    invoiceValue: ['', Validators.required],
+    igpNo: [],
+    invoiceNo: [],
+    invoiceValue: [],
     driverName: ['', Validators.required],
     driverMobile: ['', [Validators.required, CustomValidator.mobileValidator]],
     grossWeight: ['', Validators.required],
@@ -101,18 +106,51 @@ export class BuiltyCreateComponent implements OnInit {
     doClosingBalance: [{ value: '', disabled: true }],
     transporter: [],
     subTransporter: [],
-    waybillNo: ['', Validators.required],
-    tpNo: ['', Validators.required],
+    tpRequired: [],
+    waybillRequired: [],
+    waybillNo: [],
+    tpNo: [],
     netWeight: [{ value: '', disabled: true }],
     refund: ['', Validators.required],
-    assesibleValue: ['', Validators.required],
+    assesibleValue: [],
     freightToBePaidBy: ['', Validators.required],
     receivedDate: [],
     receivedQuantity: [],
     savedReferenceNumber: [],
+    otherDeduction: [],
+    deductionRemark:[],
     id: []
-  })
+  }, {validator: this.validateConditionalFields()})
 
+  validateConditionalFields(){
+    return (group : FormGroup) => {
+      let wayBillRequired = group.controls['waybillRequired'];
+      let tpRequired = group.controls['tpRequired'];
+      if(wayBillRequired.value){
+        if(!group.controls['waybillNo'].value){
+          group.controls['waybillNo'].setErrors({required: true})
+        }
+        if(!group.controls['invoiceNo'].value){
+          group.controls['invoiceNo'].setErrors({required: true})
+        }
+        if(!group.controls['invoiceValue'].value){
+          group.controls['invoiceValue'].setErrors({required: true})
+        }
+        if(!group.controls['assesibleValue'].value){
+          group.controls['assesibleValue'].setErrors({required: true})
+        }
+      }
+      if(tpRequired.value){
+        if(!group.controls['tpNo'].value){
+          group.controls['tpNo'].setErrors({required: true})
+        }
+        if(!group.controls['igpNo'].value){
+          group.controls['igpNo'].setErrors({required: true})
+        }
+      }
+      return
+    }
+  }
   getDataOnDoselect() {
     let _selectedDO = this.builtyForm.controls.doId.value;
     this.doService.getDoByID(_selectedDO).subscribe(
@@ -125,14 +163,12 @@ export class BuiltyCreateComponent implements OnInit {
     )
   }
 
-  getVehicleList() {
-    this.builtyService.getAllVehicleList().subscribe(
+  getPumpNames(){
+    this.dataService.getPumpList().subscribe(
       (res) => {
-        //console.log(res);
-        this.vehicleList = res['data'];
-      },
-      (err) => {
-
+        if(res.success){
+          this.pumps = res.data;
+        }
       }
     )
   }
@@ -248,10 +284,14 @@ export class BuiltyCreateComponent implements OnInit {
     this.builtyForm.controls.grossWeight.setValue(element.grossWeight);
     this.builtyForm.controls.tierWeight.setValue(element.tierWeight);
     this.builtyForm.controls.doClosingBalance.setValue(element.doClosingBalance);
+    this.builtyForm.controls.otherDeduction.setValue(element.otherDeduction);
+    this.builtyForm.controls.deductionRemark.setValue(element.deductionRemark);
     this.transporter = [];
     //this.transporter.push(element.subTransporter);
     //this.builtyForm.controls.subTransporter.setValue(element.subTransporter.id);
+    this.builtyForm.controls.wayBillRequired.setValue(element.waybillNo ? 1 : 0);
     this.builtyForm.controls.waybillNo.setValue(element.waybillNo);
+    this.builtyForm.controls.tpRequired.setValue(element.tpNo ? 1 : 0);
     this.builtyForm.controls.tpNo.setValue(element.tpNo);
     this.builtyForm.controls.receivedDate.setValue(AppUtil.transformdate(element.receivedDate));
     this.builtyForm.controls.receivedQuantity.setValue(element.receivedQuantity);
@@ -267,6 +307,13 @@ export class BuiltyCreateComponent implements OnInit {
       return;
     }
     let _builtyData = this.builtyForm.getRawValue();
+
+    //check if DO due date is passed
+    if(Date.parse(_builtyData.builtyDate) > Date.parse(AppUtil.transformdate(this.selectedDo.dueDate))){
+      this.toaster.error("Can't create bilty as DO due date is passed");
+      return;
+    }
+
     let _subtransporter = this.builtyForm.controls.subTransporter.value
 
     if (_subtransporter == null) {
@@ -409,12 +456,6 @@ updateBuilty(){
     });
   }
 
-  searchVehicleNumber(evt) {
-    this.vehicleList.forEach(element => {
-      element.includes(evt.target.value)
-    });
-  }
-
   getDObyId(id) {
     return new Promise((resolve, reject) => {
       this.doList.forEach(element => {
@@ -469,6 +510,10 @@ updateBuilty(){
         }
       }
     )
+  }
+
+  onSelectItem(selectedVehicle){
+    this.builtyForm.controls.vehicleNo.setValue(selectedVehicle.vehicleNo);
   }
 
   cancel(){

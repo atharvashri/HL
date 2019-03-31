@@ -27,4 +27,16 @@ export class DataService {
       return this.http.put(this.url + '/area', data);
     }
 
+    getPumpList(): any{
+      return this.http.get(this.url + '/pump');
+    }
+
+    createPump(data): any{
+      return this.http.post(this.url + '/pump', data);
+    }
+
+    removePump(data): any{
+      return this.http.put(this.url + '/pump/remove', data);
+    }
+
 }

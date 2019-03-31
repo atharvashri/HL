@@ -75,6 +75,8 @@ import { BuiltyListComponent } from './builty/builty-list/builty-list.component'
 import { Refdata } from './utils/refdata.service';
 import { PaymentInstructionComponent } from './payment/payment-instruction/payment-instruction.component';
 import { WindowRef } from './utils/window.ref';
+import { NgxTypeaheadModule } from 'ngx-typeahead';
+import { PumpComponent } from './pump/pump.component';
 
 @NgModule({
   declarations: [
@@ -112,7 +114,8 @@ import { WindowRef } from './utils/window.ref';
     PermitComponent,
     AreaComponent,
     BuiltyListComponent,
-    PaymentInstructionComponent
+    PaymentInstructionComponent,
+    PumpComponent
 
   ],
   imports: [
@@ -143,7 +146,8 @@ import { WindowRef } from './utils/window.ref';
       positionClass: 'toast-top-right',
       preventDuplicates: true,
     }),
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
+    NgxTypeaheadModule
     // required animations module
 
   ],

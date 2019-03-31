@@ -78,6 +78,9 @@
               <div class="form-group">
                 <label for="panCopy">PAN Copy</label>
                 <input class="form-control" type="file" ng2FileSelect [uploader]="uploader"  name="pancopy" (change)="onFileChange({'name':'pancopy'})" formControlName="panCopy">
+                <div *ngIf="submitted && f.panCopy.errors" class="invalid-field">
+                    <div>PAN copy is required</div>
+                </div>
               </div>
             </div>
             <div class="col-md-3">

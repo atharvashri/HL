@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="panel-body fixed-height-divs">
-    <form [formGroup]="builtyForm">
+    <form [formGroup]="builtyForm" autocomplete="off">
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
@@ -86,13 +86,21 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="vehicleNo">Vehicle No.</label>
-            <select class="form-control" name="vehicleNo" id="vehicleNo" formControlName="vehicleNo">
+            <!-- <select class="form-control" name="vehicleNo" id="vehicleNo" formControlName="vehicleNo">
               <option *ngFor="let vh of vehicleList" [value]="vh.vehicleNo">{{vh.vehicleNo}}</option>
-            </select>
+            </select> -->
             <div *ngIf="submitted && f.vehicleNo.errors" class="invalid-field">
               <div *ngIf="f.vehicleNo.errors.required">Vehicle Number is required</div>
             </div>
-            <!-- <input type="text" name="vehicleNo" class="form-control" value="" formControlName="vehicleNo" (keyup)="searchVehicleNumber($event)"> -->
+            <input type="text" name="vehicleNo" class="form-control"
+              formControlName="vehicleNo"
+              ngxTypeahead
+              [taUrl]="vehicleListUrl"
+              taDebounce="300"
+              (taSelected)="onSelectItem($event)"
+              taApi="http"
+              taListItemLabel="vehicleNo"
+              taQueryParam="searchText">
           </div>
         </div>
         <div class="col-md-3">
@@ -181,7 +189,8 @@
           <div class="form-group">
             <label for="pumpName">Pump Name</label>
             <select class="form-control" name="pumpName" id="pumpName" formControlName="pumpName">
-              <option *ngFor="let do of doList" [value]="do.doId">Pump Name</option>
+              <option hidden="true"></option>
+              <option *ngFor="let pump of pumps" [value]="pump.name">{{pump.name}}</option>
             </select>
             <div *ngIf="submitted && f.pumpName.errors" class="invalid-field">
               <div *ngIf="f.pumpName.errors.required">Pump Name is required</div>
@@ -231,33 +240,7 @@
             <input type="date" name="permitEndDate" class="form-control" formControlName="permitEndDate">
           </div>
         </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="igpNo">IGP No</label>
-            <input type="number" name="igpNo" class="form-control" formControlName="igpNo">
-            <div *ngIf="submitted && f.igpNo.errors" class="invalid-field">
-              <div *ngIf="f.igpNo.errors.required">IGP No is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="invoiceNo">Invoice No.</label>
-            <input type="number" name="invoiceNo" class="form-control" formControlName="invoiceNo">
-            <div *ngIf="submitted && f.invoiceNo.errors" class="invalid-field">
-              <div *ngIf="f.invoiceNo.errors.required">Invoice No. is required</div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="form-group">
-            <label for="invoiceValue">Invoice Value</label>
-            <input type="number" name="invoiceValue" class="form-control" formControlName="invoiceValue">
-            <div *ngIf="submitted && f.invoiceValue.errors" class="invalid-field">
-              <div *ngIf="f.invoiceValue.errors.required">Invoice Value is required</div>
-            </div>
-          </div>
-        </div>
+
         <div class="col-md-3">
           <div class="form-group">
             <label for="driverName">Driver Name</label>
@@ -287,6 +270,16 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
+            <label for="waybillRequired">Waybill Required</label>
+            <select class="form-control" name="waybillRequired" id="waybillRequired" formControlName="waybillRequired">
+              <option [ngValue]="0">NO</option>
+              <option [ngValue]
+              ="1">YES</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3" [hidden]="!f.waybillRequired.value">
+          <div class="form-group">
             <label for="waybillNo">Waybill No.</label>
             <input type="text" name="waybillNo" class="form-control" value="" formControlName="waybillNo">
             <div *ngIf="submitted && f.waybillNo.errors" class="invalid-field">
@@ -294,7 +287,43 @@
             </div>
           </div>
         </div>
+        <div class="col-md-3" [hidden]="!f.waybillRequired.value">
+          <div class="form-group">
+            <label for="invoiceNo">Invoice No.</label>
+            <input type="number" name="invoiceNo" class="form-control" formControlName="invoiceNo">
+            <div *ngIf="submitted && f.invoiceNo.errors" class="invalid-field">
+              <div *ngIf="f.invoiceNo.errors.required">Invoice No. is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3" [hidden]="!f.waybillRequired.value">
+          <div class="form-group">
+            <label for="invoiceValue">Invoice Value</label>
+            <input type="number" name="invoiceValue" class="form-control" formControlName="invoiceValue">
+            <div *ngIf="submitted && f.invoiceValue.errors" class="invalid-field">
+              <div *ngIf="f.invoiceValue.errors.required">Invoice Value is required</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3" [hidden]="!f.waybillRequired.value">
+          <div class="form-group">
+            <label for="assesibleValue">Assesible Value</label>
+            <input type="number" name="assesibleValue" class="form-control" formControlName="assesibleValue">
+            <div *ngIf="submitted && f.assesibleValue.errors" class="invalid-field">
+              <div *ngIf="f.assesibleValue.errors.required">Assesible Value is required</div>
+            </div>
+          </div>
+        </div>
         <div class="col-md-3">
+          <div class="form-group">
+            <label for="tpRequired">TP Required</label>
+            <select class="form-control" name="tpRequired" id="tpRequired" formControlName="tpRequired">
+              <option [ngValue]="0">NO</option>
+              <option [ngValue]="1">YES</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3" [hidden]="!f.tpRequired.value">
           <div class="form-group">
             <label for="tpNo">TP No.</label>
             <input type="number" name="tpNo" class="form-control" formControlName="tpNo">
@@ -303,13 +332,12 @@
             </div>
           </div>
         </div>
-
-        <div class="col-md-3">
+        <div class="col-md-3" [hidden]="!f.tpRequired.value">
           <div class="form-group">
-            <label for="assesibleValue">Assesible Value</label>
-            <input type="number" name="assesibleValue" class="form-control" formControlName="assesibleValue">
-            <div *ngIf="submitted && f.assesibleValue.errors" class="invalid-field">
-              <div *ngIf="f.assesibleValue.errors.required">Assesible Value is required</div>
+            <label for="igpNo">IGP No</label>
+            <input type="number" name="igpNo" class="form-control" formControlName="igpNo">
+            <div *ngIf="submitted && f.igpNo.errors" class="invalid-field">
+              <div *ngIf="f.igpNo.errors.required">IGP No is required</div>
             </div>
           </div>
         </div>
@@ -336,6 +364,24 @@
           <div class="form-group">
             <label for="receivedQuantity">Received Quantity</label>
             <input type="number" name="receivedQuantity" class="form-control" formControlName="receivedQuantity">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="otherDeduction">Other Deduction</label>
+            <input type="number" class="form-control" formControlName="otherDeduction">
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="deductionRemark">Deduction Remark</label>
+            <input type="text" class="form-control" formControlName="deductionRemark">
+          </div>
+        </div>
+        <div *ngIf="updateMode" class="col-md-3">
+          <div class="form-group">
+            <label for="createdBy">Created By</label>
+            <input type="text" class="form-control" formControlName="createdBy">
           </div>
         </div>
       </div>
@@ -528,27 +574,7 @@
                 <span id="permitEndDate">{{builtyDataforConfirmModel.permitEndDate}}</span>
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="igpNo">Igp No</label>
-                <br>
-                <span id="igpNo">{{builtyDataforConfirmModel.igpNo}}</span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="invoiceNo">Invoice No</label>
-                <br>
-                <span id="invoiceNo">{{builtyDataforConfirmModel.invoiceNo}}</span>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="invoiceValue">Invoice Value</label>
-                <br>
-                <span id="invoiceValue">{{builtyDataforConfirmModel.invoiceValue}}</span>
-              </div>
-            </div>
+
             <div class="col-md-3">
               <div class="form-group">
                 <label for="driverName">Driver Name</label>
@@ -571,26 +597,46 @@
                   {{builtyDataforConfirmModel.subTransporter?.lastName}}</span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.wayBillRequired">
               <div class="form-group">
                 <label for="waybillNo">Waybill No</label>
                 <br>
                 <span id="waybillNo">{{builtyDataforConfirmModel.waybillNo}}</span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.wayBillRequired">
+              <div class="form-group">
+                <label for="invoiceNo">Invoice No</label>
+                <br>
+                <span id="invoiceNo">{{builtyDataforConfirmModel.invoiceNo}}</span>
+              </div>
+            </div>
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.wayBillRequired">
+              <div class="form-group">
+                <label for="invoiceValue">Invoice Value</label>
+                <br>
+                <span id="invoiceValue">{{builtyDataforConfirmModel.invoiceValue}}</span>
+              </div>
+            </div>
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.wayBillRequired">
+              <div class="form-group">
+                <label for="assesibleValue">Assesible Value</label>
+                <br>
+                <span id="assesibleValue">{{builtyDataforConfirmModel.assesibleValue}}</span>
+              </div>
+            </div>
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.tpRequired">
               <div class="form-group">
                 <label for="tpNo">TP No</label>
                 <br>
                 <span id="tpNo">{{builtyDataforConfirmModel.tpNo}}</span>
               </div>
             </div>
-
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.tpRequired">
               <div class="form-group">
-                <label for="assesibleValue">Assesible Value</label>
+                <label for="igpNo">Igp No</label>
                 <br>
-                <span id="assesibleValue">{{builtyDataforConfirmModel.assesibleValue}}</span>
+                <span id="igpNo">{{builtyDataforConfirmModel.igpNo}}</span>
               </div>
             </div>
             <div class="col-md-3">
@@ -598,6 +644,20 @@
                 <label for="freightToBePaidBy">Freight To Be Paid By</label>
                 <br>
                 <span id="freightToBePaidBy">{{builtyDataforConfirmModel.freightToBePaidBy}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="otherDeduction">Other Deduction</label>
+                <br>
+                <span id="otherDeduction">{{builtyDataforConfirmModel.otherDeduction}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="deductionRemark">Deduction Remark</label>
+                <br>
+                <span id="deductionRemark">{{builtyDataforConfirmModel.deductionRemark}}</span>
               </div>
             </div>
           </div>

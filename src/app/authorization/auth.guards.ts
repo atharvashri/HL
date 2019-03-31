@@ -9,7 +9,7 @@ export class AuthGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         console.log(route.routeConfig.path);
 
-        if (localStorage.getItem('currentUser') != null && localStorage.getItem('currentUser') != "null") {
+        if (localStorage.getItem('currentRole') != null && localStorage.getItem('currentRole') != "null") {
             console.log(route.routeConfig.path + "true");
             // logged in so return true
             return true;
@@ -30,7 +30,7 @@ export class LoginGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         console.log(route.routeConfig.path);
 
-        if (localStorage.getItem('currentUser') != null && localStorage.getItem('currentUser') != "null") {
+        if (localStorage.getItem('currentRole') != null && localStorage.getItem('currentRole') != "null") {
             console.log(route.routeConfig.path + "true");
             // logged in so return true
             this.router.navigate(['/do']);

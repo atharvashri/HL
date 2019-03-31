@@ -29,6 +29,7 @@ import { PermitComponent } from './permit/permit.component';
 import { AreaComponent } from './area/area.component';
 import { BuiltyListComponent } from './builty/builty-list/builty-list.component';
 import { PaymentInstructionComponent } from './payment/payment-instruction/payment-instruction.component';
+import { PumpComponent } from './pump/pump.component';
 
 
 export const AppRoutes: Routes = [
@@ -177,6 +178,11 @@ export const AppRoutes: Routes = [
     {
       path: 'freightPayment',
       component: PaymentInstructionComponent,
+      canActivate: [AuthGuard]
+    },
+    {
+      path: 'pump',
+      component: PumpComponent,
       canActivate: [AuthGuard]
     }
 ]
