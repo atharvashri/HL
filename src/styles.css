@@ -39,7 +39,7 @@ a{
 }
 
 span.dropdown-btn{
-  padding: 12px 4px 12px 12px !important;
+  padding: 6px 4px 6px 12px !important;
 }
 
 span.dropdown-up{
@@ -93,6 +93,10 @@ button.right{
   margin-left: 0 !important;
 }
 
+.btn.float-right{
+  float: right !important;
+}
+
 .table tbody tr td, .table thead tr th, .table tfoot tr td{
   padding: 4px !important;
 }
@@ -104,6 +108,24 @@ div.ag-overlay{
 div.ng2-tag-input{
   border: 1px solid #ccc !important;
   border-radius: 4px !important;
+  padding: 0 !important;
+}
+.slick-gridmenu-list{
+  display: inline-grid !important;
+  min-width: 400px !important;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px 30px
+}
+.slickgrid-container .grid-canvas .slick-cell{
+  font-size: 13px !important;
+  font-family: Arial !important;
+}
+
+.container-fluid{
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.slickgrid-list-container{
   padding: 0 !important;
 }
 }

@@ -4,6 +4,8 @@ import { BuiltyService } from '../../services/builty.service';
 import { WindowRef } from '../../utils/window.ref';
 import { AppConfig } from '../../app-config';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { AngularGridInstance, Column, GridOption, FieldType, Formatters, Aggregators, Grouping, GroupTotalFormatters } from 'angular-slickgrid';
+import { CustomFormatters } from '../../utils/custom-slickgrid.formatters';
 
 @Component({
   selector: 'app-payment-instruction',
@@ -12,29 +14,27 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class PaymentInstructionComponent implements OnInit {
 
-private gridApi: any;
-private noRowMessage: String = "<span style='margin-top: 20px'>No bilties available for payment</span>"
+angularGrid: AngularGridInstance;
+gridObj: any;
+allColumns: Column[];
+gridOptions: GridOption;
+rowData: Array<any> = [];
+
   constructor(private builtyService: BuiltyService,
         private toaster: ToastrService,
         private windowRef: WindowRef,
         private spinner: NgxSpinnerService) { }
 
-  columnDefs = [
-        {field: 'checkRow', checkboxSelection: true, headerCheckboxSelection:true, width: 40 },
-        {headerName: 'Bilty No', field: 'builtyNo', width: 120 },
-        {headerName: 'Received Date', field: 'receivedDate', width: 140},
-        {headerName: 'Received Quantity', field: 'receivedQuantity', width: 140},
-        {headerName: 'Vehicle No.', field: 'vehicleNo', width: 120},
-        {headerName: 'Owner', field: 'vehicleOwner', width: 180},
-        {headerName: 'Freight', field: 'freightBill', width: 120},
-        {headerName: 'Bank Details Available YES/NO', field: 'bankDtlsAvailable', width: 180, cellRenderer: 'customCellRenderer'}
+  columnDefs: Column[] = [
+        {id:'panNo', field: 'panNo', name: 'PAN', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string, formatter: this.emptyStringFormatter, groupTotalsFormatter: GroupTotalFormatters.avgTotals, params: { groupFormatterPrefix: '<b>Extra Payment</b>: ', groupFormatterSuffix: ' <i>* it would be deducted from total freight</i>'} },
+        {id:'builtyNo', field: 'builtyNo', name: 'Builty No', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string },
+        {id:'receivedDate', field: 'receivedDate', name: 'Received Date', maxWidth: 120, sortable: true, filterable: true, type: FieldType.dateIso, formatter: CustomFormatters.dateFormatter },
+        {id:'receivedQuantity', field: 'receivedQuantity', name: 'Received Quantity', maxWidth: 100, sortable: true, filterable: true, type: FieldType.number },
+        {id:'vehicleNo', field: 'vehicleNo', name: 'Vehicle No', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string },
+        {id:'vehicleOwner', field: 'vehicleOwner', name: 'Owner', maxWidth: 150, sortable: true, filterable: true, type: FieldType.string },
+        {id:'freightBill', field: 'freightBill', name: 'Freight', maxWidth: 120, sortable: true, filterable: true, type: FieldType.number, groupTotalsFormatter: GroupTotalFormatters.sumTotals, params: { groupFormatterPrefix: '<b>Total Frieght</b>: ' /*, groupFormatterSuffix: ' USD'*/ } },
+        {id:'bankDtlsAvailable', field: 'bankDtlsAvailable', name: 'Bank Details Available', maxWidth: 100, sortable: true, filterable: true, type: FieldType.string, formatter: Formatters.yesNo }
     ];
-
-    defaultColDef: {
-      width: 100
-    }
-
-    rowData: Array<any> = [];
 
   ngOnInit() {
     this.spinner.show();
@@ -53,6 +53,32 @@ private noRowMessage: String = "<span style='margin-top: 20px'>No bilties availa
           this.toaster.error("Error in retrieving builties for payments");
       }
     )
+
+    this.gridOptions = {
+
+      enableColumnReorder: false,
+      enableAutoResize: true,
+      //enableAsyncPostRender: true,
+      enableGridMenu: false,
+      enableColumnPicker: false,
+      defaultColumnWidth: 100,
+      enableAutoTooltip: true,
+      autoResize: {
+        containerId: 'pending-payment-container'
+      },
+      enableGrouping: true,
+      enableRowSelection: true,
+      enableCheckboxSelector: true,
+      checkboxSelector: {
+        // you can toggle these 2 properties to show the "select all" checkbox in different location
+        hideInFilterHeaderRow: false
+      },
+      rowSelectionOptions:{
+        selectActiveRow: false
+      },
+      minRowBuffer: 1
+
+    }
   }
 
   isRowSelectable(rowNode){
@@ -63,11 +89,21 @@ private noRowMessage: String = "<span style='margin-top: 20px'>No bilties availa
     'disabled-row': '!data.bankDtlsAvailable'
   }
 
-  onGridReady(param){
-    this.gridApi = param.api;
+  onGridReady(e){
+      this.angularGrid = e;
+      this.gridObj = this.angularGrid && this.angularGrid.slickGrid || {}
+      //this.gridObj.setSelectionModel(new Slick.CheckboxSelectColumn())
+      this.groupByPan()
   }
   generateInstructions(){
-    let rows = this.gridApi.getSelectedRows();
+    let selectedIdx: number[] = this.gridObj.getSelectedRows()
+    let rows: any[] = [];
+    selectedIdx.forEach(idx => {
+      let item = this.gridObj.getDataItem(idx);
+      if(item.bankDtlsAvailable){
+        rows.push(this.gridObj.getDataItem(idx))
+      }
+    })
     this.spinner.show();
     this.builtyService.exportInstructions(rows).subscribe(
       (res) => {
@@ -83,8 +119,22 @@ private noRowMessage: String = "<span style='margin-top: 20px'>No bilties availa
       }
     )
   }
-  customCellRenderer(param){
-    return param.value ? "YES" : "NO";
+
+  groupByPan(){
+    this.angularGrid.dataView.setGrouping({
+      getter: 'panNo',
+      formatter:(item) => {
+        return `<strong>${item.value}</strong>`
+      },
+      aggregators:[
+        new Aggregators.Sum('freightBill'),
+        new Aggregators.Avg('extraPayment')
+      ]
+    } as Grouping)
+  }
+
+  emptyStringFormatter(){
+    return '';
   }
 
 }

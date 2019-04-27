@@ -282,9 +282,9 @@ export class DoCreateComponent implements OnInit {
     delete doCreationData.destinations;
 
     doCreationData.destinationparty = this.destinationParty;
-    doCreationData.dueDate = AppUtil.transformdate(doCreationData.dueDate);
-    doCreationData.receivedDate = AppUtil.transformdate(doCreationData.receivedDate);
-    doCreationData.doDate = AppUtil.transformdate(doCreationData.doDate);
+    // doCreationData.dueDate = AppUtil.transformdate(doCreationData.dueDate);
+    // doCreationData.receivedDate = AppUtil.transformdate(doCreationData.receivedDate);
+    // doCreationData.doDate = AppUtil.transformdate(doCreationData.doDate);
 
     //TODO this is temporary solution to get it work.
     doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
@@ -414,8 +414,8 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.auctionNo.setValue(data.auctionNo)
     this.doCreateForm.controls.collary.setValue(data.collary)
     this.doCreateForm.controls.quantity.setValue(data.quantity)
-    this.doCreateForm.controls.doDate.setValue(this.transformDate(data.doDate))
-    this.doCreateForm.controls.dueDate.setValue(this.transformDate(data.dueDate))
+    this.doCreateForm.controls.doDate.setValue(data.doDate)
+    this.doCreateForm.controls.dueDate.setValue(data.dueDate)
 
     this.doCreateForm.controls.grade.setValue(data.grade)
     this.doCreateForm.controls.size.setValue(data.size)
@@ -433,13 +433,13 @@ export class DoCreateComponent implements OnInit {
 
     this.doCreateForm.controls.party.setValue(data.party.name)
     this.doCreateForm.controls.withinOutSide.setValue(data.withinOutSide)
-    this.doCreateForm.controls.receivedDate.setValue(this.transformDate(data.receivedDate))
+    this.doCreateForm.controls.receivedDate.setValue(data.receivedDate)
 
 
     this.doCreateForm.controls.liftedQuantity.setValue(data.liftedQuantity)
     this.doCreateForm.controls.quantityDeduction.setValue(data.quantityDeduction)
     this.doCreateForm.controls.remarks.setValue(data.remarks)
-    this.doCreateForm.controls.refundDate.setValue(this.transformDate(data.refundDate))
+    this.doCreateForm.controls.refundDate.setValue(data.refundDate)
     this.doCreateForm.controls.refundAmt.setValue(data.refundAmt)
     this.doCreateForm.controls.website.setValue(data.website)
     this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
@@ -671,13 +671,6 @@ export class DoCreateComponent implements OnInit {
         }
       })
     })
-  }
-
-  transformDate(date: string) {
-    if (date && date.length == 10) {
-      return (<Array<string>>date.split('-')).reverse().join('-');
-    }
-    return "";
   }
 
   cancelUpdateDO() {

@@ -56,7 +56,7 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
         builtyNo: [<string>item.builtyNo],
         vehicleNo: [<string>item.vehicleNo],
         quantity: [<string>item.netWeight],
-        receivedDate: [item.receivedDate ? AppUtil.transformdate(item.receivedDate) : AppUtil.currentdate(), Validators.required],
+        receivedDate: [item.receivedDate ? item.receivedDate : AppUtil.currentdate(), Validators.required],
         receivedQuantity: [<number>item.receivedQuantity, Validators.required],
         allowedShortage: [],
         deductionRate: [],
@@ -76,9 +76,9 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
     let commissionDefault = this.findDefault(this.commissions);
 
     _control.controls.forEach(group => {
-      group.controls.allowedShortage.setValue(shortageLimitDefault);
-      group.controls.deductionRate.setValue(deductionRateDefault);
-      group.controls.commission.setValue(commissionDefault);
+      group['controls'].allowedShortage.setValue(shortageLimitDefault);
+      group['controls'].deductionRate.setValue(deductionRateDefault);
+      group['controls'].commission.setValue(commissionDefault);
     })
   }
 
@@ -125,7 +125,7 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
     _formval.builtyitems.forEach(function(item, idx) {
       let tmp = {
         id: item.id,
-        receivedDate: AppUtil.transformdate(item.receivedDate),
+        receivedDate: item.receivedDate,
         receivedQuantity: item.receivedQuantity,
         freightBill: this.calculateFreightBill(item)
       }

@@ -1,0 +1,19 @@
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-body">
+    <button class="btn btn-default btn-sm float-right" (click)="toggleGridMenu($event)">
+        <i class="fa fa-bars"></i>
+        Grid Menu
+    </button>
+    <div id="completed-do-container" class="col-md-12 slickgrid-list-container">
+      <angular-slickgrid #gridRef
+          gridId="completedDOGrid"
+          [columnDefinitions]="allColumns"
+          [gridOptions]="gridOptions"
+          [dataset]="dataset"
+          (onAngularGridCreated)="onGridReady($event)">
+      </angular-slickgrid>
+    </div>
+  </div>
+</div>
+</div>

@@ -72,9 +72,9 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       this.toastrService.error("Please correct the errors in account details");
       return;
     }
-    if (this.panForm.controls.account.controls.accountNumber.value == null ||
-      this.panForm.controls.account.controls.accountHoldername.value == null ||
-      this.panForm.controls.account.controls.ifscCode.value == null){
+    if (this.panForm.controls.account['controls'].accountNumber.value == null ||
+      this.panForm.controls.account['controls'].accountHoldername.value == null ||
+      this.panForm.controls.account['controls'].ifscCode.value == null){
 
       this.toastrService.error("Please provide the required details")
       return;
@@ -83,25 +83,25 @@ export class PanAddUpdateDetailsComponent implements OnInit {
       this.toastrService.error("This account number is already added")
       return;
     }else {
-      if(parseInt(this.panForm.controls.account.controls.accountNumber.value) !== this.panForm.controls.account.controls.confirmAccountNumber.value){
+      if(parseInt(this.panForm.controls.account['controls'].accountNumber.value) !== this.panForm.controls.account['controls'].confirmAccountNumber.value){
         this.toastrService.error("Account Number and Confirm Account Number do not match");
         return;
-      }else if(this.panForm.controls.account.controls.confirmIfscCode.value !== this.panForm.controls.account.controls.ifscCode.value){
+      }else if(this.panForm.controls.account['controls'].confirmIfscCode.value !== this.panForm.controls.account['controls'].ifscCode.value){
         this.toastrService.error("IFSC Code and Confirm IFSC do not match");
         return;
       }
       let account = new Account();
-      account.accountNo = this.panForm.controls.account.controls.accountNumber.value;
-      account.bankName = this.panForm.controls.account.controls.bankName.value;
-      account.ifscCode = this.panForm.controls.account.controls.ifscCode.value;
-      account.accountHoldername = this.panForm.controls.account.controls.accountHoldername.value;
-      account.branchName = this.panForm.controls.account.controls.branchName.value;
-      if(this.panForm.controls.account.controls.passbook.value){
-        this.uploaderService.setPanaNo(this.panForm.controls.account.controls.panNo.value);
+      account.accountNo = this.panForm.controls.account['controls'].accountNumber.value;
+      account.bankName = this.panForm.controls.account['controls'].bankName.value;
+      account.ifscCode = this.panForm.controls.account['controls'].ifscCode.value;
+      account.accountHoldername = this.panForm.controls.account['controls'].accountHoldername.value;
+      account.branchName = this.panForm.controls.account['controls'].branchName.value;
+      if(this.panForm.controls.account['controls'].passbook.value){
+        this.uploaderService.setPanaNo(this.panForm.controls.account['controls'].panNo.value);
         this.fileQueue.push({'name':'passbook', 'accountno': account.accountNo})
-        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.account.controls.passbook.value, account.accountNo);
+        account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.account['controls'].passbook.value, account.accountNo);
       }
-      this.panForm.controls.account.controls.passbook.setValue("");
+      this.panForm.controls.account['controls'].passbook.setValue("");
       this.addedBankAccounts.push(account);
       this.clearAccountSection();
       //this.toastrService.success("Account is added successfully.");
@@ -111,7 +111,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   isAccountPresent() {
     let result = false;
     this.addedBankAccounts.forEach((element) => {
-      if (element.accountNo == this.panForm.controls.account.controls.accountNumber.value) {
+      if (element.accountNo == this.panForm.controls.account['controls'].accountNumber.value) {
         result = true;
       }
     });
@@ -237,20 +237,20 @@ export class PanAddUpdateDetailsComponent implements OnInit {
     let _ifscValidators = [this.customrequired.bind(this), CustomValidator.ifsccodeValidator];
     let accountCntrl = this.panForm.controls.account;
     if(this.addaccountclicked){
-      Object.keys(this.panForm.controls.account.controls).forEach(key => {
+      Object.keys(this.panForm.controls.account['controls']).forEach(key => {
         if(key != 'passbook'){
           if(key == 'ifscCode'){
-            accountCntrl.controls[key].setValidators(_ifscValidators);
+            accountCntrl['controls'][key].setValidators(_ifscValidators);
           }else{
-            accountCntrl.controls[key].setValidators(this.customrequired.bind(this));
+            accountCntrl['controls'][key].setValidators(this.customrequired.bind(this));
           }
         }
-        accountCntrl.controls[key].updateValueAndValidity();
+        accountCntrl['controls'][key].updateValueAndValidity();
       })
     }else{
-      Object.keys(this.panForm.controls.account.controls).forEach(key => {
-        accountCntrl.controls[key].setValidators([]);
-        accountCntrl.controls[key].updateValueAndValidity();
+      Object.keys(this.panForm.controls.account['controls']).forEach(key => {
+        accountCntrl['controls'][key].setValidators([]);
+        accountCntrl['controls'][key].updateValueAndValidity();
       })
     }
 
@@ -271,7 +271,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
   }
 
   get f(){ return this.panForm.controls}
-  get a(){ return this.panForm.controls.account.controls}
+  get a(){ return this.panForm.controls.account['controls']}
   removeAccount(index){
     this.addedBankAccounts.splice(index, 1);
     // this.addedBankAccounts = this.addedBankAccounts.filter((item, idx) => idx !== index);

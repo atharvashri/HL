@@ -55,7 +55,9 @@ import { BuiltyService } from './services/builty.service'
 import { BillingService } from './services/billing.service'
 import { DoService } from './services/do.service'
 import { UserService } from './services/user.service'
-import { ReportService } from './services/report.service'
+import { HttpClient } from '@angular/common/http'
+import { Injector } from '@angular/core'
+import { LOCATION_INITIALIZED } from '@angular/common';
 import { LoginService } from './services/login.service'
 import { DataService } from './services/data.service'
 import { AddHeaderInterceptor } from './interceptor/header.interceptor'
@@ -77,6 +79,37 @@ import { PaymentInstructionComponent } from './payment/payment-instruction/payme
 import { WindowRef } from './utils/window.ref';
 import { NgxTypeaheadModule } from 'ngx-typeahead';
 import { PumpComponent } from './pump/pump.component';
+import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { AngularSlickgridModule } from 'angular-slickgrid';
+import { DOEditActionComponent } from './do/do-edit-action.component';
+import { BiltyEditActionComponent } from './builty/bilty-edit-action.component';
+import { BiltyDeleteActionComponent } from './builty/bilty-delete-action.component';
+import { DOLinkActionComponent } from './do/do-link-action.component';
+
+// AoT requires an exported function for factories
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
+
+// use an Initializer Factory as describe here: https://github.com/ngx-translate/core/issues/517#issuecomment-299637956
+export function appInitializerFactory(translate: TranslateService, injector: Injector) {
+  return () => new Promise<any>((resolve: any) => {
+    const locationInitialized = injector.get(LOCATION_INITIALIZED, Promise.resolve(null));
+    locationInitialized.then(() => {
+      const langToSet = 'en';
+      translate.setDefaultLang('en');
+      translate.use(langToSet).subscribe(() => {
+        // console.info(`Successfully initialized '${langToSet}' language.'`);
+      }, err => {
+        console.error(`Problem with '${langToSet}' language initialization.'`);
+      }, () => {
+        resolve(null);
+      });
+    });
+  });
+}
+
 
 @NgModule({
   declarations: [
@@ -115,8 +148,11 @@ import { PumpComponent } from './pump/pump.component';
     AreaComponent,
     BuiltyListComponent,
     PaymentInstructionComponent,
-    PumpComponent
-
+    PumpComponent,
+    DOEditActionComponent,
+    DOLinkActionComponent,
+    BiltyEditActionComponent,
+    BiltyDeleteActionComponent
   ],
   imports: [
     TagInputModule ,
@@ -147,9 +183,24 @@ import { PumpComponent } from './pump/pump.component';
       preventDuplicates: true,
     }),
     AgGridModule.withComponents([]),
-    NgxTypeaheadModule
+    NgxTypeaheadModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (createTranslateLoader),
+        deps: [HttpClient]
+      }
+    }),
+    AngularSlickgridModule.forRoot({
+      // add any Global Grid Options/Config you might want
+      // to avoid passing the same options over and over in each grids of your App
+      enableAutoResize: true,
+      autoResize: {
+        containerId: 'grid-container',
+        sidePadding: 15
+      }
     // required animations module
-
+  })
   ],
   providers: [
     AuthGuard,
@@ -167,7 +218,14 @@ import { PumpComponent } from './pump/pump.component';
     WindowRef,
     { provide: HTTP_INTERCEPTORS, useClass: AddHeaderInterceptor, multi: true }
   ],
+
   bootstrap: [AppComponent],
-  entryComponents: [ModalComponent]
+  entryComponents: [
+    ModalComponent,
+    DOEditActionComponent,
+    BiltyEditActionComponent,
+    BiltyDeleteActionComponent,
+    DOLinkActionComponent
+  ]
 })
 export class AppModule { }

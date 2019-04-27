@@ -24,7 +24,10 @@
             ],
             "styles": [
               "src/styles.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap/dist/css/bootstrap.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/angular-slickgrid/styles/css/slickgrid-theme-bootstrap.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.js",
@@ -32,8 +35,10 @@
               "node_modules/arrive/src/arrive.js",
               "node_modules/moment/moment.js",
               "node_modules/chartist/dist/chartist.js",
-              "node_modules/bootstrap-notify/bootstrap-notify.js"
-              
+              "node_modules/bootstrap-notify/bootstrap-notify.js",
+              "node_modules/jquery-ui-dist/jquery-ui.min.js",
+              "node_modules/slickgrid/lib/jquery.event.drag-2.3.0.js"
+
             ]
           },
           "configurations": {
