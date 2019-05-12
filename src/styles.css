@@ -1,0 +1,172 @@
+/* You can add global styles to this file, and also import other style files */
+@media (min-width: 960px) {
+html,
+body {
+    height: 100%;
+    font-size: 13px;
+}
+/*.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}*/
+div.fixed-height-divs div[class^="col-"]{
+  height: 6.5rem;
+}
+.invalid-field{
+  color: red !important;
+  font-size: 11px !important;
+}
+
+.p-spacer-top-20 {
+    margin-top:  20%
+}
+
+a{
+  cursor: pointer;
+}
+
+img.link{
+  cursor: pointer;
+}
+
+.list-options-local{
+  border: 1px solid gray;
+  padding: 15px 15px 0px 15px;
+  margin: 20px 20px 0px;
+  /*background: #A4D3EE;*/
+  box-shadow: 5px 5px 2px #888888;
+  position: relative;
+  display: inline-block;
+
+}
+.list-options-local .remove-option {
+    position: absolute;
+    background: red;
+    color: white;
+    top: -10px;
+    right: -10px;
+}
+
+div.centered{
+  text-align: center;
+  vertical-align: middle;
+  align-content: center;
+}
+
+button.right{
+  float: right;
+  margin-top: 0 !important;
+}
+
+.disabled-row{
+  background-color: lightpink !important;
+}
+
+.btn.float-left{
+  margin-left: 0 !important;
+}
+
+.btn.float-right{
+  float: right !important;
+}
+
+.table tbody tr td, .table thead tr th, .table tfoot tr td{
+  padding: 4px !important;
+}
+
+div.ag-overlay{
+  position: relative !important;
+}
+
+div.ng2-tag-input{
+  border: 1px solid #E3E3E3 !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+}
+.slick-gridmenu-list{
+  display: inline-grid !important;
+  min-width: 400px !important;
+  grid-template-columns: auto auto auto;
+  grid-gap: 10px 30px
+}
+.slickgrid-container .grid-canvas .slick-cell{
+  font-size: 13px !important;
+  font-family: Arial !important;
+}
+
+.slickgrid-list-container{
+  padding: 0 !important;
+}
+
+.sidebar .nav li > a{
+	font-size: 0.85em !important;
+}
+
+.slickgrid-container .grid-canvas .slick-cell .slick-group-toggle.expanded:before{
+	content: "\e114";
+	font-family: 'Glyphicons Halflings';
+	transition: all 0.5s;
+}
+
+}
+
+.form-group input[type=file]{
+	opacity: 0.8 !important;
+	cursor: pointer !important;
+	line-height: normal !important;
+	position: relative !important;
+}
+.multiselect-dropdown .dropdown-btn{
+	border: 1px solid #E3E3E3 !important;
+	line-height: normal !important;
+}
+
+.form-group .form-control{
+	padding: 5px 18px !important;
+	border-radius: 5px !important;
+}
+
+.container-fluid{
+	background-color: #fff !important;
+	padding-top: 1em !important;
+}
+.sidebar{
+	box-shadow: none !important;
+}
+.black-bg{
+	background-color: #000 !important
+}
+
+.dropdown-down[ng-reflect-ng-class="dropdown-down"]{
+  border-top:6px solid #555 !important;
+  border-left:3px solid transparent !important;
+  border-right: 3px solid transparent !important;
+}
+
+span.dropdown-btn{
+  padding: 6px 4px 6px 12px !important;
+}
+
+span.dropdown-up{
+  border-bottom:6px solid #555 !important;
+  border-left:3px solid transparent !important;
+  border-right: 3px solid transparent !important;
+}
+
+.main-panel > .content{
+    padding: 0px !important;
+}
+
+.btn{
+	font-size: 1em !important;
+}
+
+.modal-dialog{
+	max-width: 800px !important;
+}
+
+button + button{
+	margin-left: 20px !important;
+}

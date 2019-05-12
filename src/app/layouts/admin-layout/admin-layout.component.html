@@ -1,0 +1,18 @@
+<div *ngIf="isloggedIn then afterlogin else beforelogin">
+</div>
+
+<ng-template #beforelogin>
+    <login (showsidebar)="changeViewAfterlogin($event)"></login>
+</ng-template>
+<ng-template #afterlogin>
+  <div class="wrapper">
+      <div class="sidebar" data-color="blue">
+          <app-sidebar></app-sidebar>
+      </div>
+      <div class="main-panel">
+          <navbar-cmp></navbar-cmp>
+          <router-outlet></router-outlet>
+          <!--<app-footer></app-footer>-->
+      </div>
+  </div>
+</ng-template>

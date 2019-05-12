@@ -1,0 +1,678 @@
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-12">
+          <strong>{{modeSelect}}</strong>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body fixed-height-divs">
+      <form [formGroup]="doCreateForm">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspDoNo">BSP DO No.</label>
+              <input type="number" class="form-control input-resp" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
+              <div *ngIf="submitted && f.bspDoNo.errors" class="invalid-field">
+                <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="areaDoNo">Area DO No.</label>
+              <input type="text" class="form-control input-resp" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
+              <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-field">
+                <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doNo">DO No</label>
+              <input type="text" class="form-control input-resp" id="doNo" formControlName="doNo" value="{{areaNO}}/{{bspNO}}">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doNo">Auction No</label>
+              <input type="number" class="form-control input-resp" id="doNo" formControlName="auctionNo">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" class="form-control input-resp" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
+              <div *ngIf="submitted && f.quantity.errors" class="invalid-field">
+                <div *ngIf="f.quantity.errors.required">Quantity is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="receivedDate">Received Date</label>
+              <input type="date" class="form-control input-resp" id="receivedDate" formControlName="receivedDate">
+              <div *ngIf="submitted && f.receivedDate.errors" class="invalid-field">
+                <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doDate">DO Date</label>
+              <input type="date" class="form-control input-resp" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
+                (change)="updateDate()">
+              <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
+                <div *ngIf="f.doDate.errors.required">DO date is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="dueDate">Due Date</label>
+              <input type="date" class="form-control input-resp" id="dueDate" formControlName="dueDate">
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="area">Area</label>
+              <select class="form-control" name="area" id="area" formControlName="area" (change)="populatecollary(true)">
+                <option *ngFor="let al of ref_areaList" [value]="al.name">{{al.name}}</option>
+              </select>
+              <div *ngIf="submitted && f.area.errors" class="invalid-field">
+                <div *ngIf="f.area.errors.required">Area is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="collary">Collary</label>
+              <select class="form-control" name="collary" id="collary" formControlName="collary">
+                <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
+              </select>
+              <div *ngIf="submitted && f.collary.errors" class="invalid-field">
+                <div *ngIf="f.collary.errors.required">Collary is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="grade">Grade</label>
+              <select class="form-control" name="grade" id="grade" formControlName="grade">
+                <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
+              </select>
+              <div *ngIf="submitted && f.grade.errors" class="invalid-field">
+                <div *ngIf="f.grade.errors.required">Grade is required</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="size">Size</label>
+              <select class="form-control" name="size" id="size" formControlName="size">
+                <option *ngFor="let size of sizes" [value]="size">{{size}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="by">By</label>
+              <select class="form-control" name="by" id="by" formControlName="by">
+                <option value="Courier">Courier</option>
+                <option value="Self">Self</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="builtyCompany">Bilty Company</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="builtyCompanyOptions"
+                formControlName="otBuiltyCompany"
+                [settings]="multiDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany"> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="transporter">Transporter</label>
+              <select class="form-control" id="transporter" formControlName="transporter">
+                <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter.username">
+                  {{transporter.firstName}} {{transporter.lastName}}
+                </option>
+              </select>
+              <!--<input type="text" class="form-control" id="transporter" formControlName="transporter">-->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="partyName">DO Owner Name</label>
+              <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
+                    ngOptions="party.name for party in partyData"></select>-->
+              <select class="form-control input-resp" name="partyName" id="partyName" formControlName="party">
+                <option *ngFor="let pd of ref_partyData" [ngValue]="pd.name">{{pd.name}}</option>
+              </select>
+              <div *ngIf="submitted && f.party.errors" class="invalid-field">
+                <div *ngIf="f.party.errors.required">DO Owner is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="destinationParty">Destination Party</label>
+              <!--<select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                    ngOptions="party.name for party in destinationParty"></select>-->
+              <select class="form-control" name="destinationParty" id="destinationParty" formControlName="destinationParty"
+                (change)="onChangeDestinationsData()">
+                <option *ngFor="let destd of ref_destinationData" [value]="destd.name">{{destd.name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="destination">Destination</label>
+              <select class="form-control" name="destination" id="destination" formControlName="destinations">
+                <option *ngFor="let destNames of destinationsNames" [value]="destNames">{{destNames}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="freight">Freight</label>
+              <input type="number" class="form-control input-resp" formControlName="freight">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <button class="btn btn-primary margin-btn margin-btn-left" (click)="addFreightEntry()">Add Freight Entry</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isfrightEntryAdded">
+          <strong>Added Freight Entries</strong>
+          <br><br>
+          <!-- below code is commented for now, we can roll it back for deleting fright entry functionality -->
+          <!-- <div class="row">
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destinationParty">Destination Party</label>
+                <select class="form-control" name="destinationParty" id="destinationParty" formControlName="addedDestinationParty"
+                  (change)="showDestinationAndFreightData(true)">
+                  <option *ngFor="let destparty of destinationParty" [value]="destparty.name">{{destparty.name}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destination">Destination</label>
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations"
+                  (change)="showDestinationAndFreightData(false)">
+                  <option *ngFor="let destNames of selectedDestinations" [value]="destNames">{{destNames}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-2">
+              <div class="form-group">
+                <label for="destination">Freight</label>
+                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
+                  <option *ngFor="let freights of selectedFreight" [value]="freights">{{freights}}</option>
+                </select>
+              </div>
+            </div>
+          </div> -->
+          <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+              <tr>
+                <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let freightEntries of dataToShowInFreightsTable">
+                <td>{{freightEntries.destinationParty}}</td>
+                <td>{{freightEntries.destinations}}</td>
+                <td>{{freightEntries.freights}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="permissionNo">Permission No</label>
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="permits"
+                formControlName="permitNos"
+                [settings]="permitDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <select class="form-control" id="permissionNo" formControlName="permissionNo">
+                <option *ngFor="let permit of permits" [value]="permit.permitnumber">{{permit.permitnumber}}</option>
+              </select> -->
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="emd">EMD</label>
+              <input type="text" class="form-control input-resp" id="emd" formControlName="emd" (keyup)="setEMDAMt()">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="emdAmt">EMD Amt</label>
+              <input type="text" class="form-control input-resp" id="emdAmt" formControlName="emdAmt">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doAmt">DO Amt</label>
+              <input type="text" class="form-control input-resp" id="doAmt" formControlName="doAmt" (keyup)="setDOAMtPMT()">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doAmtPMt">DO Amt P. MT</label>
+              <input type="text" class="form-control input-resp" id="doAmtPMt" formControlName="doAmtpmt">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doRate">DO Basic Rate</label>
+              <input type="text" class="form-control input-resp" id="doRate" formControlName="doRate">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doRateTcs">TCS Amount</label>
+              <input type="text" class="form-control input-resp" id="doRateTcs" formControlName="doRateTcs">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="withinOutSide">Within/out Side</label>
+              <select class="form-control" name="by" id="withinOutSide" formControlName="withinOutSide">
+                <option value="withinstate">Within state</option>
+                <option value="outsidestate">Outside state</option>
+              </select>
+            </div>
+          </div>
+          <!-- Only when edit DO  - START-->
+          <!-- <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="liftedQuantity">Lifted Quantity</label>
+                <input type="number" class="form-control input-resp" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
+              </div>
+            </div>
+          </div> -->
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="quantityDeduction">Quantity Deduction</label>
+                <input type="number" class="form-control input-resp" id="quantityDeduction" formControlName="quantityDeduction"
+                  (keyup)="setlepseQuantity()">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="lepseQuantity">Lepse Quantity</label>
+                <input type="number" class="form-control input-resp" id="lepseQuantity" formControlName="lepseQuantity">
+              </div>
+            </div>
+          </div>
+          <!--<div class="col-md-3">
+            <div class="form-group">
+              <label for="doStatus">Do Status</label>
+              <input type="text" class="form-control" id="doStatus" formControlName="doStatus">
+            </div>
+          </div> -->
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="refundAmt">Refund Amt</label>
+                <input type="text" class="form-control input-resp" id="refundAmt" formControlName="refundAmt">
+              </div>
+            </div>
+          </div>
+          <div *ngIf="isShowDoUpdate">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="refundDate">Refund Date</label>
+                <input type="date" class="form-control input-resp" id="refundDate" formControlName="refundDate">
+              </div>
+            </div>
+          </div>
+
+
+          <!--  <div class="col-md-3">
+              <div class="form-group">
+                <label for="finishDate">Finish Date</label>
+                <input type="date" class="form-control" id="finishDate" formControlName="finishDate">
+              </div>
+            </div>-->
+          <!-- <div class="col-md-3">
+            <div class="form-group">
+              <label for="inAdvanceLimit">In Advance limit</label>
+              <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
+            </div>
+          </div> -->
+          <div class="col-md-3">
+            <label for="inAdvanceLimit">In Advance limit (Multiple values)</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="inAdvanceLimit" (onAdd)="addTags($event)" (onRemove)="removeTag($event)" [(ngModel)]="inAdvanceLimitEntries"
+              formControlName="inAdvanceLimit"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="remarks">Remarks</label>
+              <input type="text" class="form-control input-resp" id="remarks" formControlName="remarks">
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="freightToBePaidBy">Freight to be paid By</label>
+              <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
+
+              <ng-multiselect-dropdown
+                [placeholder]="'--Select--'"
+                [data]="freightToBePaidByOptions"
+                formControlName="freightToBePaidBy"
+                [settings]="multiDropDownSettings">
+              </ng-multiselect-dropdown>
+              <!-- <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
+                <option *ngFor="let freightspaid of freightToBePaidBy" [value]='freightspaid'>{{freightspaid}}</option>
+              </select> -->
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="doCopy">DO Copy</label>
+              <input type="file"  ng2FileSelect [uploader]="uploader" id="doCopy" name="doCopy" formControlName="doCopy">
+            </div>
+          </div>
+          <!-- Only when edit DO  - END-->
+          <div class="col-md-6">
+            <label for="subTransporter">Sub-Transporter (Multiple values)</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="subTransporter" (onAdd)="addTags($event, true)" (onRemove)="removeTag($event, true)" [(ngModel)]="subTransporterEntries"
+              formControlName="subTransporter"></tag-input>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="website">Website</label>
+              <input type="text" class="form-control input-resp" id="website" formControlName="website">
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <button *ngIf="!isShowDoUpdate" type="submit" class="btn btn-primary float-right" (click)="onSubmitDo()">Create</button>
+                <button *ngIf="isShowDoUpdate" type="submit" (click)="onUpdateSubmit()" class="btn btn-primary float-right">Update</button>
+            </div>
+            <div class="col">
+              <button *ngIf="!isShowDoUpdate" (click)="resetForm()" class="btn btn-primary">Reset</button>
+              <button *ngIf="isShowDoUpdate" (click)="cancelUpdateDO()" class="btn btn-primary">Cancel</button>
+            </div>
+        </div>
+        <!-- <button type="submit" class="btn btn-success">Create</button> -->
+        <!-- <div *ngIf="!isShowDoUpdate">
+          <button type="submit" class="btn btn-primary" (click)="onSubmitDo()">Create</button>
+        </div>
+        <div *ngIf="isShowDoUpdate">
+          <div class="row">
+            <div class="col-md-1 col-md-push-4">
+              <button type="submit" (click)="onUpdateSubmit()" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col-md-1 col-md-push-4">
+              <button (click)="cancelUpdateDO()" class="btn btn-primary">Cancel</button>
+            </div>
+          </div>
+        </div> -->
+      </form>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Confirm DO Details</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">BSP DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Area DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.areaDoNo}}</span>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}/{{doDataForConfirmationModel.areaDoNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Auction No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.auctionNo}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Quantity</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.quantity}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Date</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doDate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Received Date</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.receivedDate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Area</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.area}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Collary</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.collary}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Grade</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.grade}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Size</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.size}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">By</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.by}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Bilty Company</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.otBuiltyCompany}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Transporter</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.transporter.firstName +' ' + doDataForConfirmationModel.transporter.lastName}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Owner Name</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.partyName}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Permission No</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.permitNos}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">EMD</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.emd}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">EMD Amt</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.emdAmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Amt</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doAmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Amt P. MT</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doAmtpmt}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">DO Basic Rate</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.doRate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Within/out Side</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.withinOutSide}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">In Advance limit</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.inAdvanceMultiple}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Remarks</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.remarks}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Freight to be paid By</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.freightToBePaidBy}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="bspNo">Website</label>
+              <br>
+              <span id="bspNo">{{doDataForConfirmationModel.Website}}</span>
+            </div>
+          </div>
+
+          <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+              <tr>
+                <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let freightEntries of dataToShowInFreightsTable">
+                <td>{{freightEntries.destinationParty}}</td>
+                <td>{{freightEntries.destinations}}</td>
+                <td>{{freightEntries.freights}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row">
+          <div class="col-md-1 col-md-push-4">
+            <div class="form-group">
+              <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createDo()">Submit</button>
+            </div>
+          </div>
+          <div class="col-md-1 col-md-push-4">
+            <div class="form-group">
+              <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#337ab7" type="ball-circus"></ngx-spinner>

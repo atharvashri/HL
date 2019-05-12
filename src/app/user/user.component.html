@@ -1,0 +1,86 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form [formGroup]="userForm">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="username">User Name</label>
+                            <input [ngClass]="{'error-username':usernameDuplicate===true}" type="text" class="form-control" id="username"
+                                formControlName="username" (keyup)="checkUserNameAvailability()" (focusout)="checkUserNameAvailability()">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="firstname">First Name</label>
+                            <input type="text" class="form-control" id="firstname" formControlName="firstname">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="lastname">Last Name</label>
+                            <input type="text" class="form-control" id="lastname" formControlName="lastname">
+                        </div>
+                    </div>
+
+                    <div *ngIf="isUserPasswordUpdate">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password" formControlName="password">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="password">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmpassword" formControlName="confirmpassword">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Role">Role</label>
+                            <select class="form-control" id="Role" formControlName="role">
+                                <option value="ROLE_OFFICE" selected>Office</option>
+                                <option value="ROLE_FIELD">Field</option>
+                                <option value="ROLE_PARTY">Party</option>
+                                <option value="ROLE_ADMIN">Admin</option>
+                                <option value="ROLE_">Truck Owner</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="active">Select Status</label>
+                            <select class="form-control" id="active" formControlName="active">
+                                <option value="true">Active</option>
+                                <option value="false">Not Active</option>
+                            </select>
+                        </div>
+                    </div> -->
+
+                </div>
+                <div *ngIf="isUserCreateMode">
+                    <div class="row">
+                        <div class="col-md-1 col-md-push-5">
+                            <button type="submit" class="btn btn-primary" (click)="onSubmitUserCreate()">Create</button>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="!isUserCreateMode">
+                    <div class="row">
+                        <div class="col-md-1 col-md-push-4">
+                            <button (click)="onUpdateSubmit()" class="btn btn-primary">Update</button>
+                        </div>
+                        <div class="col-md-1 col-md-push-4">
+                            <button (click)="cancelUpdateUser()" class="btn btn-primary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<user-list-cmp #userlist (sendUserName)=getUserToupdate($event)></user-list-cmp>

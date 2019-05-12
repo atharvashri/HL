@@ -1,0 +1,26 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Field Entry Approve</h4>
+    </div>
+    <div class="">
+        <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let columnNames of fieldReportscolumnNames"><span class="p-txt ">{{ columnNames }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let props of fieldReportsProperties">
+                    <td>{{props.builtyNo}}</td>
+                    <td>{{props.Do_no}}</td>
+                    <td>{{props.vehicleNo}}</td>
+                    <td>{{props.freightRate}}</td>
+                    <td>{{props.advance}}</td>
+                    <td>{{props.diesel}}</td>
+                    <td>{{props.quantity}}</td>
+                    <td><button type="button" name="Proceed" class="btn btn-primary">Approve</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

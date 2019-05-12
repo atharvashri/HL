@@ -1,0 +1,20 @@
+.do-run-list{
+    background-color: white
+}
+
+@media(max-width: 991px){
+    .list-resp {
+        margin-left: 30%;
+        width: 600px;
+    }
+}
+
+.scrollbar{
+  overflow-y: scroll !important;
+  width: 25em !important;
+  top: 20px !important;
+  border: 1px solid #d4dbe2 !important;
+  padding: 10px !important;
+  margin-bottom: 20px !important;
+  max-height: 12em !important;
+}

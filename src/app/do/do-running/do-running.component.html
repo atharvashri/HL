@@ -1,0 +1,34 @@
+<div class="container-fluid">
+
+  <div class="row justify-content-center align-self-center">
+    <div class="form-group scrollbar do-run-list list-resp ">
+      <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="selectAll" checked="checked" [(ngModel)]="selectedAll" (change)="selectAllCheckbox($event)">
+          <label class="custom-control-label" for="selectAll">Select All</label>
+      </div>
+
+      <div class="custom-control custom-checkbox" *ngFor="let activeDO of activeDoList">
+        <input id="{{activeDO.id}}-check" class="custom-control-input" type="checkbox" (change)="updatecheckBoxList(activeDO, $event)" [(ngModel)]="activeDO.selected">
+        <label class="custom-control-label" for="{{activeDO.id}}-check">{{activeDO.areaDoNo}}/{{activeDO.bspDoNo}} -
+          {{activeDO.collary}} - {{activeDO.quantity}}</label>
+      </div>
+      <div>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center align-self-center">
+    <div class="form-group">
+      <button type="button" name="Show" class="btn btn-primary" (click)="showAllRunningDo()">Show</button>
+    </div>
+  </div>
+
+</div>
+<br>
+<div *ngIf="isrunningDoTablevisible; then showTable">
+</div>
+
+<ng-template #showTable>
+  <app-do-running-list [activeDoProperties]=activeDoProperties [activeDoList]=runningDosInTable></app-do-running-list>
+</ng-template>
+
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#337ab7" type="ball-circus"></ngx-spinner>

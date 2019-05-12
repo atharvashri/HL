@@ -1,0 +1,165 @@
+<div class="container-fluid">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <button class="btn btn-primary float-right" (click)="exportPANData()">Export PAN Data</button>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-content-center align-self-center">
+          <div class="form-group">
+            <label>Enter PAN / Vehicle:&emsp;</label>
+            <input type="text" id="pan" placeholder="Search text" required #searchText>
+          </div>
+        <!-- <div class="col-md-3">
+          <div class="form-group">
+
+          </div>
+        </div> -->
+      </div>
+      <div class="row justify-content-center align-self-center">
+          <div class="radio-inline">
+            <label class="radio-inline"><input type="radio" [(ngModel)]="searchby" checked value="pan">By PAN</label>
+            <label class="radio-inline"><input type="radio" [(ngModel)]="searchby" value="vehicle">By Vehicle No.</label>
+          </div>
+      </div>
+
+      <div class="row justify-content-center align-self-center">
+          <div class="form-group">
+            <button class="btn btn-primary" (click)="performSearch(searchText.value)">Search</button>
+          </div>
+      </div>
+
+      <app-add-pan-update-details #addDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN"></app-add-pan-update-details>
+      <app-pan-update-details #updateDetails [formtitle]="formtitleParent" [PANno]="EnteredPAN" [PanDataToUpdate] = "panSelected"></app-pan-update-details>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid h-100" *ngIf="isUpdatePan || !noVehicle">
+  <div class="row" *ngIf="isUpdatePan">
+    <div class="col-md-4">
+      <strong>Owner Name:</strong>&emsp;{{panSelected.panHolderName}}
+    </div>
+    <div class="col-md-4">
+      <strong>Pan Copy:&nbsp;&nbsp;</strong><a *ngIf="panSelected.panCopyLink" [href]="s3url+panSelected.panCopyLink" target="_blank">&emsp;<img src="/assets/img/img_icon.png" alt="View Copy" width="20" height="20"></a>
+    </div>
+    <div class="col-md-4">
+      <strong>Declaration:&nbsp;&nbsp;</strong><a *ngIf="panSelected.declarationLink" [href]="s3url+panSelected.declarationLink" target="_blank">&emsp;<img src="/assets/img/img_icon.png" alt="View Copy" width="20" height="20"></a>
+    </div>
+  </div>
+  <br>
+  <div class="row justify-content-center align-self-center">
+    <div class="col-md-8">
+    <div class="table-responsive" *ngIf="vehicleList.length;else novhiclesForPan">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><strong>Vehicle Number</strong></th>
+            <th *ngIf="!noVehicle"><strong>PAN</strong></th>
+            <th *ngIf="!noVehicle"><strong>Pan Holder</strong></th>
+            <th><strong>Old Owner</strong></th>
+            <th><strong>RC Copy</strong></th>
+            <th></th>
+            <th *ngIf="isUpdatePan"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--<div *ngFor="let pan of panList">-->
+            <tr *ngFor="let vehicle of vehicleList; let i=index">
+              <td>{{vehicle.vehicleNo | uppercase}}</td>
+              <td *ngIf="!noVehicle">{{vehicle.panNo}}</td>
+              <td *ngIf="!noVehicle">{{vehicle.panHolderName}}</td>
+              <td>{{vehicle.oldOwner ? 'YES' : 'NO'}}</td>
+              <td><a *ngIf="vehicle.rcCopyLink" target="_blank" [href]="s3url+vehicle.rcCopyLink"><img src="/assets/img/img_icon.png" width="20" height="20"/></a></td>
+              <td><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="selectedvehicle=vehicle;openAddVehicleDialog(true)"/></td>
+              <td *ngIf="isUpdatePan"><img src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeVehicle(i)"/></td>
+            </tr>
+          <!--</div>-->
+
+        </tbody>
+      </table>
+    </div>
+    <ng-template #novhiclesForPan>
+      <div class="row justify-content-center align-self-center">
+        <div class="col-md-6">
+          No vehicles linked to this PAN.
+        </div>
+      </div>
+    </ng-template>
+    </div>
+  </div>
+  <br>
+  <div class="row justify-content-center align-self-center" *ngIf="isUpdatePan">
+      <button type="button" class="btn btn-primary" (click)="openupdatePANModel()">Update PAN</button>
+      <button type="button" class="btn btn-primary" (click)="openAddVehicleDialog(false)">Link Vehicle</button>
+  </div>
+</div>
+
+<div *ngIf="isAddpan">
+  <div class="row justify-content-center align-self-center">
+    <div>
+      <b>Entered PAN is not found, Please add PAN</b>
+    </div>
+  </div>
+  <br>
+  <div class="row justify-content-center align-self-center">
+      <button type="button" class="btn btn-primary" (click)="openAddPANModel()">Register PAN</button>
+  </div>
+</div>
+
+<div *ngIf="noVehicle && searchby=='vehicle'">
+  <div class="row justify-content-center align-self-center">
+    <div>
+      <b>No Vehicles found for entered criteria</b>
+    </div>
+  </div>
+</div>
+
+<ng-template #addvehicleDialog let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add new Vehicle</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="pan">Pan</label>
+              <input class="form-control" type="text" id="pan" [value]="panSelected.panNo" disabled>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="panholder">Pan Holder</label>
+              <input class="form-control" type="text" id="panholder" [value]="panSelected.panHolderName" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="vehicleno">Vehicle No.</label>
+              <input class="form-control" type="text" id="vehicleno" [value]="selectedvehicle?.vehicleNo" [(ngModel)]="selectedvehicle.vehicleNo" name="vehicleno" [disabled]="isUpdate">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="rccopy">RC Copy</label>
+              <input #rccopy class="form-control" type="file" ng2FileSelect [uploader]="uploader" id="rccopy">
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-center align-self-center">
+            <button *ngIf="!isUpdate" type="button" class="btn btn-primary" (click)="addvehicle(rccopy)">Add</button>
+            <button *ngIf="isUpdate" type="button" class="btn btn-primary" (click)="updatecopy(rccopy)">Update</button>
+            <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</ng-template>

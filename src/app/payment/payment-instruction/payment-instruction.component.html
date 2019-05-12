@@ -1,0 +1,46 @@
+<!-- <div class="" id="pendingPaymentGrid">
+  <ag-grid-angular
+    class="ag-theme-balham"
+    rowSelection="multiple"
+    [rowData]="rowData"
+    [isRowSelectable]="isRowSelectable"
+    [defaultColDef]="defaultColDef"
+    [rowClassRules]="rowClassRules"
+    suppressCellSelection="true"
+    [columnDefs]="columnDefs"
+    [overlayNoRowsTemplate]="noRowMessage"
+    (gridReady)="onGridReady($event)">
+  </ag-grid-angular>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <button type="button" class="btn btn-primary float-left" (click)="generateInstructions()">Generate Payment Instructions</button>
+    </div>
+    <!-- <div class="col-md-6">
+      <button type="button" class="btn btn-primary float-left">Cancel</button>
+    </div>
+  </div>
+</div> -->
+
+<div class="container-fluid">
+    <!-- <button class="btn btn-default btn-sm" (click)="toggleGridMenu($event)">
+        <i class="fa fa-bars"></i>
+        Grid Menu
+    </button> -->
+    <div id="pending-payment-container" class="col-md-12">
+      <angular-slickgrid #gridRef
+          gridId="pendingPaymentGrid"
+          [columnDefinitions]="columnDefs"
+          [gridOptions]="gridOptions"
+          [dataset]="rowData"
+          (onAngularGridCreated)="onGridReady($event)">
+      </angular-slickgrid>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <button type="button" class="btn btn-primary float-left" (click)="generateInstructions()">Generate Payment Instructions</button>
+      </div>
+      <!-- <div class="col-md-6">
+        <button type="button" class="btn btn-primary float-left">Cancel</button>
+      </div> -->
+    </div>
+</div>

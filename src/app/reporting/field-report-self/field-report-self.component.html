@@ -1,0 +1,23 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Running DOs</h4>
+    </div>
+    <div class="content table-responsive table-full-width">
+        <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let rprops of reportProperties" ><span class="p-txt ">{{ rprops }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let rpts of reports">
+                    <td>{{rpts.doId}}</td>
+                    <td>{{rpts.collaryName}}</td>
+                    <td>{{rpts.quantity}}</td>
+                    <td>{{rpts.areaDoNo}}</td>
+                    <td>{{rpts.bspDoNo}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

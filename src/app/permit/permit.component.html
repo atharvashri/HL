@@ -1,0 +1,80 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Permit Resource</strong>
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary right" (click)="showpermitform(false)">Create Permit</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive" *ngIf="activepermits.length;else nopermits">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th><strong>Permit No.</strong></th>
+                  <th><strong>Quantity</strong></th>
+                  <th><strong>End Date</strong></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let permit of activepermits; let i=index">
+                  <td>{{permit.permitnumber}}</td>
+                  <td>{{permit.quantity}}</td>
+                  <td>{{permit.enddate}}</td>
+                  <td><a (click)="showpermitform(true, i)">Update</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #nopermits>
+            <div class="row">
+              <div class="col-md-6">
+                  No permits availabe.
+              </div>
+            </div>
+          </ng-template>
+          <br>
+          <form *ngIf="showform" [formGroup]="permitform">
+              <div class="row">
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="permitnumber" class="test">Permit Number</label>
+                          <input type="number" class="form-control" id="permitnumber" formControlName="permitnumber" [disabled]="updatemode">
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="quantity">Quantity</label>
+                          <input type="number" class="form-control" id="quantity" formControlName="quantity">
+                      </div>
+                  </div>
+                  <div class="col-md-4">
+                      <div class="form-group">
+                          <label for="enddate">End Date</label>
+                          <input type="date" class="form-control" id="enddate" formControlName="enddate">
+                      </div>
+                  </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-1 col-md-push-4">
+                  <div class="form-group">
+                    <button *ngIf="!updatemode" class="btn btn-primary margn-btn" type="submit" (click)="createpermit()">Submit</button>
+                    <button *ngIf="updatemode" class="btn btn-primary margn-btn" type="submit" (click)="updatepermit()">Update</button>
+                  </div>
+                </div>
+                <div class="col-md-1 col-md-push-4">
+                  <div class="form-group">
+                    <button class="btn btn-primary margn-btn" (click)="showform=false">Cancel</button>
+                  </div>
+                </div>
+              </div>
+          </form>
+        </div>
+    </div>
+</div>

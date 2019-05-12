@@ -1,0 +1,16 @@
+@media(min-width: 960px){
+    .margin-btn{
+        margin-left:10%
+    }
+
+    .margin-btn-left{
+        margin-top:10% 
+    }
+}
+
+@media(max-width: 960px){
+    .margin-btn{
+        margin-left:35% ;
+        margin-top: 5%
+    }
+}

@@ -1,0 +1,43 @@
+<!-- <div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Selected Running DOs</h4>
+    </div>
+     <div class="content table-responsive table-full-width">
+        <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let activeDOProp of activeDoProperties" ><span class="p-txt ">{{ activeDOProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let activeDO of activeDoList">
+                    <td>{{activeDO.areaDoNo}}/{{activeDO.bspDoNo}}-{{activeDO.collary}}-{{activeDO.quantity}}</td>
+                    <td>{{activeDO.doDate}}</td>
+                    <td>{{activeDO.dueDate}}</td>
+                    <td>{{activeDO.doBalance}}</td>
+                    <td>{{activeDO.party?.name}}</td>
+                    <td><span *ngFor="let destination of activeDO.destinationparty; let i=index;  let len=count">{{destination.name + (len-1 == i ? '' : ', ')}}</span></td>
+                    <td><a *ngIf="activeDO.doCopy" target="_blank" [href]="s3url+activeDO.doCopy"><img src="/assets/img/img_icon.png" width="20" height="20" title="View DO Copy"/></a></td>
+                    <td><img class="link" src="/assets/img/edit-icon.png" id="{{activeDO.id}}" width="20" height="20" (click)="onUpdateDO($event)" title="Edit"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div> -->
+
+
+<div class="container-fluid">
+    <button class="btn btn-default btn-sm" (click)="toggleGridMenu($event)">
+        <i class="fa fa-bars"></i>
+        Grid Menu
+    </button>
+    <div id="running-do-container" class="col-md-12">
+      <angular-slickgrid #gridRef
+          gridId="runningDOGrid"
+          [columnDefinitions]="allColumns"
+          [gridOptions]="gridOptions"
+          [dataset]="activeDoList"
+          (onAngularGridCreated)="onGridReady($event)">
+      </angular-slickgrid>
+    </div>
+</div>

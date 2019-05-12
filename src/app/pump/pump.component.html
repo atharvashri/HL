@@ -1,0 +1,32 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="panel-body">
+
+          <div class="row">
+              <div class="col-md-3 col-md-push-4">
+                  <div class="form-group">
+                      <label for="collary">Pump Name</label>
+                      <input type="text" class="form-control" id="collary" [(ngModel)]="pumpName">
+                  </div>
+              </div>
+              <div class="col-md-3 col-md-push-3">
+                  <div class="form-group">
+                      <button class="btn btn-primary margin-btn" (click)="addPump()">Add Pump</button>
+                  </div>
+              </div>
+          </div>
+
+          <div [hidden]="pumps.length == 0">
+            <h3>Pumps Added</h3>
+            <div class="list-options-local" id="collary-added" *ngFor="let pump of pumps; let i=index">
+              <button class="remove-option" value="X" (click)="removePump(i)">X</button>
+                {{pump.name}}
+            </div>
+          </div>
+          <div [hidden]="pumps.length">
+            No pump is added yet
+          </div>
+        </div>
+    </div>
+</div>

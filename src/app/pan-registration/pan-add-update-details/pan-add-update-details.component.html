@@ -1,0 +1,217 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-body">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-6">
+            <strong>{{formtitle}}</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body fixed-height-divs">
+        <form [formGroup]="panForm">
+          <br>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="panc">PAN</label>
+                <input class="form-control" type="password" id="panc" formControlName="panNo">
+                <div *ngIf="submitted && f.panNo.errors" class="invalid-field">
+                    <div *ngIf="f.panNo.errors.required">PAN number is required</div>
+                    <div *ngIf="f.panNo.errors.invalidpan">PAN is not in valid format</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="confirmpan">Confirm PAN</label>
+                <input class="form-control" type="text" id="confirmpan" formControlName="confirmPanNo">
+                <div *ngIf="submitted && f.confirmPanNo.errors" class="invalid-field">
+                    <div>Confirm PAN is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="panHolderName">Pan Holder Name</label>
+                <input class="form-control" type="text" pattern="[a-zA-Z ]*" formControlName="panHolderName">
+                <div *ngIf="submitted && f.panHolderName.errors" class="invalid-field">
+                    <div>Pan holder name is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="mobile">Mobile</label>
+                <input class="form-control" type="text" pattern="[0-9]*" formControlName="mobile">
+                <div *ngIf="submitted && f.mobile.errors" class="invalid-field">
+                    <div>Enter 10 digit number, don't start with 0</div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="tds">TDS</label>
+                <select class="form-control" name="tds" id="tds" formControlName="tds">
+                    <option value="false">No</option>
+                    <option value="true">Yes</option>
+                  </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input class="form-control" type="text" id="city" formControlName="city">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="state">State</label>
+                <select class="form-control" name="state" id="state" formControlName="state">
+                  <option *ngFor="let s of ref_states" [value]="s">{{s}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="panCopy">PAN Copy</label>
+                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader"  name="pancopy" (change)="onFileChange({'name':'pancopy'})" formControlName="panCopy">
+                <div *ngIf="submitted && f.panCopy.errors" class="invalid-field">
+                    <div>PAN copy is required</div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="declaration">Declaration</label>
+                <input class="form-control" type="file" ng2FileSelect [uploader]="uploader" name="declaration" (change)="onFileChange({'name':'declaration'})" formControlName="declaration">
+              </div>
+            </div>
+          </div>
+          <hr>
+
+          <strong>Bank Information</strong>
+          <br>
+          <div formGroupName="account">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="accountNumber">Bank A/C No</label>
+                  <input class="form-control" type="password" id="accountNumber" formControlName="accountNumber">
+                  <div *ngIf="a.accountNumber.errors" class="invalid-field">
+                      <div>Account no. is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="confirmaccountNumber">Confirm A/C No</label>
+                  <input class="form-control" type="number" id="confirmaccountNumber" formControlName="confirmAccountNumber">
+                  <div *ngIf="a.confirmAccountNumber.errors" class="invalid-field">
+                      <div>Confirm account no. is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="accountHoldername">Account Holder Name</label>
+                  <input class="form-control" type="text" id="accountHoldername" formControlName="accountHoldername">
+                  <div *ngIf="a.accountHoldername.errors" class="invalid-field">
+                      <div>Account holder name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="ifscCode">IFSC Code</label>
+                  <input class="form-control" type="password" id="ifscCode" formControlName="ifscCode">
+                  <div *ngIf="addaccountclicked && a.ifscCode.errors" class="invalid-field">
+                      <div>IFSC code is invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="confirmifscCode">Confirm IFSC Code</label>
+                  <input class="form-control" type="text" id="confirmifscCode" formControlName="confirmIfscCode">
+                  <div *ngIf="addaccountclicked && a.confirmIfscCode.errors" class="invalid-field">
+                      <div>Confirm IFSC code is invalid</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="bankname">Bank Name</label>
+                  <input class="form-control" type="text" id="bankname" formControlName="bankName">
+                  <div *ngIf="a.bankName.errors" class="invalid-field">
+                      <div>Bank name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="branchname">Branch Name</label>
+                  <input class="form-control" type="text" id="branchname" formControlName="branchName">
+                  <div *ngIf="a.branchName.errors" class="invalid-field">
+                      <div>Branch name is required</div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="passbook">Passbook</label>
+                  <input type="file" name="passbook" ng2FileSelect [uploader]="uploader" formControlName="passbook" >
+                </div>
+              </div>
+            </div>
+            <div class="row justify-content-center align-self-center">
+              <div class="form-group">
+                <button type="button" class="btn btn-primary small-btn" id="addAccount" (click)="addAccountByBankName()">Add
+                  Account</button>
+              </div>
+
+            </div>
+          <!-- formgroup close-->
+          </div>
+          <hr>
+          <div class="row" *ngIf="addedBankAccounts.length">
+            <div class="col">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th><strong>Account No.</strong></th>
+                      <th><strong>Account Holder</strong></th>
+                      <th><strong>IFSC</strong></th>
+                      <th><strong>Bank Name</strong></th>
+                      <th><strong>Branch Name</strong></th>
+                      <th></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let account of addedBankAccounts; let i=index;">
+                      <td>{{account.accountNo}}</td>
+                      <td>{{account.accountHoldername}}</td>
+                      <td>{{account.ifscCode}}</td>
+                      <td>{{account.bankName}}</td>
+                      <td>{{account.branchName}}</td>
+                      <td><img src="/assets/img/delete-icon.png" width="20" height="20" title="Delete" (click)="removeAccount(i)"/></td>
+                      <td><a *ngIf="account.passbookAvailable" target="_blank" [href]="s3url+account.passbookLink"><img src="/assets/img/img_icon.png" width="20" height="20" title="View passbook"/></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center align-self-center">
+                <button class="btn btn-primary" type="submit" name="update" (click)="addPANdetails()" >Submit</button>
+                <button class="btn btn-primary" name="Cancel" (click)="d('Cross click')">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

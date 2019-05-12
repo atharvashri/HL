@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Active Bilties</strong>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-primary right" (click)="showupdatereceiptform()">Update Receipt</button>
+                </div>
+                <div class="col-md-3">
+                    <button *ngIf="viewactive" type="button" class="btn btn-primary right" (click)="showCompletedBuilties()">View Completed Bilties</button>
+                    <button *ngIf="!viewactive" type="button" class="btn btn-primary right" (click)="showActiveBuilties()">View Active Bilties</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+              <button class="btn btn-default btn-sm float-right" (click)="toggleGridMenu($event)">
+                  <i class="fa fa-bars"></i>
+                  Grid Menu
+              </button>
+              <div id="bilty-list-container" class="col-md-12 slickgrid-list-container">
+                <angular-slickgrid #gridRef
+                    gridId="biltyGrid"
+                    [columnDefinitions]="allColumns"
+                    [gridOptions]="gridOptions"
+                    [dataset]="builtylist"
+                    (onAngularGridCreated)="onGridReady($event)">
+                </angular-slickgrid>
+              </div>
+
+          <!-- <div class="table-responsive" *ngIf="builtylist?.length;else nobuilties">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th><strong>Bilty No.</strong></th>
+                  <th><strong>DO</strong></th>
+                  <th><strong>Bilty Date</strong></th>
+                  <th><strong>Vehicle Number</strong></th>
+                  <th><strong>Net Weight</strong></th>
+                  <th><strong>Party</strong></th>
+                  <th><strong>Destination</strong></th>
+                  <th><strong>Freight</strong></th>
+                  <th><strong>Driver</strong></th>
+                  <th><strong>Mobile</strong></th>
+                  <th *ngIf="canedit()"></th>
+                  <th *ngIf="viewactive"></th>
+                  <th *ngIf="!viewactive"><strong>Reset Payment Instruction</strong></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let builty of builtylist; let i=index">
+                  <td>{{builty.builtyNo}}</td>
+                  <td>{{builty.doDisplay}}</td>
+                  <td>{{builty.builtyDate}}</td>
+                  <td>{{builty.vehicleNo}}</td>
+                  <td>{{builty.netWeight}}</td>
+                  <td>{{builty.party}}</td>
+                  <td>{{builty.destination}}</td>
+                  <td>{{builty.freight}}</td>
+                  <td>{{builty.driverName}}</td>
+                  <td>{{builty.driverMobile}}</td>
+                  <td *ngIf="canedit()"><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="showupdateform(i)" title="Edit"></td>
+                  <td *ngIf="viewactive"><img class="link" src="/assets/img/delete-icon.png" width="20" height="20" (click)="deletebuilty(i)" title="Delete"></td>
+                  <td *ngIf="!viewactive"><a *ngIf="builty.paymentInstructionDone" [routerLink]="" (click)="resetInstruction(builty.builtyNo)">reset</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div> -->
+          <ng-template #nobuilties>
+            <div class="row">
+              <div *ngIf="viewactive" class="col-md-6">
+                  Currently no bilties are active.
+              </div>
+              <div *ngIf="!viewactive" class="col-md-6">
+                  No bilties are completed in last 3 months.
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>

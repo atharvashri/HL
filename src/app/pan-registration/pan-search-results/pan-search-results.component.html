@@ -1,0 +1,26 @@
+<div class="col-md-12">
+  <div class="card">
+    <div class="header">
+      <h4 class="title">Striped Table</h4>
+      <p class="category">Here is a subtitle for this table</p>
+    </div>
+    <div class="content table-responsive table-full-width">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th *ngFor="let activeDO of activeDoList">{{ cell }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let activeDO of activeDoList">
+            <td>{{activeDO.doId}}</td>
+            <td>{{activeDO.collaryName}}</td>
+            <td >{{activeDO.quantity}}</td>
+            <td >{{activeDO.areaDoNo}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>

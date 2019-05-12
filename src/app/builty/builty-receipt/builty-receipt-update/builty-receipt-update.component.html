@@ -1,0 +1,105 @@
+<div class="col-md-12">
+    <div class="header">
+        <h4 class="title">Selected Bilty Nos</h4>
+    </div>
+    <form [formGroup]="receiptForm">
+      <div formArrayName="builtyitems">
+        <!-- <div *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index">
+          <div class="row" [formGroupName]="i">
+            <div class="col-md-3 right">
+              <input type="text" class="form-control" formControlName="builtyNo">
+            </div>
+            <div class="col-md-3 right">
+              <input type="date" class="form-control" formControlName="receivedDate">
+            </div>
+            <div class="col-md-3 right">
+              <input type="number" class="form-control" formControlName="receivedQuantity">
+            </div>
+          </div>
+        </div> -->
+        <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th><span class="p-txt ">Bilty No.</span></th>
+                    <th><span class="p-txt ">Vehicle No.</span></th>
+                    <th><span class="p-txt ">Quantity</span></th>
+                    <th><span class="p-txt ">Received Date</span></th>
+                    <th><span class="p-txt ">Received Quantity</span></th>
+                    <th><span class="p-txt ">Allowed Shortage (in kg)</span></th>
+                    <th><span class="p-txt ">Deduction Rate (per kg)</span></th>
+                    <th><span class="p-txt ">Commission</span></th>
+                    <th><span class="p-txt ">Total Advance</span></th>
+                    <th><span class="p-txt ">Freight Rate</span></th>
+                    <th><span class="p-txt ">Total Freight</span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index" [formGroupName]="i">
+                    <td>{{builty.controls.builtyNo?.value}}</td>
+                    <td>{{builty.controls.vehicleNo?.value}}</td>
+                    <td>{{builty.controls.quantity?.value}}</td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
+                    <td>
+                      <select class="form-control" name="allowedShortage" id="allowedShortage" formControlName="allowedShortage">
+                        <option *ngFor="let limit of shortageLimits" [value]="limit.value" [selected]="limit.defaultValue">{{limit.value}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control" name="deductionRate" id="deductionRate" formControlName="deductionRate">
+                        <option *ngFor="let rate of deductionRates" [value]="rate.value" [selected]="rate.defaultValue">{{rate.value}}</option>
+                        <!-- <option selected=false>7</option>
+                        <option selected=false>7.5</option>
+                        <option selected=true>8</option> -->
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control" name="commission" id="commission" formControlName="commission">
+                        <option *ngFor="let commission of commissions" [value]="commission.value">{{commission.value}}</option>
+                      </select>
+                    </td>
+                    <td>{{builty.controls.totalAdvance?.value}}</td>
+                    <td>{{builty.controls.freightRate?.value}}</td>
+                    <td><strong>{{builty.controls.freightBill?.value}}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+      </div>
+
+
+        <!-- <table class="table table-bordered">
+            <thead class="p-back-color">
+                <tr>
+                    <th *ngFor="let builtyProp of builtyListProperties" ><span class="p-txt ">{{ builtyProp }}</span></th>
+                </tr>
+            </thead>
+            <tbody>
+              <div *ngFor="let builty of receiptForm.controls.builtyitems.controls; let i=index" class="form-group" [formGroupName]="i">
+                <tr >
+                    <td> <input type="text" class="form-control" formControlName="builtyNo"></td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
+                </tr>
+              </div>
+            </tbody>
+        </table> -->
+        <div class="row">
+          <div class="col-md-12 text-center">
+              <button class="btn btn-primary float-left" (click)="updateReceipt()">Update & Calculate Freight</button>
+          </div>
+        </div>
+
+
+    </form>
+<!-- <div class="">
+  <ag-grid-angular
+    style="width: 500px;"
+    class="ag-theme-balham"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs">
+  </ag-grid-angular>
+</div> -->
+
+</div>

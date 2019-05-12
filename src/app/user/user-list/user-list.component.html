@@ -1,0 +1,139 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="row">
+            <div class="col-md-9">
+
+            </div>
+            <div class="col-md-3">
+                <button type="button" class="btn btn-primary right" (click)="openUserEntryForm(addUser)">Add User</button>
+            </div>
+          </div>
+
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-12">
+                    <table class="table table-bordered table-responsive">
+                        <thead class="p-back-color">
+                            <tr>
+                                <th *ngFor="let userProp of userProperties"><span class="p-txt ">{{ userProp }}</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of userList">
+                                <td>{{user.username}}</td>
+                                <td>{{user.firstName}}</td>
+                                <td>{{user.lastName}}</td>
+                                <td>{{user.role}}</td>
+                                <td><button class="btn btn-primary hl-user-update-btn" id="{{user.username}}" (click)="updateUser($event)">Update</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #addUser let-modal>
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Add User </h4>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Confirm DO Details</strong>
+          </div>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form [formGroup]="userForm">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" name="username" class="form-control" formControlName="username">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" name="firstName" class="form-control" formControlName="firstName">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" name="lastName" class="form-control" formControlName="lastName">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" class="form-control" formControlName="password">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" name="confirmPassword" class="form-control" formControlName="confirmPassword">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select class="form-control" id="role" formControlName="role">
+                  <option value="ROLE_OFFICE" selected>Office</option>
+                  <option value="ROLE_FIELD">Field</option>
+                  <option value="ROLE_PARTY">Party</option>
+                  <option value="ROLE_ADMIN">Admin</option>
+                  <option value="ROLE_">Truck Owner</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="submit()">Create</button>
+      <button type="button" class="btn btn-primary" (click)="resetForm()">Reset</button>
+  </div>
+
+</ng-template>
+
+<!-- <ng-template #activateUser let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Activate User </h4>
+    </div>
+    <div class="modal-body">
+        <p>Do you want to activate this User now ?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="activateUser()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="d('Cross click')">No</button>
+    </div>
+
+</ng-template>
+
+<ng-template #deactivateUser let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Deactivate User </h4>
+    </div>
+    <div class="modal-body">
+        <p>Do you want to deactivate this User now ?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="deactivateUser()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="d('Cross click')">No</button>
+    </div>
+</ng-template> -->

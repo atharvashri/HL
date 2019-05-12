@@ -1,0 +1,70 @@
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Party Resource</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form [formGroup]="partyForm">
+                <div class="row">
+                    <div class="col-md-3 col-md-push-4">
+                        <div class="form-group">
+                            <label for="partyname" class="test">Party Name</label>
+                            <input type="text" class="form-control" id="partyname" formControlName="partyname">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-md-push-4">
+                        <div class="form-group">
+                            <label for="destination">Destination</label>
+                            <input type="text" class="form-control" id="destination" formControlName="destination">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-push-3">
+                        <div class="form-group">
+                            <button class="btn btn-primary margin-btn" (click)="addDestination()">Add</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div [hidden]="destinationsData.length == 0">
+                  <h3>Destinations Added</h3>
+                  <div class="list-options-local" id="destination-added" *ngFor="let destination of destinationsData">
+                    <button class="remove-option" value="X" (click)="removeOption(destination)">X</button>
+                      {{destination}}
+                  </div>
+                </div>
+                <!--<input type="text" name="destinations" hidden [value]="destinationsData" formControlName="destinations">-->
+                <!--<div class="row">
+                    <div class="col-md-3 col-md-push-2">
+                        <div class="form-group">
+                            <label for="freightratemin">Freightrate Min</label>
+                            <input type="text" class="form-control" id="freightratemin" formControlName="freightratemin">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-push-3">
+                        <div class="form-group">
+                            <label for="freightratemax">Freightrate Max</label>
+                            <input type="text" class="form-control" id="freightratemax" formControlName="freightratemax">
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-md-push-2">
+                        <div class="form-group">
+                            <button class="btn btn-primary margin-btn" (click)="submitFreight()">Add freight</button>
+                        </div>
+                    </div>
+
+                </div>-->
+                <div class="col-md-2 col-md-push-4">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary margin-btn" (click)="onSubmit()">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
