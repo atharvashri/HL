@@ -47,8 +47,11 @@ export class BuiltyCreateComponent implements OnInit {
   submitted: boolean = false;
   updateMode: boolean;
   builtyToUpdate;
+  selectedVehicle;
+  vehicleConfirmed;
 
   @ViewChild('content') content;
+  @ViewChild('confirmVehicleOwner') confirmVehicleOwner;
 
   ngOnInit() {
     this.route.queryParams.subscribe(
@@ -294,6 +297,10 @@ export class BuiltyCreateComponent implements OnInit {
       this.toaster.error("Please correct the errors in form and then proceed");
       return;
     }
+    if(!this.vehicleConfirmed){
+      this.toaster.error("Vehicle owner details is not confirmed. Please slecte a vehicle and confirm owner details to proceed");
+      return;
+    }
     let _builtyData = this.builtyForm.getRawValue();
 
     //check if DO due date is passed
@@ -474,7 +481,13 @@ updateBuilty(){
   }
 
   onSelectItem(selectedVehicle){
-    this.builtyForm.controls.vehicleNo.setValue(selectedVehicle.vehicleNo);
+    this.selectedVehicle = selectedVehicle;
+    this.modalService.open(this.confirmVehicleOwner);
+  }
+
+  onConfirmVehicle(){
+    this.vehicleConfirmed = true;
+    this.builtyForm.controls.vehicleNo.setValue(this.selectedVehicle.vehicleNo);
   }
 
   cancel(){
