@@ -39,7 +39,20 @@
             </div>
           </ng-template>
           <br>
-          <form *ngIf="showform" [formGroup]="permitform">
+
+        </div>
+    </div>
+</div>
+
+<ng-template #addPermitModal let-modal let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{popupTitle}}</h4>
+    </div>
+    <div class="modal-body">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form [formGroup]="permitform">
               <div class="row">
                   <div class="col-md-4">
                       <div class="form-group">
@@ -60,21 +73,13 @@
                       </div>
                   </div>
               </div>
-
-              <div class="row">
-                <div class="col-md-1 col-md-push-4">
-                  <div class="form-group">
-                    <button *ngIf="!updatemode" class="btn btn-primary margn-btn" type="submit" (click)="createpermit()">Submit</button>
-                    <button *ngIf="updatemode" class="btn btn-primary margn-btn" type="submit" (click)="updatepermit()">Update</button>
-                  </div>
-                </div>
-                <div class="col-md-1 col-md-push-4">
-                  <div class="form-group">
-                    <button class="btn btn-primary margn-btn" (click)="showform=false">Cancel</button>
-                  </div>
-                </div>
+              <div class="modal-footer">
+                <button *ngIf="!updatemode" class="btn btn-primary" type="submit" (click)="createpermit()">Create</button>
+                <button *ngIf="updatemode" class="btn btn-primary" type="submit" (click)="updatepermit()">Update</button>
+                <button class="btn btn-danger" (click)="d('Cross click')">Cancel</button>
               </div>
           </form>
         </div>
+      </div>
     </div>
-</div>
+</ng-template>

@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '../../../node_modules/@angular/forms';
 import { ToastrService } from '../../../node_modules/ngx-toastr';
 import { PermitService } from '../services/permit.service';
 import { AppUtil } from '../utils/app.util';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-permit',
@@ -13,7 +14,7 @@ export class PermitComponent implements OnInit {
 
 
   constructor(private permitformbuilder: FormBuilder, private toaster: ToastrService,
-      private permitservice: PermitService) { }
+      private permitservice: PermitService, private modalService: NgbModal ) { }
 
   ngOnInit() {
     this.activepermits = [];
@@ -25,6 +26,8 @@ export class PermitComponent implements OnInit {
       }
     )
   }
+  @ViewChild('addPermitModal') content;
+  popupTitle;
   activepermits: Array<any>;
   showform: boolean = false;
   updatemode: boolean = false;
@@ -45,6 +48,7 @@ export class PermitComponent implements OnInit {
     this.permitservice.createpermit(permitdata).subscribe(
       (res) => {
         if(res.success){
+          this.modalService.dismissAll();
           this.toaster.success(res.message);
           this.activepermits.push(res.data);
         }else{
@@ -71,6 +75,7 @@ export class PermitComponent implements OnInit {
     this.permitservice.updatepermit(permitdata).subscribe(
       (res) => {
         if(res.success){
+          this.modalService.dismissAll();
           this.toaster.success(res.message);
           this.activepermits[this.selectedpermit.index] = res.data;
         }else{
@@ -85,14 +90,18 @@ export class PermitComponent implements OnInit {
 
   showpermitform(updatemode, index){
     this.updatemode = updatemode;
-    this.showform = true;
+    this.modalService.open(this.content);
     if(this.updatemode){
+      this.popupTitle = "Update Permit"
       this.selectedpermit = this.activepermits[index];
       this.selectedpermit.index = index;
       this.permitform.controls.permitnumber.setValue(this.selectedpermit.permitnumber);
+      this.permitform.controls.permitnumber.disable();
       this.permitform.controls.quantity.setValue(this.selectedpermit.quantity);
       this.permitform.controls.enddate.setValue(this.selectedpermit.enddate);
     }else{
+      this.popupTitle = "Add Permit"
+      this.permitform.controls.permitnumber.enable();
       this.permitform.reset();
     }
 

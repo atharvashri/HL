@@ -16,6 +16,10 @@ export class AdminLayoutComponent implements OnInit {
   private lastPoppedUrl: string;
   private yScrollStack: number[] = [];
   isloggedIn: boolean = false;
+  private mainPanel: HTMLElement;
+  private sideBarPanel: HTMLElement;
+  private psMainScroll: PerfectScrollbar;
+  private psSideBarScroll: PerfectScrollbar;
 
   constructor( public location: Location, private router: Router) {}
 
@@ -35,8 +39,6 @@ export class AdminLayoutComponent implements OnInit {
       } else {
           document.getElementsByTagName('body')[0].classList.remove('perfect-scrollbar-off');
       }
-      //const elemMainPanel = <HTMLElement>document.querySelector('.main-panel');
-      const elemSidebar = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
 
       this.location.subscribe((ev:PopStateEvent) => {
           this.lastPoppedUrl = ev.url;
@@ -54,15 +56,21 @@ export class AdminLayoutComponent implements OnInit {
          }
       });
       this._router = this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((event: NavigationEnd) => {
-           //elemMainPanel.scrollTop = 0;
-           elemSidebar.scrollTop = 0;
-      });
-      if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
-        if(elemSidebar){
-          let ps = new PerfectScrollbar(elemSidebar);
+        this.mainPanel = <HTMLElement>document.querySelector('.main-panel');
+        this.sideBarPanel = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
+        // if(this.psMainScroll)
+        //   this.psMainScroll.destroy();
+
+        this.psSideBarScroll = new PerfectScrollbar(this.sideBarPanel);
+        if(this.psSideBarScroll)
+          this.psSideBarScroll.destroy();
+        this.psMainScroll = new PerfectScrollbar(this.mainPanel);
+        this.psMainScroll.destroy();
+        if(this.mainPanel){
+          this.mainPanel.scrollTop = 0;
         }
-          //ps = new PerfectScrollbar(elemSidebar);
-      }
+        
+      });
   }
   ngAfterViewInit() {
       this.runOnRouteChange();
@@ -79,12 +87,14 @@ export class AdminLayoutComponent implements OnInit {
   }
   runOnRouteChange(): void {
     if (window.matchMedia(`(min-width: 960px)`).matches && !this.isMac()) {
-      const mainPanel = <HTMLElement>document.querySelector('.main-panel');
-      const sideBarPanel = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
-      let ps = new PerfectScrollbar(sideBarPanel);
-      ps.update();
-      ps = new PerfectScrollbar(mainPanel);
-      ps.update();
+      this.mainPanel = <HTMLElement>document.querySelector('.main-panel');
+      this.sideBarPanel = <HTMLElement>document.querySelector('.sidebar .sidebar-wrapper');
+      // if(this.psMainScroll)
+      //   this.psMainScroll.destroy();
+      this.psSideBarScroll = new PerfectScrollbar(this.sideBarPanel);
+      this.psSideBarScroll.destroy();
+      this.psMainScroll = new PerfectScrollbar(this.mainPanel);
+      this.psMainScroll.destroy();
     }
   }
   isMac(): boolean {

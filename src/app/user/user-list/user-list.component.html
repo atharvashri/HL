@@ -2,63 +2,56 @@
     <div class="panel panel-default">
         <div class="panel-heading">
           <div class="row">
-            <div class="col-md-9">
-
+            <div class="col-md-6">
+                <strong>User Management</strong>
             </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-primary right" (click)="openUserEntryForm(addUser)">Add User</button>
+            <div class="col-md-6">
+                <button type="button" class="btn btn-primary right" (click)="openAddUserModal(addUserModal)">Add User</button>
             </div>
           </div>
 
         </div>
         <div class="panel-body">
-          <div class="row">
-            <div class="col-md-12">
-                    <table class="table table-bordered table-responsive">
-                        <thead class="p-back-color">
-                            <tr>
-                                <th *ngFor="let userProp of userProperties"><span class="p-txt ">{{ userProp }}</span></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let user of userList">
-                                <td>{{user.username}}</td>
-                                <td>{{user.firstName}}</td>
-                                <td>{{user.lastName}}</td>
-                                <td>{{user.role}}</td>
-                                <td><button class="btn btn-primary hl-user-update-btn" id="{{user.username}}" (click)="updateUser($event)">Update</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead class="p-back-color">
+                        <tr>
+                            <th *ngFor="let userProp of userProperties"><span class="p-txt ">{{ userProp }}</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of userList">
+                            <td>{{user.username}}</td>
+                            <td>{{user.firstName}}</td>
+                            <td>{{user.lastName}}</td>
+                            <td>{{user.role}}</td>
+                            <td><a id="{{user.username}}" (click)="openUpdateUserModal(user, addUserModal)">Update</a></td>
+                            <td><a id="{{user.username}}_changePassword" (click)="openChangePasswordModal(user, changePasswordModal)">Change Password</a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-          </div>
         </div>
     </div>
 </div>
 
 
-<ng-template #addUser let-modal>
+<ng-template #addUserModal let-modal let-d="dismiss">
   <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Add User </h4>
+      <h4 class="modal-title" id="modal-basic-title">{{popupTitle}}</h4>
   </div>
 
   <div class="modal-body">
 
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-md-6">
-            <strong>Confirm DO Details</strong>
-          </div>
-        </div>
-      </div>
       <div class="panel-body">
         <form [formGroup]="userForm">
         <div class="row">
           <div class="col-md-4">
             <div class="form-group">
               <label for="username">Username</label>
-              <input type="text" name="username" class="form-control" formControlName="username">
+              <input [ngClass]="{'error-username':usernameDuplicate===true}"  type="text" name="username" class="form-control"
+                  formControlName="username" (focusout)="checkUserNameAvailability()">
             </div>
           </div>
           <div class="col-md-4">
@@ -75,13 +68,13 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="!updateMode">
             <div class="form-group">
               <label for="password">Password</label>
               <input type="password" name="password" class="form-control" formControlName="password">
             </div>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-4" *ngIf="!updateMode">
             <div class="form-group">
               <label for="confirmPassword">Confirm Password</label>
               <input type="password" name="confirmPassword" class="form-control" formControlName="confirmPassword">
@@ -105,8 +98,43 @@
     </div>
   </div>
   <div class="modal-footer">
-      <button type="button" class="btn btn-primary" (click)="submit()">Create</button>
-      <button type="button" class="btn btn-primary" (click)="resetForm()">Reset</button>
+      <button type="button" class="btn btn-primary" (click)="submit()" *ngIf="!updateMode">Create</button>
+      <button type="button" class="btn btn-primary" (click)="update()" *ngIf="updateMode">Update</button>
+      <button type="button" class="btn btn-danger" (click)="resetForm()" *ngIf="!updateMode">Reset</button>
+      <button type="button" class="btn btn-danger" (click)="d('Cross click')" *ngIf="updateMode">Cancel</button>
+  </div>
+
+</ng-template>
+
+<ng-template #changePasswordModal let-modal let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Change Password</h4>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" name="password" class="form-control" [(ngModel)]="password">
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" name="confirmPassword" class="form-control" [(ngModel)]="confirmPassword">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="changePassword()">Update</button>
+      <button type="button" class="btn btn-danger" (click)="d('Cross click')">Cancel</button>
   </div>
 
 </ng-template>

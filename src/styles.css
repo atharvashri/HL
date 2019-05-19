@@ -34,7 +34,7 @@ img.link{
 .list-options-local{
   border: 1px solid gray;
   padding: 15px 15px 0px 15px;
-  margin: 20px 20px 0px;
+  margin: 10px 20px 0px;
   /*background: #A4D3EE;*/
   box-shadow: 5px 5px 2px #888888;
   position: relative;
@@ -43,7 +43,7 @@ img.link{
 }
 .list-options-local .remove-option {
     position: absolute;
-    background: red;
+    background: #8d8996;
     color: white;
     top: -10px;
     right: -10px;
@@ -102,6 +102,7 @@ div.ng2-tag-input{
 
 .sidebar .nav li > a{
 	font-size: 0.85em !important;
+  font-weight: bold !important;
 }
 
 .slickgrid-container .grid-canvas .slick-cell .slick-group-toggle.expanded:before{
@@ -169,4 +170,39 @@ span.dropdown-up{
 
 button + button{
 	margin-left: 15px !important;
+}
+
+a:not([href]):not([tabindex]){
+	color: #00b0cc !important;
+}
+a:not([href]):not([tabindex]):hover{
+	color: #00b0cc !important;
+}
+
+.btn-gridmenu{
+	background-color: transparent !important;
+	color: black !important;
+	border: 1px solid transparent !important;
+}
+
+.btn-gridmenu:hover{
+	background-color: transparent !important;
+	color: black;
+	border: 1px solid #979797 !important;
+}
+
+.toast-container{
+  width: auto !important;
+}
+
+.toast-error {
+  background-color: #BD362F !important;
+}
+
+.toast-success {
+  background-color: #51A351 !important;
+}
+
+div h4{
+  margin: 10px 0;
 }

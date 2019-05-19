@@ -6,7 +6,7 @@
                     <strong>Area Resource</strong>
                 </div>
                 <div class="col-md-6">
-                    <button type="button" class="btn btn-primary right" (click)="showform=true;updatemode=false">Create Area</button>
+                    <button type="button" class="btn btn-primary right" (click)="showareaform()">Add Area</button>
                 </div>
             </div>
         </div>
@@ -24,7 +24,7 @@
                 <tr *ngFor="let area of arealist; let i=index">
                   <td>{{area.name}}</td>
                   <td><span *ngFor="let collary of area.collaries; let i=index; let len=count">{{collary + (len-1 == i ? '' : ', ')}}</span></td>
-                  <td><a (click)="showareaform(i)">Update</a></td>
+                  <td><a (click)="showareaform(i, true)">Update</a></td>
                 </tr>
               </tbody>
             </table>
@@ -36,57 +36,57 @@
               </div>
             </div>
           </ng-template>
-          <br>
-          <form *ngIf="showform" [formGroup]="areaForm">
-              <div class="row">
-                  <div class="col-md-3 col-md-push-4">
-                      <div class="form-group">
-                          <label for="areaname" class="test">Area Name</label>
-                          <input type="text" class="form-control" id="areaname" formControlName="areaname">
-                      </div>
-                  </div>
-              </div>
-              <div class="row">
-                  <div class="col-md-3 col-md-push-4">
-                      <div class="form-group">
-                          <label for="collary">Collary</label>
-                          <input type="text" class="form-control" id="collary" formControlName="collary">
-                      </div>
-                  </div>
-                  <div class="col-md-3 col-md-push-3">
-                      <div class="form-group">
-                          <button class="btn btn-primary margin-btn" (click)="addCollary()">Add Collary</button>
-                      </div>
-                  </div>
-              </div>
-
-              <div [hidden]="collaries.length == 0">
-                <h3>Collary Added</h3>
-                <div class="list-options-local" id="collary-added" *ngFor="let collary of collaries; let i=index">
-                  <button class="remove-option" value="X" (click)="removeOption(i)">X</button>
-                    {{collary}}
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-1 col-md-push-4">
-                  <div class="form-group">
-                    <button *ngIf="!updatemode" class="btn btn-primary margn-btn" type="submit" (click)="onSubmit()">Submit</button>
-                    <button *ngIf="updatemode" class="btn btn-primary margn-btn" type="submit" (click)="onUpdate()">Update</button>
-                  </div>
-                </div>
-                <div class="col-md-1 col-md-push-4">
-                  <div class="form-group">
-                    <button class="btn btn-primary margn-btn" (click)="showform=false">Cancel</button>
-                  </div>
-                </div>
-              </div>
-          </form>
         </div>
     </div>
 </div>
 
+<ng-template #addAreaModal let-modal let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{popupTitle}}</h4>
+  </div>
 
+  <div class="modal-body">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form [formGroup]="areaForm">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="areaname" class="test">Area Name</label>
+                        <input type="text" class="form-control" id="areaname" formControlName="areaname">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="collary">Collary</label>
+                        <input type="text" class="form-control" id="collary" formControlName="collary">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group zero-margin">
+                      <button id="addCollary" class="btn btn-primary btn-sm" (click)="addCollary()">Add Collary</button>
+                    </div>
+                </div>
+            </div>
+
+            <div [hidden]="collaries.length == 0">
+              <h4>Collary Added</h4>
+              <div class="list-options-local" id="collary-added" *ngFor="let collary of collaries; let i=index">
+                <button class="remove-option" value="X" (click)="removeOption(i)">X</button>
+                  {{collary}}
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button *ngIf="!updatemode" class="btn btn-primary" type="submit" (click)="onSubmit()">Submit</button>
+    <button *ngIf="updatemode" class="btn btn-primary" type="submit" (click)="onUpdate()">Update</button>
+    <button class="btn btn-danger" (click)="d('Cross click')">Cancel</button>
+  </div>
+
+</ng-template>
 
 <!--
 <div class="container-fluid">

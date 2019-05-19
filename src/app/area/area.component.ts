@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, Validators } from '../../../node_modules/@angular/forms';
 import { ToastrService } from '../../../node_modules/ngx-toastr';
 import { DataService } from '../services/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-area',
@@ -25,14 +26,16 @@ export class AreaComponent implements OnInit {
 
   constructor(private areaFormbuilder: FormBuilder,
       private toaster: ToastrService,
-      private service: DataService) {
+      private service: DataService,
+      private modalService: NgbModal) {
 
   }
 
+@ViewChild('addAreaModal') content;
   arealist: Array<any>;
-  showform: boolean = false;
   updatemode: boolean = false;
   selectedarea;
+  popupTitle;
 
   areaForm = this.areaFormbuilder.group({
     areaname: ['', Validators.required],
@@ -65,8 +68,7 @@ export class AreaComponent implements OnInit {
     this.service.createArea(area).subscribe(
       (res) => {
         if(res.success){
-          this.areaForm.reset();
-          this.collaries = [];
+          this.modalService.dismissAll();
           this.arealist.push(res.data);
           this.toaster.success(res.message);
         }else{
@@ -81,6 +83,10 @@ export class AreaComponent implements OnInit {
   }
 
   onUpdate(){
+    if(this.areaForm.invalid){
+      this.toaster.error("Area name is mandatory");
+      return;
+    }
     let area = {
       "id": this.selectedarea.id,
       "name": this.areaForm.controls.areaname.value,
@@ -89,11 +95,8 @@ export class AreaComponent implements OnInit {
     this.service.updateArea(area).subscribe(
       (res) => {
         if(res.success){
-          this.areaForm.reset();
-          this.collaries = [];
+          this.modalService.dismissAll();
           this.arealist[this.selectedarea.index] = res.data;
-          this.updatemode = false;
-          this.showform = false;
           this.toaster.success(res.message);
         }else{
             this.toaster.error(res.message);
@@ -107,13 +110,23 @@ export class AreaComponent implements OnInit {
     )
   }
 
-  showareaform(index){
-    this.updatemode = true;
-    this.showform = true;
-    this.selectedarea = this.arealist[index];
-    this.selectedarea.index = index;
-    this.areaForm.controls.areaname.setValue(this.selectedarea.name);
-    this.collaries = this.selectedarea.collaries;
+  showareaform(index, updatemode){
+    this.updatemode = updatemode;
+    this.modalService.open(this.content);
+    if(updatemode){
+      this.popupTitle = "Update Area"
+      if(index > -1){
+        this.selectedarea = this.arealist[index];
+        this.selectedarea.index = index;
+        this.areaForm.controls.areaname.setValue(this.selectedarea.name);
+        this.collaries = this.selectedarea.collaries;
+      }
+    }else{
+      this.popupTitle = "Add Area"
+      this.areaForm.reset()
+      this.collaries = []
+    }
+
   }
 
 }

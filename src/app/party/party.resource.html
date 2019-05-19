@@ -5,66 +5,85 @@
                 <div class="col-md-6">
                     <strong>Party Resource</strong>
                 </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary right" (click)="showpartyform()">Add Party</button>
+                </div>
             </div>
         </div>
         <div class="panel-body">
-            <form [formGroup]="partyForm">
-                <div class="row">
-                    <div class="col-md-3 col-md-push-4">
-                        <div class="form-group">
-                            <label for="partyname" class="test">Party Name</label>
-                            <input type="text" class="form-control" id="partyname" formControlName="partyname">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-md-push-4">
-                        <div class="form-group">
-                            <label for="destination">Destination</label>
-                            <input type="text" class="form-control" id="destination" formControlName="destination">
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-md-push-3">
-                        <div class="form-group">
-                            <button class="btn btn-primary margin-btn" (click)="addDestination()">Add</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div [hidden]="destinationsData.length == 0">
-                  <h3>Destinations Added</h3>
-                  <div class="list-options-local" id="destination-added" *ngFor="let destination of destinationsData">
-                    <button class="remove-option" value="X" (click)="removeOption(destination)">X</button>
-                      {{destination}}
-                  </div>
-                </div>
-                <!--<input type="text" name="destinations" hidden [value]="destinationsData" formControlName="destinations">-->
-                <!--<div class="row">
-                    <div class="col-md-3 col-md-push-2">
-                        <div class="form-group">
-                            <label for="freightratemin">Freightrate Min</label>
-                            <input type="text" class="form-control" id="freightratemin" formControlName="freightratemin">
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-md-push-3">
-                        <div class="form-group">
-                            <label for="freightratemax">Freightrate Max</label>
-                            <input type="text" class="form-control" id="freightratemax" formControlName="freightratemax">
-                        </div>
-                    </div>
-                    <div class="col-md-3 col-md-push-2">
-                        <div class="form-group">
-                            <button class="btn btn-primary margin-btn" (click)="submitFreight()">Add freight</button>
-                        </div>
-                    </div>
-
-                </div>-->
-                <div class="col-md-2 col-md-push-4">
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary margin-btn" (click)="onSubmit()">Submit</button>
-                    </div>
-                </div>
-            </form>
+          <div class="table-responsive" *ngIf="partyList.length;else noparty">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th><strong>Party Name</strong></th>
+                  <th><strong>Destinations</strong></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let party of partyList; let i=index">
+                  <td>{{party.name}}</td>
+                  <td><span *ngFor="let destination of party.destinations; let i=index; let len=count">{{destination + (len-1 == i ? '' : ', ')}}</span></td>
+                  <td><a (click)="showpartyform(i, true)">Update</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <ng-template #noparty>
+            <div class="row">
+              <div class="col-md-6">
+                  No Party is availabe.
+              </div>
+            </div>
+          </ng-template>
         </div>
     </div>
 </div>
+
+<ng-template #addPartyModal let-modal let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">{{popupTitle}}</h4>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <form [formGroup]="partyForm">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="partyName" class="test">Party Name</label>
+                        <input type="text" class="form-control" id="partyName" formControlName="partyName">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="destination">Destination</label>
+                        <input type="text" class="form-control" id="destination" formControlName="destination">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-sm" (click)="addDestination()">Add Destination</button>
+                    </div>
+                </div>
+            </div>
+
+            <div [hidden]="destinationsData.length == 0">
+              <h4>Destinations Added</h4>
+              <div class="list-options-local" id="destination-added" *ngFor="let destination of destinationsData">
+                <button class="remove-option" value="X" (click)="removeOption(destination)">X</button>
+                  {{destination}}
+              </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="onSubmit()" *ngIf="!updateMode">Create</button>
+      <button type="button" class="btn btn-primary" (click)="onUpdate()" *ngIf="updateMode">Update</button>
+      <button type="button" class="btn btn-danger" (click)="d('Cross click')">Cancel</button>
+  </div>
+</ng-template>

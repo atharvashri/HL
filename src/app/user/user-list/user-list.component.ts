@@ -4,14 +4,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 
-interface User {
-    UserName: string,
-    FirstName: string,
-    LastName: string,
-    Role: string,
-    Status: string
-}
-
 @Component({
     selector: 'user-list-cmp',
     moduleId: module.id,
@@ -24,8 +16,6 @@ export class UserListComponent implements OnInit {
     @Output() sendUserName: EventEmitter<any> = new EventEmitter<any>();
     //@ViewChild('addUser') addUserModal;
 
-    userIDForActivation = null
-
     userProperties = [
         'Username',
         'First Name',
@@ -34,8 +24,14 @@ export class UserListComponent implements OnInit {
         ''
     ];
     updateMode: boolean
-    userList: User[]
+    userList: any[]
     userForm: FormGroup
+    userIDForActivation = null
+    popupTitle: string
+    password
+    confirmPassword
+    usernameToUpdate
+    usernameDuplicate = false;
 
     constructor(public _fb: FormBuilder, private userService: UserService,
           private toastrService: ToastrService,
@@ -70,7 +66,27 @@ export class UserListComponent implements OnInit {
 
     }
 
-    openUserEntryForm(content){
+    openAddUserModal(content){
+      this.updateMode = false;
+      this.userForm.controls.username.enable();
+      this.popupTitle = "Add User";
+      this.userForm.reset();
+      this.modalService.open(content);
+    }
+
+    openUpdateUserModal(user, content){
+        this.updateMode = true;
+        this.popupTitle = "Update User";
+        this.modalService.open(content);
+        this.userForm.controls.username.setValue(user.username);
+        this.userForm.controls.username.disable();
+        this.userForm.controls.firstName.setValue(user.firstName);
+        this.userForm.controls.lastName.setValue(user.lastName);
+        this.userForm.controls.role.setValue(user.role);
+    }
+
+    openChangePasswordModal(user, content){
+      this.usernameToUpdate = user.username;
       this.modalService.open(content);
     }
 
@@ -86,31 +102,84 @@ export class UserListComponent implements OnInit {
           this.toastrService.error("Password and Confirm password do not match");
           return;
       }
-      // let userData = {
-      //     username: this.userForm.controls.username.value,
-      //     firstName: this.userForm.controls.firstname.value,
-      //     lastName: this.userForm.controls.lastname.value,
-      //     password: this.userForm.controls.password.value,
-      //     role: this.userForm.controls.role.value,
-      //     //active: JSON.parse(this.userForm.controls.active.value)
-      // }
+
       let userData = this.userForm.getRawValue();
 
       this.userService.addUser(userData).subscribe(
           (res) => {
             if(res.success){
-              this.toastrService.success("User is added successfully")
+              this.modalService.dismissAll()
+              this.toastrService.success(res.message)
               this.userList.push(userData);
             }else{
               this.toastrService.error(res.message);
             }
           },
           (error) => {
-              this.toastrService.error("Fail to add user to database please contact Admin", "User Add failure")
+              this.toastrService.error("Fail to add user to database! Internal server error")
           }
       )
     }
-    updateUser(evt) {
-        this.sendUserName.emit(evt.target.id)
+
+    update(){
+      let userData = this.userForm.getRawValue();
+
+      this.userService.updateUser(userData).subscribe(
+          (res) => {
+            if(res.success){
+              this.modalService.dismissAll()
+              this.toastrService.success(res.message)
+              let idx = this.userList.findIndex(user => user.username === res.data.username);
+              if(idx > -1){
+                this.userList[idx] = res.data;
+              }
+            }else{
+              this.toastrService.error(res.message);
+            }
+          },
+          (error) => {
+              this.toastrService.error("Fail to update user details! Internal server error")
+          }
+      )
+    }
+
+    changePassword(){
+      if(!this.password){
+        this.toastrService.error("Password field can't be blank");
+        return;
+      }else if(this.password !== this.confirmPassword){
+        this.toastrService.error("Password and Confirm Password don't match");
+        return;
+      }
+
+      let userData ={
+        'password': this.password
+      }
+
+      this.userService.changePassword(userData).subscribe(
+          (res) => {
+            if(res.success){
+              this.modalService.dismissAll()
+              this.toastrService.success(res.message)
+            }else{
+              this.toastrService.error(res.message);
+            }
+          },
+          (error) => {
+              this.toastrService.error("Fail to change password! Internal server error")
+          }
+      )
+    }
+
+    checkUserNameAvailability() {
+        let _username = this.userForm.controls.username.value;
+        this.usernameDuplicate = false;
+        this.userList.forEach(element => {
+            if (_username == element.username) {
+                this.usernameDuplicate = true;
+                this.toastrService.error('username is already present')
+                return;
+            }
+        });
     }
 }

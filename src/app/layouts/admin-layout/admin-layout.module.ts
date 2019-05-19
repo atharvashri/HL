@@ -4,7 +4,6 @@ import { CommonModule, LOCATION_INITIALIZED } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutes } from './admin-layout.routing';
 import { UserProfileComponent } from '../../user-profile/user-profile.component';
-import { TableListComponent } from '../../table-list/table-list.component';
 import { IconsComponent } from '../../icons/icons.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
@@ -143,9 +142,7 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
   ],
   declarations: [
     UserProfileComponent,
-    TableListComponent,
     IconsComponent,
-
     DoRunningComponent,
     DoCompletedComponent,
     DoCreateComponent,
@@ -191,7 +188,7 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
     BuiltyService,
     BillingService,
     DoService,
-    UserService,    
+    UserService,
     DataService,
     FileUploadService,
     PermitService,

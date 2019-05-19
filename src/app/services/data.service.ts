@@ -11,7 +11,7 @@ export class DataService {
 
     }
 
-    createParty(data) {
+    createParty(data): any {
         return this.http.post(this.url + '/party', data);
     }
 
@@ -31,12 +31,20 @@ export class DataService {
       return this.http.get(this.url + '/pump');
     }
 
+    getPartyList(): any{
+      return this.http.get(this.url + '/party');
+    }
+
     createPump(data): any{
       return this.http.post(this.url + '/pump', data);
     }
 
     removePump(data): any{
       return this.http.put(this.url + '/pump/remove', data);
+    }
+
+    updateParty(data): any{
+      return this.http.put(this.url + '/party', data);
     }
 
 }

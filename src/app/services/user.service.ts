@@ -24,11 +24,15 @@ export class UserService {
         return this.http.get(this.url + '/user/'+`${userName}`);
     }
 
-    updateUser(data) {
+    updateUser(data): any {
         return this.http.put(this.url + '/user', data);
     }
 
     getByRole(rolename){
       return this.http.get(this.url + '/user/role/' + rolename);
+    }
+
+    changePassword(data): any{
+      return this.http.put(this.url + '/user/updatePassword', data);
     }
 }

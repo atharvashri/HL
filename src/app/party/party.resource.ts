@@ -1,8 +1,9 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
 import { DataService } from '../services/data.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'party-resource',
@@ -11,22 +12,44 @@ import { DataService } from '../services/data.service';
 })
 
 export class PartyResourceComponent implements OnInit {
+
+  @ViewChild('addPartyModal') content
   destinations = [];
+  partyList;
+  popupTitle;
+  updateMode;
+  partyData:string;
+  destinationsData:Array<string>;
+  selectedParty;
+  selectedPartyIndex
+
   ngOnInit() {
     this.destinationsData = [];
+    this.partyList = [];
+    this.service.getPartyList().subscribe(
+      (res) => {
+        if(res.success){
+          this.toaster.success(res.message)
+          this.partyList = res.data
+        }else{
+          this.toaster.error(res.message);
+        }
+      },
+      () => {
+        this.toaster.error("Failed to get list of party! Internal server error")
+      }
+    )
   }
 
   constructor(private partyFormbuilder: FormBuilder,
       private toaster: ToastrService,
-      private service: DataService) {
+      private service: DataService,
+      private modalService: NgbModal) {
 
   }
 
-  partyData:string;
-  destinationsData:Array<string>;
-
   partyForm = this.partyFormbuilder.group({
-    partyname: [],
+    partyName: ['', Validators.required],
     destination: []
   })
 
@@ -44,21 +67,69 @@ export class PartyResourceComponent implements OnInit {
     //console.log(this.destinations);
   }
 
+  showpartyform(idx, updateMode){
+    this.updateMode = updateMode;
+    this.modalService.open(this.content)
+    if(updateMode){
+      this.popupTitle = "Update Party"
+      if(idx > -1){
+        this.selectedParty = this.partyList[idx]
+        this.selectedPartyIndex = idx;
+        this.partyForm.controls.partyName.setValue(this.selectedParty.name)
+        this.destinationsData = this.selectedParty.destinations;
+      }
+    }else{
+      this.popupTitle = "Add Party"
+      this.partyForm.reset();
+      this.destinationsData = []
+    }
+  }
+
   onSubmit(){
+    if(this.partyForm.invalid){
+      this.toaster.error("Party name is mandatory");
+      return;
+    }
     let party = {
-      "name": this.partyForm.controls.partyname.value,
+      "name": this.partyForm.controls.partyName.value,
       "destinations": this.destinationsData
     }
     this.service.createParty(party).subscribe(
-      (success) => {
-        console.log(success);
-        this.partyForm.reset();
-        this.destinationsData = [];
-        this.toaster.success("Party data saved successfully");
+      (res) => {
+        if(res.success){
+          this.modalService.dismissAll()
+          this.toaster.success(res.message);
+          this.partyList.push(res.data);
+        }else{
+          this.toaster.error(res.message);
+        }
       },
-      (error) => {
-        console.log(error);
-        this.toaster.error("Problem saving party data");
+      () => {
+        this.toaster.error("Failed to add party details! Internal Server error");
+      }
+    )
+  }
+
+  onUpdate(){
+    if(this.partyForm.invalid){
+      this.toaster.error("Party name is mandatory");
+      return;
+    }
+    let party = this.selectedParty;
+    party.name = this.partyForm.controls.partyName.value
+    party.destinations = this.destinationsData
+    this.service.updateParty(party).subscribe(
+      (res) => {
+        if(res.success){
+          this.modalService.dismissAll()
+          this.toaster.success(res.message);
+          this.partyList[this.selectedPartyIndex] = party
+        }else{
+          this.toaster.error(res.message);
+        }
+      },
+      () => {
+        this.toaster.error("Failed to update party details! Internal Server error");
       }
     )
   }
