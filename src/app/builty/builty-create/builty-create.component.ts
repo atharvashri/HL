@@ -187,6 +187,9 @@ export class BuiltyCreateComponent implements OnInit {
       (res) => {
         if(this.updateMode){ // it will return single DO
           this.doList.push(res.data);
+          this.builtyForm.controls.vehicleNo.setValue(this.builtyToUpdate.vehicleNo);
+          this.builtyForm.controls.vehicleNo.disable();
+          this.vehicleConfirmed = true
           this.populateBuiltyDetails(this.builtyToUpdate);
           this.showDataAfterDoSelection(false);
           this.populateDependentOptions();
@@ -232,6 +235,7 @@ export class BuiltyCreateComponent implements OnInit {
     this.savedBuilties.forEach(element => {
 
       if (element.id == evt.target.value) {
+        this.builtyForm.controls.vehicleNo.setValue('');
         this.populateBuiltyDetails(element);
         this.showDataAfterDoSelection(false);
         this.populateDependentOptions();
@@ -256,7 +260,6 @@ export class BuiltyCreateComponent implements OnInit {
     this.builtyForm.controls.otBuiltyNumber.setValue(element.otBuiltyNumber);
     this.builtyForm.controls.party.setValue(element.party);
     this.builtyForm.controls.destination.setValue(element.destination);
-    this.builtyForm.controls.vehicleNo.setValue(element.vehicleNo);
     this.builtyForm.controls.doOpeningbalance.setValue(element.doOpeningbalance);
     this.builtyForm.controls.outAdvance.setValue(element.outAdvance);
     this.builtyForm.controls.inAdvance.setValue(element.inAdvance);
@@ -338,8 +341,12 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   saveBuilty() {
-    let _builtyData = this.builtyForm.getRawValue();
 
+    let _builtyData = this.builtyForm.getRawValue();
+    // if(_builtyData.vehicleNo && !this.vehicleConfirmed){
+    //   this.toaster.error("Vehicle number is not confirmed. To proceed with saving please remove vehicle details or confirm the vehicle number");
+    //   return;
+    // }
         //this.builtyDataforConfirmModel = _builtyData
         _builtyData.doDisplay = this.selectedDo.doDisplay;
         //_builtyData.builtyDate = _builtyData.builtyDate;

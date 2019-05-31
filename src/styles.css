@@ -206,3 +206,12 @@ a:not([href]):not([tabindex]):hover{
 div h4{
   margin: 10px 0;
 }
+
+.modal-footer{
+  justify-content: flex-start !important;
+}
+
+.table > thead > tr > th{
+  font-size: 1em !important;
+  font-weight: 600 !important;
+}

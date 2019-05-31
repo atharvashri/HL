@@ -408,15 +408,11 @@
 </div>
 
   <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+          <h4 class="modal-title">Confirm Bilty Details</h4>
+    </div>
     <div class="modal-body">
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <div class="row">
-            <div class="col-md-6">
-              <strong>Confirm DO Details</strong>
-            </div>
-          </div>
-        </div>
         <div class="panel-body">
           <div class="row">
             <div class="col-md-3">
@@ -669,20 +665,12 @@
               </div>
             </div> -->
           </div>
-          <div class="row">
-            <div class="col-md-1 col-md-push-4">
-              <div class="form-group">
-                <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createBuilty()">Submit</button>
-              </div>
-            </div>
-            <div class="col-md-1 col-md-push-4">
-              <div class="form-group">
-                <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" name="update" (click)="createBuilty()">Submit</button>
+      <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
     </div>
   </ng-template>
 
@@ -714,13 +702,10 @@
           </div>
         </div>
       </div>
-      <hr>
-      <div class="row">
-        <div class="form-group">
-          <button type="button" class="btn btn-primary margn-btn" (click)="onConfirmVehicle();d('Cross click')">Yes, I Confirm</button>
-          <button type="button" class="btn btn-danger" (click)="vehicleConfirmed=false;d('Cross click')">No, Owner Details Incorrect</button>
-        </div>
-      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary margn-btn" (click)="onConfirmVehicle();d('Cross click')">Yes, I Confirm</button>
+      <button type="button" class="btn btn-danger" (click)="vehicleConfirmed=false;d('Cross click')">No, Owner Details Incorrect</button>
     </div>
 
   </ng-template>

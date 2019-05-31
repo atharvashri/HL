@@ -1,4 +1,77 @@
-<div class="col-md-12">
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Selected Bilties</strong>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+          <form [formGroup]="receiptForm">
+          <div class="table-responsive" formArrayName="builtyitems">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><span>Bilty No.</span></th>
+                  <th><span>Vehicle No.</span></th>
+                  <th><span>Quantity</span></th>
+                  <th><span>Received Date</span></th>
+                  <th><span>Received Quantity</span></th>
+                  <th><span>Allowed Shortage (in kg)</span></th>
+                  <th><span>Deduction Rate (per kg)</span></th>
+                  <th><span>Commission</span></th>
+                  <th><span>Total Advance</span></th>
+                  <th><span>Freight Rate</span></th>
+                  <th><span>Total Freight</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let builty of receiptForm.get('builtyitems')['controls']; let i=index" [formGroupName]="i">
+                    <td>{{builty.controls.builtyNo?.value}}</td>
+                    <td>{{builty.controls.vehicleNo?.value}}</td>
+                    <td>{{builty.controls.quantity?.value}}</td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
+                    <td>
+                      <select class="form-control" name="allowedShortage" id="allowedShortage" formControlName="allowedShortage">
+                        <option *ngFor="let limit of shortageLimits" [value]="limit.value" [selected]="limit.defaultValue">{{limit.value}}</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control" name="deductionRate" id="deductionRate" formControlName="deductionRate">
+                        <option *ngFor="let rate of deductionRates" [value]="rate.value" [selected]="rate.defaultValue">{{rate.value}}</option>
+                        <!-- <option selected=false>7</option>
+                        <option selected=false>7.5</option>
+                        <option selected=true>8</option> -->
+                      </select>
+                    </td>
+                    <td>
+                      <select class="form-control" name="commission" id="commission" formControlName="commission">
+                        <option *ngFor="let commission of commissions" [value]="commission.value">{{commission.value}}</option>
+                      </select>
+                    </td>
+                    <td>{{builty.controls.totalAdvance?.value}}</td>
+                    <td>{{builty.controls.freightRate?.value}}</td>
+                    <td><strong>{{builty.controls.freightBill?.value}}</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col">
+                <button class="btn btn-primary float-left" (click)="updateReceipt()">Update & Calculate Freight</button>
+            </div>
+          </div>
+          </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- <div class="col-md-12">
     <div class="header">
         <h4 class="title">Selected Bilty Nos</h4>
     </div>
@@ -16,7 +89,7 @@
               <input type="number" class="form-control" formControlName="receivedQuantity">
             </div>
           </div>
-        </div> -->
+        </div>
         <table class="table table-bordered">
             <thead class="p-back-color">
                 <tr>
@@ -50,7 +123,7 @@
                         <option *ngFor="let rate of deductionRates" [value]="rate.value" [selected]="rate.defaultValue">{{rate.value}}</option>
                         <!-- <option selected=false>7</option>
                         <option selected=false>7.5</option>
-                        <option selected=true>8</option> -->
+                        <option selected=true>8</option>
                       </select>
                     </td>
                     <td>
@@ -67,6 +140,7 @@
 
 
       </div>
+      </form>
 
 
         <!-- <table class="table table-bordered">
@@ -84,7 +158,7 @@
                 </tr>
               </div>
             </tbody>
-        </table> -->
+        </table>
         <div class="row">
           <div class="col-md-12 text-center">
               <button class="btn btn-primary float-left" (click)="updateReceipt()">Update & Calculate Freight</button>
@@ -100,6 +174,6 @@
     [rowData]="rowData"
     [columnDefs]="columnDefs">
   </ag-grid-angular>
-</div> -->
-
 </div>
+
+</div> -->

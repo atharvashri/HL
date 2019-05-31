@@ -6,3 +6,7 @@
 .margn-btn{
   margin-left: 15px !important;
 }
+
+.modal-body .form-group label{
+  font-weight: bold;
+}

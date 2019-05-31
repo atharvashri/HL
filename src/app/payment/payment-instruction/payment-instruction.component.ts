@@ -32,7 +32,7 @@ rowData: Array<any> = [];
         {id:'receivedQuantity', field: 'receivedQuantity', name: 'Received Quantity', maxWidth: 100, sortable: true, filterable: true, type: FieldType.number },
         {id:'vehicleNo', field: 'vehicleNo', name: 'Vehicle No', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string },
         {id:'vehicleOwner', field: 'vehicleOwner', name: 'Owner', maxWidth: 150, sortable: true, filterable: true, type: FieldType.string },
-        {id:'freightBill', field: 'freightBill', name: 'Freight', maxWidth: 120, sortable: true, filterable: true, type: FieldType.number, groupTotalsFormatter: GroupTotalFormatters.sumTotals, params: { groupFormatterPrefix: '<b>Total Frieght</b>: ' /*, groupFormatterSuffix: ' USD'*/ } },
+        {id:'freightBill', field: 'freightBill', name: 'Freight', maxWidth: 120, sortable: true, filterable: true, type: FieldType.number, groupTotalsFormatter: GroupTotalFormatters.sumTotals, params: { groupFormatterPrefix: '<b>Total</b>: ' /*, groupFormatterSuffix: ' USD'*/ } },
         {id:'bankDtlsAvailable', field: 'bankDtlsAvailable', name: 'Bank Details Available', maxWidth: 100, sortable: true, filterable: true, type: FieldType.string, formatter: Formatters.yesNo }
     ];
 
@@ -44,6 +44,16 @@ rowData: Array<any> = [];
         if(res.success){
           this.rowData = res.data;
           this.toaster.success(res.message);
+          if(this.rowData.length){
+            $('#pending-payment-container .btn-primary').prop("disabled", false);
+          }else{
+            $('.grid-canvas').html('<div>No Data is available for payment instruction</div>');
+          }
+
+          //this.gridObj.invalidateAllRows();
+          //
+          //$('.grid-canvas').html('<div>No Data is available for payment instruction</div>');
+
         }else{
           this.toaster.error("Some internal error ocurred while retrieving builties for payments: " + res.message);
         }

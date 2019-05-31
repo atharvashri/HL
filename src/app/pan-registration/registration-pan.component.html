@@ -153,13 +153,12 @@
             </div>
           </div>
         </div>
-        <div class="row justify-content-center align-self-center">
-            <button *ngIf="!isUpdate" type="button" class="btn btn-primary" (click)="addvehicle(rccopy)">Add</button>
-            <button *ngIf="isUpdate" type="button" class="btn btn-primary" (click)="updatecopy(rccopy)">Update</button>
-            <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
-        </div>
       </div>
     </form>
   </div>
-
+  <div class="modal-footer">
+    <button *ngIf="!isUpdate" type="button" class="btn btn-primary" (click)="addvehicle(rccopy)">Add</button>
+    <button *ngIf="isUpdate" type="button" class="btn btn-primary" (click)="updatecopy(rccopy)">Update</button>
+    <button type="button" class="btn btn-primary" (click)="d('Cross click')">Cancel</button>
+  </div>
 </ng-template>

@@ -9,7 +9,7 @@ import { Refdata } from '../../../utils/refdata.service';
 @Component({
   selector: 'app-builty-receipt-update',
   templateUrl: './builty-receipt-update.component.html',
-//   styleUrls: ['./builty-receipt.component.css']
+  //styleUrls: ['./builty-receipt-update.component.css']
 })
 export class BuiltyReceiptUpdateComponent implements OnInit {
 

@@ -315,45 +315,37 @@
               </div>
             </div>
           </div> -->
-          <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="quantityDeduction">Quantity Deduction</label>
                 <input type="number" class="form-control input-resp" id="quantityDeduction" formControlName="quantityDeduction"
                   (keyup)="setlepseQuantity()">
               </div>
             </div>
-          </div>
-          <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="lepseQuantity">Lepse Quantity</label>
                 <input type="number" class="form-control input-resp" id="lepseQuantity" formControlName="lepseQuantity">
               </div>
             </div>
-          </div>
           <!--<div class="col-md-3">
             <div class="form-group">
               <label for="doStatus">Do Status</label>
               <input type="text" class="form-control" id="doStatus" formControlName="doStatus">
             </div>
           </div> -->
-          <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="refundAmt">Refund Amt</label>
                 <input type="text" class="form-control input-resp" id="refundAmt" formControlName="refundAmt">
               </div>
             </div>
-          </div>
-          <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
+            <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="refundDate">Refund Date</label>
                 <input type="date" class="form-control input-resp" id="refundDate" formControlName="refundDate">
               </div>
             </div>
-          </div>
 
 
           <!--  <div class="col-md-3">
@@ -447,15 +439,11 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Confirm DO Details</h4>
+  </div>
   <div class="modal-body">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <div class="row">
-          <div class="col-md-6">
-            <strong>Confirm DO Details</strong>
-          </div>
-        </div>
-      </div>
       <div class="panel-body">
         <div class="row">
           <div class="col-md-3">
@@ -641,8 +629,9 @@
               <span id="bspNo">{{doDataForConfirmationModel.Website}}</span>
             </div>
           </div>
-
-          <table class="table table-bordered table-responsive">
+          </div>
+          <div class="table-responsive">
+          <table class="table table-striped">
             <thead class="p-back-color">
               <tr>
                 <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
@@ -656,21 +645,13 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <div class="row">
-          <div class="col-md-1 col-md-push-4">
-            <div class="form-group">
-              <button class="btn btn-primary margn-btn" type="submit" name="update" (click)="createDo()">Submit</button>
-            </div>
           </div>
-          <div class="col-md-1 col-md-push-4">
-            <div class="form-group">
-              <button class="btn btn-primary margn-btn" name="Cancel" (click)="d('Cross click')">Cancel</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
+  </div>
+  <div class="modal-footer">
+      <button class="btn btn-primary" type="submit" name="update" (click)="createDo()">Submit</button>
+      <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
   </div>
 </ng-template>
 

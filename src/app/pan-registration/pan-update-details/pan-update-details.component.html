@@ -152,13 +152,12 @@
             </div>
             <div class="row justify-content-center align-self-center">
                 <div class="form-group">
-                  <button type="button" class="btn btn-primary small-btn" id="addAccount" (click)="addAccountByBankName()">Add
+                  <button type="button" class="btn btn-primary btn-sm" id="addAccount" (click)="addAccountByBankName()">Add
                     Account</button>
               </div>
             </div>
           <!-- formgroup close-->
           </div>
-          <hr>
           <div class="row" *ngIf="accountsAvailable()">
             <div class="col" style="overflow: auto;">
               <div class="table-responsive">
@@ -189,12 +188,12 @@
               </div>
             </div>
           </div>
-          <div class="row justify-content-center align-self-center">
-                <button class="btn btn-primary" type="submit" name="update" (click)="UpdatePANdetails()">Update</button>
-                <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
-          </div>
         </form>
       </div>
     </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-primary" type="submit" name="update" (click)="UpdatePANdetails()">Update</button>
+    <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
   </div>
 </ng-template>

@@ -1,5 +1,22 @@
 <div class="container-fluid">
-  <div class="row">
+
+  <div class="row justify-content-center align-self-center">
+    <div class="form-group scrollbar do-run-list list-resp ">
+      <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="selectAll" checked="checked" [(ngModel)]="selectedAll" (change)="selectAllCheckbox($event)">
+          <label class="custom-control-label" for="selectAll">Select All</label>
+      </div>
+
+      <div class="custom-control custom-checkbox" *ngFor="let builtys of builtyList">
+        <input id="{{builtys.builtyNo}}-check" class="custom-control-input" type="checkbox" (change)="updatecheckBoxList(builtys, $event)" [(ngModel)] ="builtys.selected">
+        <label class="custom-control-label" for="{{builtys.builtyNo}}-check">{{builtys.builtyNo}}</label>
+      </div>
+      <div>
+      </div>
+    </div>
+  </div>
+
+  <!-- <div class="row">
     <div class="col-md-3 col-md-push-5 scrollbar list-resp">
       <div class="">
         <label for="selectAll-check"  class="checkboxcontainer" (change)="selectAllCheckbox($event)">
@@ -16,18 +33,12 @@
             </label>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-md-2 col-md-push-4">
+  </div> -->
+  <div class="row justify-content-center align-self-center">
       <div class="form-group">
         <button type="button" name="Show" class="btn btn-primary" (click)="showSelectedBuilties()">Show</button>
+        <button type="button" name="Cancel" class="btn btn-danger" (click)="cancel()">Cancel</button>
       </div>
-    </div>
-    <div class="col-md-2 col-md-push-4">
-      <div class="form-group">
-        <button type="button" name="Cancel" class="btn btn-primary" (click)="cancel()">Cancel</button>
-      </div>
-    </div>
   </div>
 </div>
 <div *ngIf="isbuiltytablevisible; then showbuiltyTable">

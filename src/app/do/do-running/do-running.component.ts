@@ -30,7 +30,7 @@ export class DoRunningComponent implements OnInit {
   ngOnInit() {
     //start spinner
     this.spinner.show();
-    this.doService.getCompletedDos().subscribe(
+    this.doService.getActiveDos().subscribe(
       (res) => {
         console.log(res.data);
         this.activeDoList = res.data;
