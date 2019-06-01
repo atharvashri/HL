@@ -21,6 +21,7 @@ import { AppUtil } from '../../utils/app.util';
   styleUrls: ['./do-create.component.css']
 })
 export class DoCreateComponent implements OnInit {
+
   doCreateForm
   doDetails: DODetails;
   submitted: boolean;
@@ -51,6 +52,7 @@ export class DoCreateComponent implements OnInit {
 
   isfrightEntryAdded: boolean = false;
   createDoOnConfirmData;
+  isValidaState: boolean = true;
 
   constructor(private doFormBuilder: FormBuilder,
     private doService: DoService,
@@ -201,12 +203,11 @@ export class DoCreateComponent implements OnInit {
 
   onSubmitDo() {
     this.submitted = true;
-
     if (this.doCreateForm.invalid) {
       this.toaster.error("Please correct the errors in form");
       return;
     }
-
+    this.isValidaState = true;
     let doCreationData = this.doCreateForm.getRawValue();
     doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
 
@@ -352,6 +353,7 @@ export class DoCreateComponent implements OnInit {
   }
 
   createDo() {
+    this.isValidaState = false;
     this.createDoOnConfirmData.doCopy = this.uploaderService.getFileNameForDO(this.createDoOnConfirmData.doCopy, this.createDoOnConfirmData.bspDoNo, this.createDoOnConfirmData.areaDoNo);
     this.doService.createDo(this.createDoOnConfirmData).subscribe(
       (res) => {
@@ -365,6 +367,7 @@ export class DoCreateComponent implements OnInit {
         }
       },
       () => {
+        this.isValidaState = true;
         this.toaster.error("Internal Server error!");
       }
     )
@@ -772,5 +775,8 @@ export class DoCreateComponent implements OnInit {
     };
   }
 
+  checkState(){
+    return !this.isValidaState;
+  }
   get f() { return this.doCreateForm.controls; }
 }

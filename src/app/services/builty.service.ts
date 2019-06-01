@@ -20,9 +20,9 @@ export class BuiltyService {
     }
 
     getActiveBuilties(): any {
-        if(this.activeBuilties && this.activeBuilties.length){
-          return this.activeBuilties;
-        }
+        // if(this.activeBuilties && this.activeBuilties.length){
+        //   return this.activeBuilties;
+        // }
         return this.http.get(this.url + '/builty');
     }
 

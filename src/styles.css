@@ -122,6 +122,7 @@ div.ng2-tag-input{
 .multiselect-dropdown .dropdown-btn{
 	border: 1px solid #E3E3E3 !important;
 	line-height: normal !important;
+  height: calc(2.25rem + 2px) !important
 }
 
 .form-group .form-control{
@@ -214,4 +215,12 @@ div h4{
 .table > thead > tr > th{
   font-size: 1em !important;
   font-weight: 600 !important;
+}
+
+div.ng2-tag-input{
+  height: calc(2.25rem + 2px) !important;
+}
+
+div.ng2-tag-input .ng2-tag-input__text-input{
+  height: calc(2.25rem) !important;
 }

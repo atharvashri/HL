@@ -6,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 
 import { FormBuilder, Validators, FormGroup } from '@angular/forms'
 import { PermitService } from '../../services/permit.service';
-import { AppUtil } from '../../utils/app.util';
 import { ActivatedRoute, Router } from '../../../../node_modules/@angular/router';
 import { CustomValidator } from '../../utils/custom.validator';
 import { AppConfig } from '../../app-config';
@@ -23,18 +22,6 @@ export class BuiltyCreateComponent implements OnInit {
   subTransporters = []
   isSearchvehicle = true;
   updatedFrights = [];
-  constructor(public builtyFormBuilder: FormBuilder,
-    private doService: DoService,
-    private builtyService: BuiltyService,
-    private permitService: PermitService,
-    private dataService: DataService,
-    private modalService: NgbModal,
-    private toaster: ToastrService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) { }
-
-
   vehicleListUrl: string = AppConfig.API_ENDPOINT + "/vehicle";
   activeDoList;
   destinationsParty = [];
@@ -49,6 +36,20 @@ export class BuiltyCreateComponent implements OnInit {
   builtyToUpdate;
   selectedVehicle;
   vehicleConfirmed;
+  isValidaState: boolean = true;
+  constructor(public builtyFormBuilder: FormBuilder,
+    private doService: DoService,
+    private builtyService: BuiltyService,
+    private permitService: PermitService,
+    private dataService: DataService,
+    private modalService: NgbModal,
+    private toaster: ToastrService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) { }
+
+
+
 
   @ViewChild('content') content;
   @ViewChild('confirmVehicleOwner') confirmVehicleOwner;
@@ -304,6 +305,7 @@ export class BuiltyCreateComponent implements OnInit {
       this.toaster.error("Vehicle owner details is not confirmed. Please slecte a vehicle and confirm owner details to proceed");
       return;
     }
+    this.isValidaState = true;
     let _builtyData = this.builtyForm.getRawValue();
 
     //check if DO due date is passed
@@ -320,6 +322,7 @@ export class BuiltyCreateComponent implements OnInit {
   }
 
   createBuilty() {
+    this.isValidaState = false;
     this.builtyService.createBuilty(this.builtyDataforConfirmModel).subscribe(
       (res) => {
         if(res.success){
@@ -336,6 +339,7 @@ export class BuiltyCreateComponent implements OnInit {
 
       },
       (error) => {
+        this.isValidaState = true;
         this.toaster.error("error in builty creation");
       })
   }
@@ -499,6 +503,10 @@ updateBuilty(){
 
   cancel(){
       this.router.navigate(['builtylist']);
+  }
+
+  checkState(){
+    return !this.isValidaState;
   }
 
   get f(){ return this.builtyForm.controls;}

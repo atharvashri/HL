@@ -650,7 +650,7 @@
     </div>
   </div>
   <div class="modal-footer">
-      <button class="btn btn-primary" type="submit" name="update" (click)="createDo()">Submit</button>
+      <button class="btn btn-primary" type="submit" name="update" (click)="createDo()" [disabled]="checkState()">Submit</button>
       <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
   </div>
 </ng-template>

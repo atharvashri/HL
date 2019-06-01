@@ -147,6 +147,9 @@ export class BuiltyReceiptUpdateComponent implements OnInit {
         }else{ //received quantity is within allowed shortage, ok and don't apply deduction rate
           finalBill = (item.freight * quantity) - builty.commission - item.totalAdvance
         }
+        if(item.otherDeduction){
+          finalBill = finalBill - item.otherDeduction;
+        }
         return true;
       }
     })

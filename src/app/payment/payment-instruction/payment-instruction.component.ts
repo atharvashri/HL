@@ -19,6 +19,7 @@ gridObj: any;
 allColumns: Column[];
 gridOptions: GridOption;
 rowData: Array<any> = [];
+instructionSubmitted: boolean = false;
 
   constructor(private builtyService: BuiltyService,
         private toaster: ToastrService,
@@ -105,6 +106,7 @@ rowData: Array<any> = [];
       //this.gridObj.setSelectionModel(new Slick.CheckboxSelectColumn())
       this.groupByPan()
   }
+
   generateInstructions(){
     let selectedIdx: number[] = this.gridObj.getSelectedRows()
     let rows: any[] = [];
@@ -114,10 +116,22 @@ rowData: Array<any> = [];
         rows.push(this.gridObj.getDataItem(idx))
       }
     })
+    if(!rows.length){
+      this.toaster.error("No rows selected for payment instructions")
+      return;
+    }
+    //check if instruction already submitted. to avoid multiple clicks on button
+    if(this.instructionSubmitted){
+      return;
+    }
+    this.instructionSubmitted = true;
+
     this.spinner.show();
     this.builtyService.exportInstructions(rows).subscribe(
       (res) => {
         this.spinner.hide();
+        this.instructionSubmitted = false;
+        this.gridObj.setSelectedRows([]);
         if(res.success){
           this.windowRef.nativeWindow.open(AppConfig.API_ENDPOINT + "/builty/payment/downloadInstruction?key=" + res.data, '_blank');
         }
@@ -125,6 +139,7 @@ rowData: Array<any> = [];
       },
       () => {
         this.spinner.hide();
+        this.instructionSubmitted = false;
         this.toaster.error("Error while generating instruction");
       }
     )
