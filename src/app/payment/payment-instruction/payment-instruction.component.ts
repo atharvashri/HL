@@ -27,19 +27,19 @@ instructionSubmitted: boolean = false;
         private spinner: NgxSpinnerService) { }
 
   columnDefs: Column[] = [
-        {id:'panNo', field: 'panNo', name: 'PAN', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string, formatter: this.emptyStringFormatter, groupTotalsFormatter: GroupTotalFormatters.avgTotals, params: { groupFormatterPrefix: '<b>Extra Payment</b>: ', groupFormatterSuffix: ' <i>* it would be deducted from total freight</i>'} },
-        {id:'builtyNo', field: 'builtyNo', name: 'Builty No', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string },
-        {id:'receivedDate', field: 'receivedDate', name: 'Received Date', maxWidth: 120, sortable: true, filterable: true, type: FieldType.dateIso, formatter: CustomFormatters.dateFormatter },
-        {id:'receivedQuantity', field: 'receivedQuantity', name: 'Received Quantity', maxWidth: 100, sortable: true, filterable: true, type: FieldType.number },
-        {id:'vehicleNo', field: 'vehicleNo', name: 'Vehicle No', maxWidth: 120, sortable: true, filterable: true, type: FieldType.string },
-        {id:'vehicleOwner', field: 'vehicleOwner', name: 'Owner', maxWidth: 150, sortable: true, filterable: true, type: FieldType.string },
-        {id:'freightBill', field: 'freightBill', name: 'Freight', maxWidth: 120, sortable: true, filterable: true, type: FieldType.number, groupTotalsFormatter: GroupTotalFormatters.sumTotals, params: { groupFormatterPrefix: '<b>Total</b>: ' /*, groupFormatterSuffix: ' USD'*/ } },
-        {id:'bankDtlsAvailable', field: 'bankDtlsAvailable', name: 'Bank Details Available', maxWidth: 100, sortable: true, filterable: true, type: FieldType.string, formatter: Formatters.yesNo }
+        {id:'panNo', field: 'panNo', name: 'PAN', maxWidth: 120, type: FieldType.string, formatter: this.emptyStringFormatter, groupTotalsFormatter: GroupTotalFormatters.avgTotals, params: { groupFormatterPrefix: '<b>Extra Payment</b>: ', groupFormatterSuffix: ' <i>* it would be deducted from total freight</i>'} },
+        {id:'builtyNo', field: 'builtyNo', name: 'Builty No', maxWidth: 120, type: FieldType.string },
+        {id:'receivedDate', field: 'receivedDate', name: 'Received Date', maxWidth: 120, type: FieldType.dateIso, formatter: CustomFormatters.dateFormatter },
+        {id:'receivedQuantity', field: 'receivedQuantity', name: 'Received Quantity', maxWidth: 100, type: FieldType.number },
+        {id:'vehicleNo', field: 'vehicleNo', name: 'Vehicle No', maxWidth: 120, type: FieldType.string },
+        {id:'vehicleOwner', field: 'vehicleOwner', name: 'Owner', maxWidth: 150, type: FieldType.string },
+        {id:'freightBill', field: 'freightBill', name: 'Freight', maxWidth: 120, type: FieldType.number, groupTotalsFormatter: GroupTotalFormatters.sumTotals, params: { groupFormatterPrefix: '<b>Total</b>: ' /*, groupFormatterSuffix: ' USD'*/ } },
+        {id:'bankDtlsAvailable', field: 'bankDtlsAvailable', name: 'Bank Details Available', maxWidth: 100, type: FieldType.string, formatter: Formatters.yesNo }
     ];
 
   ngOnInit() {
     this.spinner.show();
-    this.builtyService.getForPendingPayments().subscribe(
+    this.builtyService.getReadyForPayments().subscribe(
       (res) => {
         this.spinner.hide();
         if(res.success){
@@ -130,12 +130,15 @@ instructionSubmitted: boolean = false;
     this.builtyService.exportInstructions(rows).subscribe(
       (res) => {
         this.spinner.hide();
-        this.instructionSubmitted = false;
-        this.gridObj.setSelectedRows([]);
         if(res.success){
+          this.updaterows(rows);
+          this.gridObj.setSelectedRows([]);
           this.windowRef.nativeWindow.open(AppConfig.API_ENDPOINT + "/builty/payment/downloadInstruction?key=" + res.data, '_blank');
+          this.toaster.success("Payment instructions generated successfully");
+        }else{
+            this.toaster.error(res.message);
         }
-        this.toaster.success("Payment instructions generated successfully");
+        this.instructionSubmitted = false;
       },
       () => {
         this.spinner.hide();
@@ -143,6 +146,12 @@ instructionSubmitted: boolean = false;
         this.toaster.error("Error while generating instruction");
       }
     )
+  }
+
+  updaterows(rows){
+    //get the difference and update the rows in grid
+    this.rowData = this.rowData.filter(data => !rows.includes(data));
+    //this.gridObj.set
   }
 
   groupByPan(){

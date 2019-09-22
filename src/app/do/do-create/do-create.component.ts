@@ -46,7 +46,6 @@ export class DoCreateComponent implements OnInit {
   destinationParty = [];
   selectedDestinations = [];
   selectedFreight = [];
-  changedDestination;
   selecteddo;
   enableDueDate;
 
@@ -73,10 +72,6 @@ export class DoCreateComponent implements OnInit {
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
   sizes = ["ROM", "SLK", "STM"]
 
-  liftedQuantityUpdate;
-  doQuantityUpdate;
-  quantityDeductionUpdate;
-  lepseQuantityUpdate;
   freightToBePaidByOptions = ["DO Owner", "Bilty Company"];
   // TODO get list from backend
   builtyCompanyOptions = ["Hindustan Logistics", "Surya Logistics"];
@@ -133,9 +128,8 @@ export class DoCreateComponent implements OnInit {
       doRate: [],
       doRateTcs: [],
       withinOutSide: [],
-      liftedQuantity: [],
       quantityDeduction: [],
-      lepseQuantity: [{ value: '', disabled: true }],
+      lepseQuantity: [],
       doStatus: [],
       refundAmt: [],
       refundDate: [],
@@ -386,11 +380,15 @@ export class DoCreateComponent implements OnInit {
   }
 
   setlepseQuantity() {
-    let _doQuantity = this.doCreateForm.controls.quantity.value;
-    let _liftedQuantityUpdate = this.doCreateForm.controls.liftedQuantity.value
-    let _quantityDeductionUpdate = this.doCreateForm.controls.quantityDeduction.value
+    if(this.selecteddo){
+      let _doQuantity = this.doCreateForm.controls.quantity.value;
+      let _liftedQuantityUpdate = _doQuantity - this.selecteddo.doBalance
+      let _quantityDeductionUpdate = this.doCreateForm.controls.quantityDeduction.value
+      this.doCreateForm.controls.lepseQuantity.setValue(_doQuantity - _liftedQuantityUpdate - _quantityDeductionUpdate);
+    }else{
+      this.doCreateForm.controls.lepseQuantity.setValue(0);
+    }
 
-    this.doCreateForm.controls.lepseQuantity.setValue(_doQuantity - _liftedQuantityUpdate - _quantityDeductionUpdate);
 
   }
 
@@ -438,8 +436,6 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.withinOutSide.setValue(data.withinOutSide)
     this.doCreateForm.controls.receivedDate.setValue(data.receivedDate)
 
-
-    this.doCreateForm.controls.liftedQuantity.setValue(data.liftedQuantity)
     this.doCreateForm.controls.quantityDeduction.setValue(data.quantityDeduction)
     this.doCreateForm.controls.remarks.setValue(data.remarks)
     this.doCreateForm.controls.refundDate.setValue(data.refundDate)
@@ -451,9 +447,7 @@ export class DoCreateComponent implements OnInit {
     this.subTransporterList = data.subTransporter;
     this.showSubTransporter(data.subTransporter);
     //this.inAdvanceLimitEntries = data.inAdvanceLimit
-    if (data.liftedQuantity != undefined && data.quantityDeduction != undefined && data.quantity) {
-      this.doCreateForm.controls.lepseQuantity.setValue(data.quantity - data.liftedQuantity - data.quantityDeduction)
-    }
+    this.doCreateForm.controls.lepseQuantity.setValue(data.lepseQuantity)
 
     this.isfrightEntryAdded = true;
     this.destinationParty = data.destinationparty
@@ -462,9 +456,7 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.transporter.setValue(data.transporter ? data.transporter.username : data.transporter);
 
     this.setEMDAMt();
-    this.setlepseQuantity()
     this.setDOAMtPMT();
-
   }
 
   showInAdvanceLimitForUpdate(inAdvanceLimits) {

@@ -8,6 +8,7 @@ import { Account } from '../../model/account.model';
 import { FileUploadService } from '../../services/fileupload.service';
 import { CustomValidator } from '../../utils/custom.validator';
 import { Refdata } from '../../utils/refdata.service';
+import { AppConfig } from '../../app-config';
 
 @Component({
   selector: 'app-add-pan-update-details',
@@ -26,7 +27,7 @@ export class PanAddUpdateDetailsComponent implements OnInit {
 
   accountsForm: any;
   addedBankAccounts = new Array();
-  fileuplodurl: string = "http://localhost:8080/upload/";
+  fileuplodurl: string = AppConfig.API_ENDPOINT + "/upload/";
   @Input() formtitle: string;
   @Input() PANno
   @Input() PanDataToUpdate;

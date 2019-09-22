@@ -37,7 +37,7 @@ export class BuiltyListComponent implements OnInit {
       (params) => {
           this.doFilterCriteria = params['do']
           //if completeDO param is true then only set viewActive to false else it should be true by default
-          this.viewactive = params['completedDO'] && params['completedDO'] == "true" ? false : true  
+          this.viewactive = params['completedDO'] && params['completedDO'] == "true" ? false : true
           if(this.viewactive){
             this.showActiveBuilties();
           }else{ // show completed builties
@@ -78,8 +78,6 @@ export class BuiltyListComponent implements OnInit {
             gridMenu: {
               // all titles optionally support translation keys, if you wish to use that feature then use the title properties finishing by 'Key'
               // example "customTitle" for a plain string OR "customTitleKey" to use a translation key
-              customTitleKey: 'CUSTOM_COMMANDS',
-              iconCssClass: 'fa fa-ellipsis-v',
               hideForceFitButton: true,
               hideSyncResizeButton: true,
               hideToggleFilterCommand: false, // show/hide internal custom commands

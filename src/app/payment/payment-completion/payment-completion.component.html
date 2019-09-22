@@ -1,0 +1,26 @@
+<div class="container-fluid">
+    <!-- <button class="btn btn-default btn-sm" (click)="toggleGridMenu($event)">
+        <i class="fa fa-bars"></i>
+        Grid Menu
+    </button> -->
+    <div id="complete-payment-container" class="col-md-12">
+      <angular-slickgrid #gridRef
+          gridId="completePaymentGrid"
+          [columnDefinitions]="columnDefs"
+          [gridOptions]="gridOptions"
+          [dataset]="rowData"
+          (onAngularGridCreated)="onGridReady($event)">
+      </angular-slickgrid>
+
+      <div class="row">
+        <div class="col">
+          <button type="button" class="btn btn-primary float-left" (click)="markPaymentDone()" disabled>Mark Payment Done</button>
+          <button type="button" class="btn btn-danger" (click)="paymentNotDone()" disabled>Payment Not Completed</button>
+        </div>
+        <!-- <div class="col-md-6">
+          <button type="button" class="btn btn-primary float-left">Cancel</button>
+        </div> -->
+      </div>
+    </div>
+
+</div>

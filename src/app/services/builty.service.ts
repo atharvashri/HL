@@ -69,16 +69,24 @@ export class BuiltyService {
       return this.builtyToUpdate;
     }
 
-    getForPendingPayments(): any{
-      return this.http.get(this.url + '/builty/pendingPayments');
+    getReadyForPayments(): any{
+      return this.http.get(this.url + '/builty/readyForPayments');
     }
 
-    exportInstructions(builties): any{
-      return this.http.post(this.url + '/builty/payment/instruction', builties);
+    getInitiatedPayments(): any{
+      return this.http.get(this.url + '/builty/initiatedPayments');
     }
 
-    resetPaymentInstruction(builtyNo): any{
-      return this.http.put(this.url + '/builty/payment/reset/' + builtyNo, {});
+    markComplete(bilties): any{
+      return this.http.put(this.url + '/builty/markComplete', bilties);
+    }
+
+    exportInstructions(bilties): any{
+      return this.http.post(this.url + '/builty/payment/instruction', bilties);
+    }
+
+    resetPaymentInstruction(bilties): any{
+      return this.http.put(this.url + '/builty/resetInstruction', bilties);
     }
 
     setActiveBuilties(builtylist){

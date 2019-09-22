@@ -1,7 +1,8 @@
 import { FileUploader } from "../../../node_modules/ng2-file-upload";
+import { AppConfig } from '../app-config';
 
 export class FileUploadService{
-  fileuploadurl: string = "http://localhost:8080/upload/";
+  fileuploadurl: string = AppConfig.API_ENDPOINT + "/upload/";
   uploader: FileUploader;
   panno: string;
   constructor() {

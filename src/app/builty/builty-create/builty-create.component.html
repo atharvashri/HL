@@ -219,10 +219,19 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
+            <label for="permitRequired">Permit Required</label>
+            <select class="form-control" name="permitRequired" id="permitRequired" formControlName="permitRequired">
+              <option [ngValue]="0">NO</option>
+              <option [ngValue]="1">YES</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3" [hidden]="!f.permitRequired.value">
+          <div class="form-group">
             <label for="permitNo">Permit No</label>
             <select class="form-control" formControlName="permitNo" (change)="getPermitDetails()">
-              <option *ngFor="let permit of selectedDo?.permitNos" [value]="permit">{{permit}}</option>
               <option hidden value=""></option>
+              <option *ngFor="let permit of selectedDo?.permitNos" [value]="permit">{{permit}}</option>
             </select>
             <div *ngIf="submitted && f.permitNo.errors" class="invalid-field">
               <div *ngIf="f.permitNo.errors.required">Permit No is required</div>
@@ -230,13 +239,13 @@
             <!-- <input type="number" name="permitNo" class="form-control" value="" formControlName="permitNo"> -->
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" [hidden]="!f.permitRequired.value">
           <div class="form-group">
             <label for="permitBalance">Permit Balance</label>
             <input type="number" name="permitBalance" class="form-control" formControlName="permitBalance">
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" [hidden]="!f.permitRequired.value">
           <div class="form-group">
             <label for="permitEndDate">Permit End Date</label>
             <input type="date" name="permitEndDate" class="form-control" formControlName="permitEndDate">
@@ -551,21 +560,21 @@
                 <span id="freight">{{builtyDataforConfirmModel.freight}}</span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.permitRequired">
               <div class="form-group">
                 <label for="permitNo">Permit No</label>
                 <br>
                 <span id="permitNo">{{builtyDataforConfirmModel.permitNo}}</span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.permitRequired">
               <div class="form-group">
                 <label for="permitBalance">Permit Balance</label>
                 <br>
                 <span id="permitBalance">{{builtyDataforConfirmModel.permitBalance}}</span>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" [hidden]="!builtyDataforConfirmModel.permitRequired">
               <div class="form-group">
                 <label for="permitEndDate">Permit EndDate</label>
                 <br>

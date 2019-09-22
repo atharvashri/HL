@@ -42,6 +42,7 @@ export class DOGridUtil {
       { id: 'doId', name: 'DO ID', field: 'doDisplay', filterable: true, minWidth: 120, type: FieldType.string },
       { id: 'doDate', name: 'DO Date', field: 'doDate', filterable: true, sortable: true, formatter: CustomFormatters.dateFormatter, maxWidth: 100, type: FieldType.dateIso },
       { id: 'receivedDate', name: 'Received Date', field: 'receivedDate', filterable: true, sortable: true, formatter: CustomFormatters.dateFormatter, maxWidth: 100, type: FieldType.dateIso },
+      { id: 'doBalance', name: 'DO Balance', field: 'doBalance', sortable: true, filterable: true, maxWidth: 100, type: FieldType.number },
       { id: 'dueDate', name: 'Due Date', field: 'dueDate', filterable: true, sortable: true, formatter: CustomFormatters.dateFormatter, maxWidth: 100, type: FieldType.dateIso },
       { id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true, filterable: true, maxWidth: 80, type: FieldType.number },
       { id: 'party', name: 'Party', field: 'party', filterable: true, formatter: Formatters.complexObject, params: {complexFieldLabel: 'party.name'}, exportWithFormatter: true},

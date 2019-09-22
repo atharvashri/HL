@@ -44,6 +44,7 @@ import { PermitComponent } from '../../permit/permit.component';
 import { AreaComponent } from '../../area/area.component';
 import { BuiltyListComponent } from '../../builty/builty-list/builty-list.component';
 import { PaymentInstructionComponent } from '../../payment/payment-instruction/payment-instruction.component';
+import { PaymentCompletionComponent } from '../../payment/payment-completion/payment-completion.component';
 import { DOEditActionComponent } from '../../do/do-edit-action.component';
 import { PumpComponent } from '../../pump/pump.component';
 import { DOLinkActionComponent } from '../../do/do-link-action.component';
@@ -175,6 +176,7 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
     AreaComponent,
     BuiltyListComponent,
     PaymentInstructionComponent,
+    PaymentCompletionComponent,
     PumpComponent,
     DOEditActionComponent,
     DOLinkActionComponent,

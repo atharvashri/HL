@@ -307,33 +307,18 @@
             </div>
           </div>
           <!-- Only when edit DO  - START-->
-          <!-- <div *ngIf="isShowDoUpdate">
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="liftedQuantity">Lifted Quantity</label>
-                <input type="number" class="form-control input-resp" id="liftedQuantity" formControlName="liftedQuantity" (keyup)="setlepseQuantity()">
-              </div>
-            </div>
-          </div> -->
             <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="quantityDeduction">Quantity Deduction</label>
-                <input type="number" class="form-control input-resp" id="quantityDeduction" formControlName="quantityDeduction"
-                  (keyup)="setlepseQuantity()">
+                <input type="number" class="form-control input-resp" id="quantityDeduction" formControlName="quantityDeduction">
               </div>
             </div>
             <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
-                <label for="lepseQuantity">Lepse Quantity</label>
+                <label for="lepseQuantity">Lepse Quantity <a href="javascript:void(0)" (click)="setlepseQuantity()">(calculate)</a></label>
                 <input type="number" class="form-control input-resp" id="lepseQuantity" formControlName="lepseQuantity">
               </div>
             </div>
-          <!--<div class="col-md-3">
-            <div class="form-group">
-              <label for="doStatus">Do Status</label>
-              <input type="text" class="form-control" id="doStatus" formControlName="doStatus">
-            </div>
-          </div> -->
             <div class="col-md-3" *ngIf="isShowDoUpdate">
               <div class="form-group">
                 <label for="refundAmt">Refund Amt</label>

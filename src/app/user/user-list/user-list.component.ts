@@ -98,7 +98,7 @@ export class UserListComponent implements OnInit {
       if (this.userForm.invalid)
           return
 
-      if (this.userForm.controls.password.value !== this.userForm.controls.confirmpassword.value) {
+      if (this.userForm.controls.password.value !== this.userForm.controls.confirmPassword.value) {
           this.toastrService.error("Password and Confirm password do not match");
           return;
       }

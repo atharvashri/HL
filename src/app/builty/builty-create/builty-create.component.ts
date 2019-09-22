@@ -89,6 +89,7 @@ export class BuiltyCreateComponent implements OnInit {
     otBuiltyCompany: [],
     otBuiltyNumber: [],
     vehicleNo: ['', Validators.required],
+    vehicleOwnerPan: [''],
     doOpeningbalance: [{ value: '', disabled: true }],
     inAdvance: [],
     outAdvance: ['', Validators.required],
@@ -97,7 +98,8 @@ export class BuiltyCreateComponent implements OnInit {
     pumpName: ['', Validators.required],
     freight: ['', Validators.required],
     totalAdvance: [{ value: '', disabled: true }],
-    permitNo: ['', Validators.required],
+    permitRequired: [],
+    permitNo: [''],
     permitBalance: [{ value: '', disabled: true }],
     permitEndDate: [{ value: '', disabled: true }],
     igpNo: [],
@@ -130,6 +132,7 @@ export class BuiltyCreateComponent implements OnInit {
     return (group : FormGroup) => {
       let wayBillRequired = group.controls['waybillRequired'];
       let tpRequired = group.controls['tpRequired'];
+      let permitRequired = group.controls['permitRequired'];
       if(wayBillRequired.value){
         if(!group.controls['waybillNo'].value){
           group.controls['waybillNo'].setErrors({required: true})
@@ -150,6 +153,11 @@ export class BuiltyCreateComponent implements OnInit {
         }
         if(!group.controls['igpNo'].value){
           group.controls['igpNo'].setErrors({required: true})
+        }
+      }
+      if(permitRequired.value){
+        if(!group.controls['permitNo'].value){
+          group.controls['permitNo'].setErrors({required: true})
         }
       }
       return
@@ -206,6 +214,7 @@ export class BuiltyCreateComponent implements OnInit {
 
   showDataAfterDoSelection(isDoChanged) {
     let _selectedDOId = this.builtyForm.controls.doId.value;
+    //when DO is manually changed from dropdown then reset the fields
     if (isDoChanged) {
       this.builtyForm.reset();
       this.builtyForm.controls.doId.setValue(_selectedDOId);
@@ -213,6 +222,11 @@ export class BuiltyCreateComponent implements OnInit {
     this.doList.forEach((element) => {
       if (element.id == _selectedDOId) {
         this.selectedDo = element;
+        // if there is one element in destination party then select it by default
+        if(element.destinationparty && element.destinationparty.length == 1){
+          this.builtyForm.controls.party.setValue(element.destinationparty[0].name);
+          this.onChangeDestinationsParty();
+        }
         this.builtyForm.controls.doOpeningbalance.setValue(element.doBalance);
         this.subTransporters = element.subTransporter;
         if (element.builtyCompany && element.builtyCompany.length) {
@@ -269,6 +283,7 @@ export class BuiltyCreateComponent implements OnInit {
     this.builtyForm.controls.freight.setValue(element.freight);
     this.builtyForm.controls.totalCashAdvance.setValue(element.totalCashAdvance);
     this.builtyForm.controls.totalAdvance.setValue(element.totalAdvance);
+    this.builtyForm.controls.permitRequired.setValue(element.permitNo ? 1 : 0);
     this.builtyForm.controls.permitNo.setValue(element.permitNo);
     this.builtyForm.controls.permitBalance.setValue(element.permitBalance);
     this.builtyForm.controls.permitEndDate.setValue(element.permitEndDate);
@@ -311,6 +326,12 @@ export class BuiltyCreateComponent implements OnInit {
     //check if DO due date is passed
     if(Date.parse(_builtyData.builtyDate) > Date.parse(this.selectedDo.dueDate)){
       this.toaster.error("Can't create bilty as DO due date is passed");
+      return;
+    }
+
+    //check if total advance is capped
+    if(((_builtyData.netWeight * _builtyData.freight) - _builtyData.totalAdvance) < AppConfig.MIN_DIFF_WITH_FREIGHT){
+      this.toaster.error("Difference between total freight and total advance should be more than or equal to " + AppConfig.MIN_DIFF_WITH_FREIGHT);
       return;
     }
 
@@ -387,10 +408,9 @@ updateBuilty(){
   _builty.builtyNo = this.builtyToUpdate.builtyNo;
   _builty.createdBy = this.builtyToUpdate.createdBy;
   _builty.createdDateTime = this.builtyToUpdate.createdDateTime;
-  _builty.freightGenerated = this.builtyToUpdate.freightGenerated;
-  _builty.paymentInstructionDone = this.builtyToUpdate.paymentInstructionDone;
   _builty.paymentInstructionDateTime = this.builtyToUpdate.paymentInstructionDateTime;
   _builty.freightBill = this.builtyToUpdate.freightBill;
+  _builty.vehicleOwnerPan = this.builtyToUpdate.vehicleOwnerPan;
   this.builtyService.updateBuilty(_builty).subscribe(
     (res) => {
       if(res.success){
@@ -418,6 +438,10 @@ updateBuilty(){
         element.destinations.forEach(dest => {
           this.destinationNames.push(dest.name);
         });
+        // if there is only one destination then select it by default
+        if(this.destinationNames.length == 1){
+            this.builtyForm.controls.destination.setValue(this.destinationNames[0]);
+        }
       }
     });
   }
@@ -499,6 +523,7 @@ updateBuilty(){
   onConfirmVehicle(){
     this.vehicleConfirmed = true;
     this.builtyForm.controls.vehicleNo.setValue(this.selectedVehicle.vehicleNo);
+    this.builtyForm.controls.vehicleOwnerPan.setValue(this.selectedVehicle.panNo);
   }
 
   cancel(){
