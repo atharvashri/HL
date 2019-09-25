@@ -6,4 +6,6 @@ export class AppConfig {
 
   // aws host
   public static API_ENDPOINT = 'http://13.234.84.53:8080';
+
+  public static MIN_DIFF_WITH_FREIGHT = 4000;
 }
