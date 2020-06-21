@@ -13,6 +13,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { FileUploader } from '../../../../node_modules/ng2-file-upload';
 import { FileUploadService } from '../../services/fileupload.service';
 import { AppUtil } from '../../utils/app.util';
+import { Observable } from 'rxjs';
+import { AppConstants } from '../../utils/app.constants';
 
 
 @Component({
@@ -22,19 +24,21 @@ import { AppUtil } from '../../utils/app.util';
 })
 export class DoCreateComponent implements OnInit {
 
+  IN_ADVANCE: number = 1
+  SHORTAGE_LIMIT: number = 2
+  DEDUCTION_RATE: number = 3
+  COMMISSION: number = 4
+  ACCOUNT_NAME: number = 5
+  CODE: number = 6
+  SUB_TRANSPORTER: number = 7
+
   doCreateForm
   doDetails: DODetails;
   submitted: boolean;
   isShowDoUpdate: boolean = false;
   receivedDateforDue = new Date();
   dataToShowInFreightsTable = [];
-  titlesForFreightsTable = [
-    "Destination Party",
-    "Destinations",
-    "Freights"
-  ]
   uploader: FileUploader;
-  Freights = [];
 
   ref_collaryList: Array<string>;
   ref_areaList: Array<any>
@@ -48,6 +52,9 @@ export class DoCreateComponent implements OnInit {
   selectedFreight = [];
   selecteddo;
   enableDueDate;
+  billDate;
+  billAmount;
+  billQuantity;
 
   isfrightEntryAdded: boolean = false;
   createDoOnConfirmData;
@@ -66,30 +73,49 @@ export class DoCreateComponent implements OnInit {
 
   refData = {};
   modeSelect = "Create DO";
-  addedInAdvanceLimit = []
+  inAdvanceLimitList = []
   subTransporterList = []
+  shortageLimitList = []
+  deductionRateList = []
+  commissionList = []
+  accountNameList = []
+  codeList = []
 
   grades = ['G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10', 'G11', 'G12', 'G13'];
   sizes = ["ROM", "SLK", "STM"]
 
-  freightToBePaidByOptions = ["DO Owner", "Bilty Company"];
-  // TODO get list from backend
-  builtyCompanyOptions = ["Hindustan Logistics", "Surya Logistics"];
+  freightToBePaidByOptions = [AppConstants.DO_OWNER, AppConstants.BILTY_COMPANY];
+  builtyCompanyOptions = []
   inAdvanceLimitEntries = [];
   subTransporterEntries = [];
+  shortageLimitEntries = [];
+  deductionRateEntries = [];
+  commissionEntries = [];
+  accountNameEntries = []
+  codeEntries = []
 
   multiDropDownSettings = {}
+  biltyCompanyDropDownSettings = {}
   permitDropDownSettings = {}
+  party2DropDownSettings = {}
 
   @ViewChild('content') content;
 
-  doDataForConfirmationModel;
-
   ngOnInit() {
-
+    //get bilty companies
+    this.doService.getBiltyCompanies().subscribe(
+      (res) => {
+        if(res.success){
+          this.builtyCompanyOptions = res.data
+        }
+      },
+      (err) => {
+        console.log('Error getting bilty companies')
+      }
+    )
+    this.spinner.show()
     this.ref_areaList = [];
     this.ref_collaryList = [];
-    this.spinner.show()
     this.doDetails = new DODetails()
 
     localStorage.getItem('currentRole') === AppUtil.ROLE_ADMIN ? this.enableDueDate=true : this.enableDueDate=false;
@@ -97,30 +123,27 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm = this.doFormBuilder.group({
       bspDoNo: ['', Validators.required],
       areaDoNo: ['', Validators.required],
-      doNo: [{ value: [], disabled: true }],
-      auctionNo: [],
+      doNo: [{ value: [], disabled: true }, Validators.required],
+      auctionNo: ['', Validators.required],
       quantity: ['', Validators.required],
       doDate: ['', Validators.required],
       receivedDate: ['', Validators.required],
-      dueDate: [{ value: '', disabled: !this.enableDueDate }],
-      size: [],
+      dueDate: [{ value: '', disabled: !this.enableDueDate }, Validators.required],
+      size: ['', Validators.required],
       party: ['', Validators.required],
+      area: ['', Validators.required],
+      collary: ['', Validators.required],
+      grade: ['', Validators.required],
+      by: ['', Validators.required],
+      otBiltyCompany: ['', Validators.required],
+      transporter: ['', Validators.required],
       destinationParty: [],
       destinations: [],
       addedDestinationParty: [],
       addedDestinations: [],
-      // freight: new FormGroup({
-      //   min: [],
-      //   max: []
-      // }),
       freight: [],
+      billEntries:[],
       permitNos: [],
-      area: ['', Validators.required],
-      collary: ['', Validators.required],
-      grade: ['', Validators.required],
-      by: [],
-      otBuiltyCompany: [],
-      transporter: [],
       emd: [],
       emdAmt: [{ value: '', disabled: true }],
       doAmt: [],
@@ -133,10 +156,17 @@ export class DoCreateComponent implements OnInit {
       doStatus: [],
       refundAmt: [],
       refundDate: [],
+      tdsRate: [],
       website: [],
       finishDate: [],
       remarks: [],
       inAdvanceLimit: [],
+      shortageLimit: [],
+      deductionRate: [],
+      commission: [],
+      party2: [],
+      accountName: [],
+      code: [],
       freightToBePaidBy: [],
       subTransporter:[],
       doCopy: []
@@ -145,15 +175,21 @@ export class DoCreateComponent implements OnInit {
     this.route.queryParams.subscribe(
       (params) => {
         this.selecteddo = null;
-        this.loadrefDataForDOCreate();
-        let _updateDOID = params['update'];
-        if (_updateDOID != undefined) {
-          this.getDOForUpdate(_updateDOID);
-        }
-        else {
-          this.applyCreateMode();
-        }
-        this.loadpermit();
+        this.loadrefDataForDOCreate().subscribe(
+          (res) => {
+            // 3 means refData, transporter and permits is loaded, which is required to create/update DO
+            if(res == 3){
+              let _updateDOID = params['update'];
+              if (_updateDOID != undefined) {
+                this.getDOForUpdate(_updateDOID);
+              }
+              else {
+                this.applyCreateMode();
+              }
+            }
+          }
+        );
+
       }
     );
     this.uploader = this.uploaderService.getFileUploader();
@@ -168,31 +204,78 @@ export class DoCreateComponent implements OnInit {
       itemsShowLimit: 1,
       enableCheckAll: false
     }
+    this.biltyCompanyDropDownSettings = {
+      itemsShowLimit: 1,
+      enableCheckAll: false,
+      idField: 'uniqueShortName',
+      textField: 'companyName'
+    }
     this.permitDropDownSettings = {
       itemsShowLimit: 1,
       enableCheckAll: false,
       idField: 'permitnumber',
       textField: 'permitnumber'
     }
+    this.party2DropDownSettings = {
+      itemsShowLimit: 1,
+      enableCheckAll: false,
+      idField: 'name',
+      textField: 'name'
+    }
   }
 
-
-
-  addTags(evt, isSubTransporter) {
+  addEntry(evt, entryType) {
     //console.log(evt);
-    if(isSubTransporter){
-      this.subTransporterList.push(evt.value);
-    }else{
-      this.addedInAdvanceLimit.push(evt.value);
+    switch(entryType){
+      case this.IN_ADVANCE:
+        this.inAdvanceLimitList.push(evt.value);
+        break;
+      case this.SHORTAGE_LIMIT:
+        this.shortageLimitList.push(evt.value);
+        break;
+      case this.DEDUCTION_RATE:
+        this.deductionRateList.push(evt.value);
+        break;
+      case this.COMMISSION:
+        this.commissionList.push(evt.value);
+        break;
+      case this.ACCOUNT_NAME:
+        this.accountNameList.push(evt.value);
+        break;
+      case this.CODE:
+        this.codeList.push(evt.value);
+        break;
+      case this.SUB_TRANSPORTER:
+        this.subTransporterList.push(evt.value);
+        break;
     }
   }
 
-  removeTag(evt, isSubTransporter) {
-    if(isSubTransporter){
-      this.subTransporterList = this.subTransporterList.filter((e => e != evt.value))
-    }else{
-      this.addedInAdvanceLimit = this.addedInAdvanceLimit.filter((e => e != evt.value))
+  removeEntry(evt, entryType) {
+    switch(entryType){
+      case this.IN_ADVANCE:
+        this.inAdvanceLimitList = this.inAdvanceLimitList.filter((e => e != evt.value))
+        break;
+      case this.SHORTAGE_LIMIT:
+        this.shortageLimitList = this.shortageLimitList.filter((e => e != evt.value))
+        break;
+      case this.DEDUCTION_RATE:
+        this.deductionRateList = this.deductionRateList.filter((e => e != evt.value))
+        break;
+      case this.COMMISSION:
+        this.commissionList = this.commissionList.filter((e => e != evt.value))
+        break;
+      case this.ACCOUNT_NAME:
+        this.accountNameList = this.accountNameList.filter((e => e != evt.value))
+        break;
+      case this.CODE:
+        this.codeList = this.codeList.filter((e => e != evt.value))
+        break;
+      case this.SUB_TRANSPORTER:
+        this.subTransporterList = this.subTransporterList.filter((e => e != evt.value))
+        break;
     }
+
   }
 
   onSubmitDo() {
@@ -203,43 +286,24 @@ export class DoCreateComponent implements OnInit {
     }
     this.isValidaState = true;
     let doCreationData = this.doCreateForm.getRawValue();
-    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
+    this.modifyDODataBeforeSubmit(doCreationData);
 
     this.getSelectedParty().then((data) => {
-
       doCreationData.party = data;
       doCreationData.doDisplay = doCreationData.areaDoNo + "/" + doCreationData.bspDoNo + "-" + doCreationData.collary + "-" + doCreationData.quantity
-      this.createDoOnConfirmData = {};
-      this.doDataForConfirmationModel = {};
-
       this.createDoOnConfirmData = doCreationData;
-      this.doDataForConfirmationModel = doCreationData;
-
-      this.doDataForConfirmationModel.inAdvanceMultiple = this.addedInAdvanceLimit.join(', ');
-      this.doDataForConfirmationModel.partyName = this.doCreateForm.controls.party.value;
-
       this.modalService.open(this.content);
-
     })
   }
 
   onUpdateSubmit() {
     this.submitted = true;
-    let _updateDOID
-
     if (this.doCreateForm.invalid) {
       this.toaster.error("Please correct the errors in form");
       return;
     }
-
     let doCreationData = this.doCreateForm.getRawValue();
-    doCreationData = this.modifyDODataBeforeSubmit(doCreationData);
-
-    this.route.queryParams.subscribe(
-      (params) => {
-        _updateDOID = params['update'];
-      }
-    );
+    this.modifyDODataBeforeSubmit(doCreationData);
 
     doCreationData.id = this.selecteddo.id;
     doCreationData.createdBy = this.selecteddo.createdBy;
@@ -253,17 +317,9 @@ export class DoCreateComponent implements OnInit {
     if (this.selecteddo.finishDate) {
       doCreationData.finishDate = this.selecteddo.finishDate;
     }
-    //TODO find better way to fix it
-    if (doCreationData.permitNos && doCreationData.permitNos.length && doCreationData.permitNos[0] instanceof Object) {
-      let permitnumbers = [];
-      doCreationData.permitNos.forEach(item => {
-        permitnumbers.push(item.permitnumber);
-      })
-      doCreationData.permitNos = permitnumbers;
-    }
     this.getSelectedParty().then((data) => {
       doCreationData.party = data;
-      this.updateDO(doCreationData, _updateDOID);
+      this.updateDO(doCreationData);
     })
 
   }
@@ -276,24 +332,18 @@ export class DoCreateComponent implements OnInit {
     delete doCreationData.addedDestinations;
     delete doCreationData.destinations;
 
-    doCreationData.destinationparty = this.destinationParty;
-    // doCreationData.dueDate = AppUtil.transformdate(doCreationData.dueDate);
-    // doCreationData.receivedDate = AppUtil.transformdate(doCreationData.receivedDate);
-    // doCreationData.doDate = AppUtil.transformdate(doCreationData.doDate);
+    doCreationData.destinationParty = this.destinationParty;
 
     //TODO this is temporary solution to get it work.
-    doCreationData.inAdvanceLimit = this.addedInAdvanceLimit;
+    doCreationData.inAdvanceLimit = this.inAdvanceLimitList;
     doCreationData.subTransporter = this.subTransporterList;
-    //doCreationData.freightToBePaidBy = ;
-    // let _freightToBePaidBy = doCreationData.freightToBePaidBy;
-    // doCreationData.freightToBePaidBy = [];
-    // doCreationData.freightToBePaidBy.push(_freightToBePaidBy);
+    doCreationData.shortageLimit = this.shortageLimitList;
+    doCreationData.deductionRate = this.deductionRateList;
+    doCreationData.commission = this.commissionList;
     this.getSelectedTransporter(doCreationData.transporter).
       then((data) => {
         doCreationData.transporter = data;
       })
-    return doCreationData;
-
   }
 
   getSelectedTransporter(username) {
@@ -307,43 +357,58 @@ export class DoCreateComponent implements OnInit {
   }
 
   loadrefDataForDOCreate() {
-    this.doService.getdoRefData().subscribe(
-      (res) => {
-        this.refData = res["data"];
-        this.ref_areaList = this.refData["areaList"];
-        this.ref_partyData = this.refData["partyList"];
-        this.ref_destinationData = this.refData["partyList"]
-        this.populatecollary(false);
+    const refDataObservable = new Observable((observer) => {
+      let refdataCounter = 0;
+      // get ref data like area, party, destination
+      this.doService.getdoRefData().subscribe(
+        (res) => {
+          this.refData = res["data"];
+          this.ref_areaList = this.refData["areaList"];
+          this.ref_partyData = this.refData["partyList"];
+          this.ref_destinationData = this.refData["partyList"]
+          this.populatecollary(true);
+          setTimeout(() => {
+            this.spinner.hide();
+          }, 1500)
+          observer.next(++refdataCounter)
 
-
-        setTimeout(() => {
-          this.spinner.hide();
-        }, 1500)
-      },
-      (error) => {
-        this.spinner.hide()
-        this.toaster.error("error occured while retrieving refdata");
-      }
-    )
-
-    this.userService.getByRole("ROLE_FIELD").subscribe(
-      (res) => {
-        this.ref_transporters = res["data"];
-      },
-      (error) => {
-        console.log("could not retrieve transporters list")
-      }
-    )
-  }
-
-  loadpermit() {
-    this.permitservice.getpermits().subscribe(
-      (res) => {
-        if (res.success) {
-          this.permits = res.data;
+        },
+        (error) => {
+          this.spinner.hide()
+          this.toaster.error("error occured while retrieving refdata " + error);
+          observer.complete()
         }
-      }
-    )
+      )
+
+      // get transporter list
+      this.userService.getByRole("ROLE_FIELD").subscribe(
+        (res) => {
+          this.ref_transporters = res["data"];
+          observer.next(++refdataCounter)
+        },
+        (error) => {
+          console.log("could not retrieve transporters list " + error)
+          observer.complete()
+        }
+      )
+
+      // load permits
+      this.permitservice.getpermits().subscribe(
+        (res) => {
+          if (res.success) {
+            this.permits = res.data;
+            observer.next(++refdataCounter)
+          }
+        },
+        (err) => {
+          (error) => {
+            console.log("could not load permit data " + error)
+            observer.complete()
+          }
+        }
+      )
+    })
+    return refDataObservable;
   }
 
   createDo() {
@@ -369,11 +434,14 @@ export class DoCreateComponent implements OnInit {
   }
 
   getDOForUpdate(id) {
-    this.doService.getDoByID(id).subscribe((res) => {
-      this.applyUpdateMode();
-      this.selecteddo = res['data'];
-      this.setDataToUpdateForm(this.selecteddo);
-    },
+    this.doService.getDoByID(id).subscribe(
+      (res) => {
+        if(res.success){
+          this.applyUpdateMode();
+          this.selecteddo = res['data'];
+          this.setDataToUpdateForm(this.selecteddo);
+        }
+      },
       () => {
         this.toaster.error("not able to find the required DO information");
       })
@@ -388,27 +456,22 @@ export class DoCreateComponent implements OnInit {
     }else{
       this.doCreateForm.controls.lepseQuantity.setValue(0);
     }
-
-
   }
 
   setEMDAMt() {
     console.log("emd at");
     let _emd = this.doCreateForm.controls.emd.value;
     let _doQuantity = this.doCreateForm.controls.quantity.value;
-
     this.doCreateForm.controls.emdAmt.setValue(_emd * _doQuantity);
   }
 
   setDOAMtPMT() {
     let _doAmt = this.doCreateForm.controls.doAmt.value;
     let _doQuantity = this.doCreateForm.controls.quantity.value;
-
     this.doCreateForm.controls.doAmtpmt.setValue(_doAmt / _doQuantity);
   }
 
   setDataToUpdateForm(data) {
-    this.populatecollary(false);
     this.doCreateForm.controls.bspDoNo.setValue(data.bspDoNo);
     this.doCreateForm.controls.bspDoNo.disable();
     this.doCreateForm.controls.areaDoNo.setValue(data.areaDoNo);
@@ -417,84 +480,100 @@ export class DoCreateComponent implements OnInit {
     this.doCreateForm.controls.quantity.setValue(data.quantity)
     this.doCreateForm.controls.doDate.setValue(data.doDate)
     this.doCreateForm.controls.dueDate.setValue(data.dueDate)
-
     this.doCreateForm.controls.grade.setValue(data.grade)
     this.doCreateForm.controls.size.setValue(data.size)
     this.doCreateForm.controls.area.setValue(data.area)
     this.doCreateForm.controls.by.setValue(data.by)
-    this.doCreateForm.controls.otBuiltyCompany.setValue(data.otBuiltyCompany)
-
-    this.doCreateForm.controls.permitNos.setValue(this.resolvePermits(data.permitNos))
+    this.doCreateForm.controls.otBiltyCompany.setValue(data.otBiltyCompany)
+    this.doCreateForm.controls.permitNos.setValue(data.permitNos)
+    this.doCreateForm.controls.party2.setValue(data.party2)
     this.doCreateForm.controls.emd.setValue(data.emd)
-
     this.doCreateForm.controls.doAmt.setValue(data.doAmt)
     this.doCreateForm.controls.doAmtpmt.setValue(data.doAmtpmt)
     this.doCreateForm.controls.doRate.setValue(data.doRate)
     this.doCreateForm.controls.doRateTcs.setValue(data.doRateTcs)
-
     this.doCreateForm.controls.party.setValue(data.party.name)
     this.doCreateForm.controls.withinOutSide.setValue(data.withinOutSide)
     this.doCreateForm.controls.receivedDate.setValue(data.receivedDate)
-
     this.doCreateForm.controls.quantityDeduction.setValue(data.quantityDeduction)
     this.doCreateForm.controls.remarks.setValue(data.remarks)
     this.doCreateForm.controls.refundDate.setValue(data.refundDate)
     this.doCreateForm.controls.refundAmt.setValue(data.refundAmt)
+    this.doCreateForm.controls.tdsRate.setValue(data.tdsRate)
     this.doCreateForm.controls.website.setValue(data.website)
     this.doCreateForm.controls.freightToBePaidBy.setValue(data.freightToBePaidBy)
-    this.addedInAdvanceLimit = data.inAdvanceLimit;
-    this.showInAdvanceLimitForUpdate(data.inAdvanceLimit)
+    this.inAdvanceLimitList = data.inAdvanceLimit;
+    this.populateMultipleValuesForUpdate(data.inAdvanceLimit, this.IN_ADVANCE)
+    this.shortageLimitList = data.shortageLimit;
+    this.populateMultipleValuesForUpdate(data.shortageLimit, this.SHORTAGE_LIMIT)
+    this.deductionRateList = data.deductionRate;
+    this.populateMultipleValuesForUpdate(data.deductionRate, this.DEDUCTION_RATE)
+    this.commissionList = data.commission;
+    this.populateMultipleValuesForUpdate(data.commission, this.COMMISSION)
+    this.accountNameList = data.accountName;
+    this.populateMultipleValuesForUpdate(data.accountName, this.ACCOUNT_NAME);
+    this.codeList = data.code;
+    this.populateMultipleValuesForUpdate(data.code, this.CODE);
     this.subTransporterList = data.subTransporter;
-    this.showSubTransporter(data.subTransporter);
+    this.populateMultipleValuesForUpdate(data.subTransporter, this.SUB_TRANSPORTER);
     //this.inAdvanceLimitEntries = data.inAdvanceLimit
     this.doCreateForm.controls.lepseQuantity.setValue(data.lepseQuantity)
 
     this.isfrightEntryAdded = true;
-    this.destinationParty = data.destinationparty
+    this.destinationParty = data.destinationParty
     this.showDestinationandFreightDataForTable(this.destinationParty);
-
+    this.doCreateForm.controls.billEntries.setValue(data.billEntries);
     this.doCreateForm.controls.transporter.setValue(data.transporter ? data.transporter.username : data.transporter);
 
     this.setEMDAMt();
     this.setDOAMtPMT();
+    this.populatecollary(false);
   }
 
-  showInAdvanceLimitForUpdate(inAdvanceLimits) {
-    let _inAdvanceLimitsWithDisplay = [];
-    inAdvanceLimits.forEach((element, index) => {
-      _inAdvanceLimitsWithDisplay.push({
+  populateMultipleValuesForUpdate(values, valuetype) {
+    if(!values || !values.length){
+      return;
+    }
+    let disaplayValuePair = [];
+    values.forEach((element) => {
+      disaplayValuePair.push({
         display: element.toString(),
         value: element.toString()
       })
-      if (index == inAdvanceLimits.length - 1) {
-        this.inAdvanceLimitEntries = _inAdvanceLimitsWithDisplay;
-        //this.doCreateForm.controls.inAdvanceLimit.setValue(_inAdvanceLimitsWithDisplay);
-      }
     });
-  }
-
-  showSubTransporter(subTransporterList) {
-    let _subTransporterWithDisplay = [];
-    subTransporterList.forEach((element, index) => {
-      _subTransporterWithDisplay.push({
-        display: element.toString(),
-        value: element.toString()
-      })
-      if (index == subTransporterList.length - 1) {
-        this.subTransporterEntries = _subTransporterWithDisplay;
-        //this.doCreateForm.controls.inAdvanceLimit.setValue(_inAdvanceLimitsWithDisplay);
-      }
-    });
+    switch (valuetype) {
+      case this.IN_ADVANCE:
+        this.inAdvanceLimitEntries = disaplayValuePair;
+        break;
+      case this.SHORTAGE_LIMIT:
+        this.shortageLimitEntries = disaplayValuePair;
+        break;
+      case this.DEDUCTION_RATE:
+        this.deductionRateEntries = disaplayValuePair;
+        break;
+      case this.COMMISSION:
+        this.commissionEntries = disaplayValuePair;
+        break;
+      case this.ACCOUNT_NAME:
+        this.accountNameEntries = disaplayValuePair;
+        break;
+      case this.CODE:
+        this.codeEntries = disaplayValuePair;
+        break;
+      case this.SUB_TRANSPORTER:
+        this.subTransporterEntries = disaplayValuePair;
+        break;
+      default:
+        break;
+    }
   }
 
   onChangeDestinationsData() {
-
     this.ref_destinationData.forEach(element => {
       if (this.doCreateForm.controls.destinationParty.value == element.name) {
         this.destinationsNames = element.destinations;
       }
     });
-
   }
 
   modifyPartyData(data) {
@@ -509,33 +588,25 @@ export class DoCreateComponent implements OnInit {
   }
 
   updateDate() {
-
     let _monthData = { "Jan": "01", "Feb": "02", "Mar": "03", "Apr": "04", "May": "05", "Jun": "06", "Jul": "07", "Aug": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dec": "12" }
-
     let _added45 = moment(moment(this.receivedDateforDue)).add(45, 'days');
-
     let _rawStr = _added45["_d"].toString().split(" ");
-
     let _year = _rawStr[3];
     let _day = _rawStr[2];
     let _alphaMonth = _rawStr[1];
     let _month = _monthData[_alphaMonth];
-
     //this.dueDateUpdate = _year + "-" + _month + "-" + _day;
     this.doCreateForm.controls.dueDate.setValue(_year + "-" + _month + "-" + _day);
-
   }
 
   addFreightEntry() {
     this.isfrightEntryAdded = true;
-    console.log(this.destinationParty);
     let _destinationName = this.doCreateForm.controls.destinationParty.value;
     //it is a reported bug for reactive forms, that values are not getting fetched for select, so have to move for javascript syntax
     //let _destinations = this.doCreateForm.controls.destinations.value; --- was not working on onchange event.
     let _destinations = (<HTMLInputElement>document.getElementById("destination")).value;
     let _currentFreight = this.doCreateForm.controls.freight.value;
     let _isdestinationPresent = false;
-
     if (this.destinationParty.length == 0) {
       this.destinationParty.push({
         name: _destinationName,
@@ -552,13 +623,9 @@ export class DoCreateComponent implements OnInit {
     }
 
     let _isFreightrateAdded = false;
-
     this.destinationParty.forEach((element_destParty, party_ind, party_arr) => {
-
       if (_destinationName == element_destParty.name) {
-
         element_destParty.destinations.forEach((element_dest, dest_ind, dest_arr) => {
-
           if (element_dest.name == _destinations) {
             if (element_dest.freight.includes(_currentFreight)) {
               this.toaster.error("Freight rate is already added");
@@ -570,7 +637,6 @@ export class DoCreateComponent implements OnInit {
               _isFreightrateAdded = true;
               return;
             }
-
           }
           if (dest_ind === dest_arr.length - 1 && !_isFreightrateAdded) {
             element_destParty.destinations.push({
@@ -598,14 +664,39 @@ export class DoCreateComponent implements OnInit {
         this.toaster.success("Freight rate is added");
         return;
       }
-
       return;
-
     });
 
     this.showDestinationAndFreightData(true);
     this.showDestinationandFreightDataForTable(this.destinationParty);
+  }
 
+  addBillEntry(){
+    if(!this.billDate || !this.billAmount || !this.billQuantity){
+        alert("All 3 fields are mandatory.");
+        return;
+    }
+    let _billEntry = {
+      "billDate": this.billDate,
+      "amount": this.billAmount,
+      "quantity": this.billQuantity
+    }
+
+    let _currEntries = this.doCreateForm.controls.billEntries.value;
+    if(!_currEntries){
+      _currEntries = [];
+    }
+    _currEntries.push(_billEntry);
+    this.doCreateForm.controls.billEntries.setValue(_currEntries);
+    this.billAmount = '';
+    this.billDate = '';
+    this.billQuantity = '';
+  }
+
+  removeBillEntry(index){
+    let _currEntries = this.doCreateForm.controls.billEntries.value;
+    _currEntries.splice(index, 1);
+    //this.doCreateForm.controls.billEntries.setValue(_currEntries);
   }
 
   showDestinationAndFreightData(isDestinationselected) {
@@ -614,10 +705,8 @@ export class DoCreateComponent implements OnInit {
     if (isDestinationselected) {
       this.selectedDestinations = [];
     }
-
     let _selectedDestinationParty = this.doCreateForm.controls.addedDestinationParty.value;
     let _selectedDestination = this.doCreateForm.controls.addedDestinations.value;
-
     this.destinationParty.forEach((element_party) => {
       if (_selectedDestinationParty == element_party.name) {
         element_party.destinations.forEach(element => {
@@ -635,7 +724,6 @@ export class DoCreateComponent implements OnInit {
         });
       }
     })
-
   }
 
   showDestinationandFreightDataForTable(destinationParty) {
@@ -655,12 +743,9 @@ export class DoCreateComponent implements OnInit {
   }
 
   getSelectedParty() {
-
     let _selectedPartyName = this.doCreateForm.controls.party.value;
-
     return new Promise((resolve, reject) => {
       this.ref_partyData.forEach((element) => {
-
         if (_selectedPartyName == element.name) {
           resolve(element)
         }
@@ -699,15 +784,8 @@ export class DoCreateComponent implements OnInit {
       this.doCreateForm.controls.collary.setValue(this.ref_collaryList[0]);
     }
   }
-  // populatecollary() {
-  //   this.ref_areaList.forEach(item => {
-  //     if (item.name === this.doCreateForm.controls.area.value) {
-  //       this.ref_collaryList = item.collaries;
-  //     }
-  //   })
-  // }
 
-  updateDO(doCreationData, _updateDOID) {
+  updateDO(doCreationData) {
     this.doService.updateDo(doCreationData).subscribe((res) => {
       if (res.success) {
         this.submitted = false;
@@ -723,20 +801,6 @@ export class DoCreateComponent implements OnInit {
       }
     )
     this.initiateFileUpload();
-  }
-
-  resolvePermits(permitNos: Array<number>) {
-    let selectpermits = [];
-    if (permitNos && permitNos.length) {
-      permitNos.forEach(item => {
-        this.permits.forEach(permit => {
-          if (permit.permitnumber === item) {
-            selectpermits.push(permit);
-          }
-        })
-      })
-    }
-    return selectpermits;
   }
 
   resolveAreaSelection(area: string) {

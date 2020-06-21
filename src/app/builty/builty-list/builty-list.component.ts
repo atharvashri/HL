@@ -8,6 +8,7 @@ import { BuiltyGridUtil } from '../builty-grid.util';
 import { Column, AngularGridInstance, GridOption, AngularSlickgridComponent, ExtensionName, AngularUtilService } from 'angular-slickgrid';
 import { BiltyEditActionComponent } from '../bilty-edit-action.component';
 import { BiltyDeleteActionComponent } from '../bilty-delete-action.component';
+import { AppConstants } from '../../utils/app.constants';
 
 @Component({
   selector: 'app-builty-list',
@@ -21,11 +22,13 @@ export class BuiltyListComponent implements OnInit {
   viewactive: boolean;
   userrole;
   @ViewChild('gridRef') gridComponent : ElementRef<AngularSlickgridComponent>;
-  angularGrid: AngularGridInstance;
   allColumns: Column[];
   gridOptions: GridOption;
   visibleColumns: Column[];
   doFilterCriteria: string;
+  angularGrid: AngularGridInstance;
+  grid: any
+  dataView: any
 
   constructor(private builtyservice: BuiltyService, private toasterservice: ToastrService,
         private router: Router,
@@ -45,16 +48,15 @@ export class BuiltyListComponent implements OnInit {
           }
 
           this.userrole = localStorage.getItem('currentRole');
-
           this.visibleColumns = BuiltyGridUtil.getVisibleColumnsForCompletedBilty()
-
           this.allColumns = BuiltyGridUtil.getAllColumnsForBilty()
-
           let actionColumns = []
           if(this.canedit()){
              actionColumns.push({ id: 'editBilty', excludeFromHeaderMenu: true, field: 'id', maxWidth: 30, asyncPostRender: this.biltyEditActionRenderer.bind(this)});
           }
-          actionColumns.push({ id: 'deleteBilty', excludeFromHeaderMenu: true, field: 'id', maxWidth: 30, asyncPostRender: this.biltyDeleteActionRenderer.bind(this)})
+          if(this.candelete()){
+              actionColumns.push({ id: 'deleteBilty', excludeFromHeaderMenu: true, field: 'id', maxWidth: 30, asyncPostRender: this.biltyDeleteActionRenderer.bind(this)})
+          }
           this.visibleColumns = this.visibleColumns.concat(actionColumns);
           this.allColumns = this.allColumns.concat(actionColumns);
 
@@ -96,7 +98,7 @@ export class BuiltyListComponent implements OnInit {
 
   showupdateform(index){
     let _builty = this.builtylist[index];
-    this.builtyservice.setBuiltyToUpdate(_builty);
+    this.builtyservice.setbiltyToUpdate(_builty);
     this.router.navigate(['builty'], { queryParams: { update: 'true' } })
   }
 
@@ -141,7 +143,7 @@ export class BuiltyListComponent implements OnInit {
 
   deletebuilty(index){
     let _builty = this.builtylist[index];
-    if(confirm("Are you sure to delete the builty " + _builty.builtyNo + "?")){
+    if(confirm("Are you sure to delete the builty " + _builty.biltyNo + "?")){
       this.builtyservice.deleteBuilty(_builty.id).subscribe(
         (res) => {
           if(res.success){
@@ -159,29 +161,17 @@ export class BuiltyListComponent implements OnInit {
   }
 
   canedit(){
-    if(this.userrole === AppUtil.ROLE_ADMIN){
+    if(this.userrole === AppUtil.ROLE_ADMIN && this.viewactive){
       return true;
     }
     return false;
   }
 
   candelete(){
-    if(this.userrole === AppUtil.ROLE_ADMIN || this.viewactive){
+    if(this.viewactive){
       return true;
     }
     return false;
-  }
-
-  resetInstruction(builtyNo){
-    this.builtyservice.resetPaymentInstruction(builtyNo).subscribe(
-      (res) => {
-        if(res.success){
-          this.toasterservice.success(res.message);
-        }else{
-          this.toasterservice.error(res.message);
-        }
-      }
-    )
   }
 
   onGridReady(e){
@@ -190,6 +180,35 @@ export class BuiltyListComponent implements OnInit {
     if(this.gridComponent['grid']){
       this.gridComponent['grid'].setColumns(this.visibleColumns);
     }
+    this.dataView = this.angularGrid.dataView;
+    this.grid = this.angularGrid.slickGrid;
+
+    this.dataView.getItemMetadata = this.updateRowBackGroundForFreightByDoOwner(this.dataView.getItemMetadata);
+    this.grid.invalidate();
+    this.grid.render();
+  }
+
+  updateRowBackGroundForFreightByDoOwner(previousItemMetadata: any){
+    const doOwnerClass = 'freight-by-owner';
+    const paymentInitiatedClass = 'payment-initiated';
+    return (rowNumber: number) => {
+      const item = this.dataView.getItem(rowNumber);
+      let meta = {
+        cssClasses: ''
+      };
+      if (typeof previousItemMetadata === 'object') {
+        meta = previousItemMetadata(rowNumber);
+      }
+
+      if (meta && item) {
+        if (item.freightToBePaidBy && item.freightToBePaidBy.toLowerCase() === AppConstants.DO_OWNER.toLowerCase()) {
+          meta.cssClasses = (meta.cssClasses || '') + ' ' + doOwnerClass;
+        }else if (item.paymentStatus && item.paymentStatus === 3){ // 3 means payment initiated
+          meta.cssClasses = (meta.cssClasses || '') + ' ' + paymentInitiatedClass;
+        }
+      }
+      return meta;
+    };
   }
 
   toggleGridMenu(e) {

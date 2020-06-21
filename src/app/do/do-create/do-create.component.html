@@ -12,7 +12,7 @@
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
-              <label for="bspDoNo">BSP DO No.</label>
+              <label for="bspDoNo" id="req">BSP DO No.</label>
               <input type="number" class="form-control input-resp" id="bspDoNo" formControlName="bspDoNo" [(ngModel)]="bspNO">
               <div *ngIf="submitted && f.bspDoNo.errors" class="invalid-field">
                 <div *ngIf="f.bspDoNo.errors.required">BSP DO number is required</div>
@@ -21,7 +21,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="areaDoNo">Area DO No.</label>
+              <label for="areaDoNo" id="req">Area DO No.</label>
               <input type="text" class="form-control input-resp" id="areaDoNo" formControlName="areaDoNo" [(ngModel)]="areaNO">
               <div *ngIf="submitted && f.areaDoNo.errors" class="invalid-field">
                 <div *ngIf="f.areaDoNo.errors.required">Area DO number is required</div>
@@ -30,19 +30,19 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="doNo">DO No</label>
+              <label for="doNo" id="req">DO No</label>
               <input type="text" class="form-control input-resp" id="doNo" formControlName="doNo" value="{{areaNO}}/{{bspNO}}">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="doNo">Auction No</label>
+              <label for="doNo" id="req">Auction No</label>
               <input type="number" class="form-control input-resp" id="doNo" formControlName="auctionNo">
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="quantity">Quantity</label>
+              <label for="quantity" id="req">Quantity</label>
               <input type="number" class="form-control input-resp" id="quantity" formControlName="quantity" (keyup)="setEMDAMt();setDOAMtPMT();setlepseQuantity()">
               <div *ngIf="submitted && f.quantity.errors" class="invalid-field">
                 <div *ngIf="f.quantity.errors.required">Quantity is required</div>
@@ -51,7 +51,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="receivedDate">Received Date</label>
+              <label for="receivedDate" id="req">Received Date</label>
               <input type="date" class="form-control input-resp" id="receivedDate" formControlName="receivedDate">
               <div *ngIf="submitted && f.receivedDate.errors" class="invalid-field">
                 <div *ngIf="f.receivedDate.errors.required">Received date is required</div>
@@ -60,7 +60,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="doDate">DO Date</label>
+              <label for="doDate" id="req">DO Date</label>
               <input type="date" class="form-control input-resp" id="doDate" formControlName="doDate" [(ngModel)]="receivedDateforDue"
                 (change)="updateDate()">
               <div *ngIf="submitted && f.doDate.errors" class="invalid-field">
@@ -70,14 +70,14 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="dueDate">Due Date</label>
+              <label for="dueDate" id="req">Due Date</label>
               <input type="date" class="form-control input-resp" id="dueDate" formControlName="dueDate">
             </div>
           </div>
 
           <div class="col-md-3">
             <div class="form-group">
-              <label for="area">Area</label>
+              <label for="area" id="req">Area</label>
               <select class="form-control" name="area" id="area" formControlName="area" (change)="populatecollary(true)">
                 <option *ngFor="let al of ref_areaList" [value]="al.name">{{al.name}}</option>
               </select>
@@ -88,7 +88,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="collary">Collary</label>
+              <label for="collary" id="req">Collary</label>
               <select class="form-control" name="collary" id="collary" formControlName="collary">
                 <option *ngFor="let cl of ref_collaryList" [value]="cl">{{cl}}</option>
               </select>
@@ -99,7 +99,7 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="grade">Grade</label>
+              <label for="grade" id="req">Grade</label>
               <select class="form-control" name="grade" id="grade" formControlName="grade">
                 <option *ngFor="let gd of grades" [value]="gd">{{gd}}</option>
               </select>
@@ -110,47 +110,60 @@
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="size">Size</label>
+              <label for="size" id="req">Size</label>
               <select class="form-control" name="size" id="size" formControlName="size">
                 <option *ngFor="let size of sizes" [value]="size">{{size}}</option>
               </select>
+              <div *ngIf="submitted && f.size.errors" class="invalid-field">
+                <div *ngIf="f.size.errors.required">Size is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="by">By</label>
-              <select class="form-control" name="by" id="by" formControlName="by">
+              <label for="by" id="req">By</label>
+              <input type="text" class="form-control" name="by" id="by" formControlName="by">
+              <!-- <select class="form-control" name="by" id="by" formControlName="by">
                 <option value="Courier">Courier</option>
                 <option value="Self">Self</option>
-              </select>
+              </select> -->
+              <div *ngIf="submitted && f.by.errors" class="invalid-field">
+                <div *ngIf="f.by.errors.required">By is required</div>
+              </div>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="builtyCompany">Bilty Company</label>
+              <label for="builtyCompany" id="req">Bilty Company</label>
               <ng-multiselect-dropdown
                 [placeholder]="'--Select--'"
                 [data]="builtyCompanyOptions"
-                formControlName="otBuiltyCompany"
-                [settings]="multiDropDownSettings">
+                formControlName="otBiltyCompany"
+                [settings]="biltyCompanyDropDownSettings">
               </ng-multiselect-dropdown>
+              <div *ngIf="submitted && f.otBiltyCompany.errors" class="invalid-field">
+                <div *ngIf="f.otBiltyCompany.errors.required">Bilty Company is required</div>
+              </div>
               <!-- <input type="text" class="form-control" id="builtyCompany" formControlName="builtyCompany"> -->
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="transporter">Transporter</label>
+              <label for="transporter" id="req">Transporter</label>
               <select class="form-control" id="transporter" formControlName="transporter">
                 <option *ngFor="let transporter of ref_transporters" [ngValue]="transporter.username">
                   {{transporter.firstName}} {{transporter.lastName}}
                 </option>
               </select>
+              <div *ngIf="submitted && f.transporter.errors" class="invalid-field">
+                <div *ngIf="f.transporter.errors.required">Transporter is required</div>
+              </div>
               <!--<input type="text" class="form-control" id="transporter" formControlName="transporter">-->
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
-              <label for="partyName">DO Owner Name</label>
+              <label for="partyName" id="req">DO Owner Name</label>
               <!--<select class="form-control" name="partyName" id="partyName" formControlName="party"
                     ngOptions="party.name for party in partyData"></select>-->
               <select class="form-control input-resp" name="partyName" id="partyName" formControlName="party">
@@ -199,39 +212,12 @@
         <div *ngIf="isfrightEntryAdded">
           <strong>Added Freight Entries</strong>
           <br><br>
-          <!-- below code is commented for now, we can roll it back for deleting fright entry functionality -->
-          <!-- <div class="row">
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="destinationParty">Destination Party</label>
-                <select class="form-control" name="destinationParty" id="destinationParty" formControlName="addedDestinationParty"
-                  (change)="showDestinationAndFreightData(true)">
-                  <option *ngFor="let destparty of destinationParty" [value]="destparty.name">{{destparty.name}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="destination">Destination</label>
-                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations"
-                  (change)="showDestinationAndFreightData(false)">
-                  <option *ngFor="let destNames of selectedDestinations" [value]="destNames">{{destNames}}</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="destination">Freight</label>
-                <select class="form-control" name="destination" id="destination" formControlName="addedDestinations">
-                  <option *ngFor="let freights of selectedFreight" [value]="freights">{{freights}}</option>
-                </select>
-              </div>
-            </div>
-          </div> -->
           <table class="table table-bordered table-responsive">
             <thead class="p-back-color">
               <tr>
-                <th *ngFor="let titles of titlesForFreightsTable"><span class="p-txt ">{{ titles }}</span></th>
+                <th><span class="p-txt ">Destination Party</span></th>
+                <th><span class="p-txt ">Destinations</span></th>
+                <th><span class="p-txt ">Freights</span></th>
               </tr>
             </thead>
             <tbody>
@@ -239,6 +225,56 @@
                 <td>{{freightEntries.destinationParty}}</td>
                 <td>{{freightEntries.destinations}}</td>
                 <td>{{freightEntries.freights}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="billDate">Bill Date</label>
+              <input type="date" class="form-control input-resp" id="billDate" [(ngModel)]="billDate" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="billAmount">Bill Amount</label>
+              <input type="number" class="form-control input-resp" [(ngModel)]="billAmount" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label for="billQuantity">Bill Quantity</label>
+              <input type="number" class="form-control input-resp" [(ngModel)]="billQuantity" [ngModelOptions]="{standalone: true}">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <button class="btn btn-primary margin-btn margin-btn-left btn-sm" (click)="addBillEntry()">Add Bill Entry</button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="f.billEntries.value && f.billEntries.value.length">
+          <strong>Added Bill Entries</strong>
+          <br><br>
+          <table class="table table-bordered table-responsive">
+            <thead class="p-back-color">
+              <tr>
+                <th><span class="p-txt ">Date</span></th>
+                <th><span class="p-txt ">Amount</span></th>
+                <th><span class="p-txt ">Quantity</span></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let entry of f.billEntries.value; let i=index;">
+                <td>{{entry.billDate}}</td>
+                <td>{{entry.amount}}</td>
+                <td>{{entry.quantity}}</td>
+                <td><img class="link" src="/assets/img/delete-icon.png" width="20" height="20" (click)="removeBillEntry(i)" title="Delete"></td>
               </tr>
             </tbody>
           </table>
@@ -331,61 +367,97 @@
                 <input type="date" class="form-control input-resp" id="refundDate" formControlName="refundDate">
               </div>
             </div>
-
-
-          <!--  <div class="col-md-3">
+            <div class="col-md-3">
               <div class="form-group">
-                <label for="finishDate">Finish Date</label>
-                <input type="date" class="form-control" id="finishDate" formControlName="finishDate">
+                <label for="tdsRate">TDS Rate</label>
+                <input type="number" class="form-control input-resp" id="tdsRate" formControlName="tdsRate">
               </div>
-            </div>-->
-          <!-- <div class="col-md-3">
-            <div class="form-group">
-              <label for="inAdvanceLimit">In Advance limit</label>
-              <input type="number" class="form-control" id="inAdvanceLimit" formControlName="inAdvanceLimit">
             </div>
-          </div> -->
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="remarks">Remarks</label>
+                <input type="text" class="form-control input-resp" id="remarks" formControlName="remarks">
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="freightToBePaidBy">Freight to be paid By</label>
+                <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
+
+                <ng-multiselect-dropdown
+                  [placeholder]="'--Select--'"
+                  [data]="freightToBePaidByOptions"
+                  formControlName="freightToBePaidBy"
+                  [settings]="multiDropDownSettings">
+                </ng-multiselect-dropdown>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="doCopy">DO Copy</label>
+                <input type="file"  ng2FileSelect [uploader]="uploader" id="doCopy" name="doCopy" formControlName="doCopy">
+              </div>
+            </div>
+          </div>
+          <!-- <p>Fields in this section supports multiple values. Add value and press enter</p>   -->
+          <hr>
+          <div class="row">
           <div class="col-md-3">
-            <label for="inAdvanceLimit">In Advance limit (Multiple values)</label>
+            <label for="inAdvanceLimit">In Advance limit</label>
             <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
-              id="inAdvanceLimit" (onAdd)="addTags($event)" (onRemove)="removeTag($event)" [(ngModel)]="inAdvanceLimitEntries"
+              id="inAdvanceLimit" (onAdd)="addEntry($event, IN_ADVANCE)" (onRemove)="removeEntry($event, IN_ADVANCE)" [(ngModel)]="inAdvanceLimitEntries"
               formControlName="inAdvanceLimit"></tag-input>
           </div>
           <div class="col-md-3">
-            <div class="form-group">
-              <label for="remarks">Remarks</label>
-              <input type="text" class="form-control input-resp" id="remarks" formControlName="remarks">
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="freightToBePaidBy">Freight to be paid By</label>
-              <!-- <input type="text" class="form-control" id="freightToBePaidBy" formControlName="freightToBePaidBy"> -->
-
-              <ng-multiselect-dropdown
-                [placeholder]="'--Select--'"
-                [data]="freightToBePaidByOptions"
-                formControlName="freightToBePaidBy"
-                [settings]="multiDropDownSettings">
-              </ng-multiselect-dropdown>
-              <!-- <select class="form-control" name="by" id="freightToBePaidBy" formControlName="freightToBePaidBy">
-                <option *ngFor="let freightspaid of freightToBePaidBy" [value]='freightspaid'>{{freightspaid}}</option>
-              </select> -->
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="doCopy">DO Copy</label>
-              <input type="file"  ng2FileSelect [uploader]="uploader" id="doCopy" name="doCopy" formControlName="doCopy">
-            </div>
-          </div>
-          <!-- Only when edit DO  - END-->
-          <div class="col-md-6">
-            <label for="subTransporter">Sub-Transporter (Multiple values)</label>
+            <label for="shortageLimit">Shortage limit</label>
             <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
-              id="subTransporter" (onAdd)="addTags($event, true)" (onRemove)="removeTag($event, true)" [(ngModel)]="subTransporterEntries"
+              id="shortageLimit" (onAdd)="addEntry($event, SHORTAGE_LIMIT)" (onRemove)="removeEntry($event, SHORTAGE_LIMIT)" [(ngModel)]="shortageLimitEntries"
+              formControlName="shortageLimit"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <label for="deductionRate">Deduction Rate</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="deductionRate" (onAdd)="addEntry($event, DEDUCTION_RATE)" (onRemove)="removeEntry($event, DEDUCTION_RATE)" [(ngModel)]="deductionRateEntries"
+              formControlName="deductionRate"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <label for="commission">Commission</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="commission" (onAdd)="addEntry($event, COMMISSION)" (onRemove)="removeEntry($event, COMMISSION)" [(ngModel)]="commissionEntries"
+              formControlName="commission"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <label for="party2">Party II</label>
+            <ng-multiselect-dropdown
+              [placeholder]="'--Select--'"
+              [data]="ref_partyData"
+              formControlName="party2"
+              [settings]="party2DropDownSettings">
+            </ng-multiselect-dropdown>
+            <!-- <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="shortageLimit" (onAdd)="addEntry($event, SHORTAGE_LIMIT)" (onRemove)="removeEntry($event, SHORTAGE_LIMIT)" [(ngModel)]="shortageLimitEntries"
+              formControlName="shortageLimit"></tag-input> -->
+          </div>
+          <div class="col-md-3">
+            <label for="accountName">Account Name</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="accountName" (onAdd)="addEntry($event, ACCOUNT_NAME)" (onRemove)="removeEntry($event, ACCOUNT_NAME)" [(ngModel)]="accountNameEntries"
+              formControlName="accountName"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <label for="code">Code</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="code" (onAdd)="addEntry($event, CODE)" (onRemove)="removeEntry($event, CODE)" [(ngModel)]="codeEntries"
+              formControlName="code"></tag-input>
+          </div>
+          <div class="col-md-3">
+            <label for="subTransporter">Sub-Transporter</label>
+            <tag-input [secondaryPlaceholder]='"Add value and Press Enter"' [placeholder]="'Add value and Press Enter'"
+              id="subTransporter" (onAdd)="addEntry($event, SUB_TRANSPORTER)" (onRemove)="removeEntry($event, SUB_TRANSPORTER)" [(ngModel)]="subTransporterEntries"
               formControlName="subTransporter"></tag-input>
           </div>
+
+          <!-- Only when edit DO  - END-->
           <div class="col-md-6">
             <div class="form-group">
               <label for="website">Website</label>
@@ -404,25 +476,12 @@
               <button *ngIf="isShowDoUpdate" (click)="cancelUpdateDO()" class="btn btn-danger">Cancel</button>
             </div>
         </div>
-        <!-- <button type="submit" class="btn btn-success">Create</button> -->
-        <!-- <div *ngIf="!isShowDoUpdate">
-          <button type="submit" class="btn btn-primary" (click)="onSubmitDo()">Create</button>
-        </div>
-        <div *ngIf="isShowDoUpdate">
-          <div class="row">
-            <div class="col-md-1 col-md-push-4">
-              <button type="submit" (click)="onUpdateSubmit()" class="btn btn-primary">Update</button>
-            </div>
-            <div class="col-md-1 col-md-push-4">
-              <button (click)="cancelUpdateDO()" class="btn btn-primary">Cancel</button>
-            </div>
-          </div>
-        </div> -->
       </form>
     </div>
   </div>
 </div>
 
+<!-- START - modal to populate details for confirmation-->
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Confirm DO Details</h4>
@@ -435,14 +494,14 @@
             <div class="form-group">
               <label for="bspNo">BSP DO No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.bspDoNo}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Area DO No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.areaDoNo}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.areaDoNo}}</span>
             </div>
           </div>
 
@@ -450,168 +509,189 @@
             <div class="form-group">
               <label for="bspNo">DO No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.bspDoNo}}/{{doDataForConfirmationModel.areaDoNo}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.bspDoNo}}/{{createDoOnConfirmData.areaDoNo}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Auction No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.auctionNo}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.auctionNo}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Quantity</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.quantity}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.quantity}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">DO Date</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.doDate}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.doDate}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Received Date</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.receivedDate}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.receivedDate}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Area</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.area}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.area}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Collary</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.collary}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.collary}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Grade</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.grade}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.grade}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Size</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.size}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.size}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">By</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.by}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.by}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Bilty Company</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.otBuiltyCompany}}</span>
+              <span id="bspNo" *ngFor="let company of createDoOnConfirmData.otBiltyCompany; let last = last">{{company.companyName}}{{last ? '' : ', '}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Transporter</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.transporter.firstName +' ' + doDataForConfirmationModel.transporter.lastName}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.transporter.firstName +' ' + createDoOnConfirmData.transporter.lastName}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">DO Owner Name</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.partyName}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.party.name}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Permission No</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.permitNos}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.permitNos}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">EMD</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.emd}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.emd}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">EMD Amt</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.emdAmt}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.emdAmt}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">DO Amt</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.doAmt}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.doAmt}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">DO Amt P. MT</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.doAmtpmt}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.doAmtpmt}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">DO Basic Rate</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.doRate}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.doRate}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Within/out Side</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.withinOutSide}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.withinOutSide}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">In Advance limit</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.inAdvanceMultiple}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.inAdvanceLimit}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="shortageLimit">Shortage Limit</label>
+              <br>
+              <span id="shortageLimit">{{createDoOnConfirmData.shortageLimit}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="deductionRate">Deduction Rate</label>
+              <br>
+              <span id="deductionRate">{{createDoOnConfirmData.deductionRate}}</span>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="commission">Commission</label>
+              <br>
+              <span id="commission">{{createDoOnConfirmData.commission}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Remarks</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.remarks}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.remarks}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Freight to be paid By</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.freightToBePaidBy}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.freightToBePaidBy}}</span>
             </div>
           </div>
           <div class="col-md-3">
             <div class="form-group">
               <label for="bspNo">Website</label>
               <br>
-              <span id="bspNo">{{doDataForConfirmationModel.Website}}</span>
+              <span id="bspNo">{{createDoOnConfirmData.Website}}</span>
             </div>
           </div>
           </div>
@@ -639,6 +719,8 @@
       <button class="btn btn-danger" name="Cancel" (click)="d('Cross click')">Cancel</button>
   </div>
 </ng-template>
+
+<!-- END - modal to populate details for confirmation-->
 
 
 <ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#337ab7" type="ball-circus"></ngx-spinner>

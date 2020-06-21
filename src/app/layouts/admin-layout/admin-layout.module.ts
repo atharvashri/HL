@@ -8,8 +8,6 @@ import { IconsComponent } from '../../icons/icons.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { BrowserModule } from '@angular/platform-browser';
 import { ComponentsModule } from '../../components/components.module';
 import { FixedPluginModule } from '../../shared/fixedplugin/fixedplugin.module';
 import { DoRunningComponent } from '../../do/do-running/do-running.component';
@@ -36,7 +34,6 @@ import { DoRunningListComponent } from '../../do/do-running/do-running-list/do-r
 import { FieldEntryApproveComponent } from '../../reporting/field-entry-approve/field-entry-approve.component';
 import { UserComponent } from '../../user/user.component';
 import { UserListComponent } from '../../user/user-list/user-list.component';
-import { LoginComponent } from '../../authorization/login/login.component';
 import { ModalComponent } from '../../modal/modal.component';
 import { PartyResourceComponent } from '../../party/party.resource';
 import { PanUpdateDetailsComponent } from '../../pan-registration/pan-update-details/pan-update-details.component';
@@ -53,10 +50,10 @@ import { BiltyDeleteActionComponent } from '../../builty/bilty-delete-action.com
 import { AuthGuard, LoginGuard } from '../../authorization/auth.guards';
 import { BuiltyService } from '../../services/builty.service';
 import { TruckPanService } from '../../services/truck.pan.services';
-import { BillingService } from '../../services/billing.service';
+import { PaymentService } from '../../services/payment.service';
+import { VehicleService } from '../../services/vehicle.service';
 import { DoService } from '../../services/do.service';
 import { UserService } from '../../services/user.service';
-import { LoginService } from '../../services/login.service';
 import { DataService } from '../../services/data.service';
 import { FileUploadService } from '../../services/fileupload.service';
 import { PermitService } from '../../services/permit.service';
@@ -73,6 +70,7 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { NgxTypeaheadModule } from 'ngx-typeahead';
 import { MatSelectModule, MatButtonModule, MatInputModule, MatDialogModule, MatFormFieldModule, MatIconModule } from '@angular/material';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { CanDeactivateGuard } from '../../services/deactivate.guard';
 
 // AoT requires an exported function for factories
 export function createTranslateLoader(http: HttpClient) {
@@ -186,9 +184,11 @@ export function appInitializerFactory(translate: TranslateService, injector: Inj
   providers: [
     AuthGuard,
     LoginGuard,
+    CanDeactivateGuard,
     TruckPanService,
     BuiltyService,
-    BillingService,
+    PaymentService,
+    VehicleService,
     DoService,
     UserService,
     DataService,

@@ -31,6 +31,7 @@ import { AreaComponent } from '../../area/area.component';
 import { PaymentInstructionComponent } from '../../payment/payment-instruction/payment-instruction.component';
 import { PumpComponent } from '../../pump/pump.component';
 import { PaymentCompletionComponent } from '../../payment/payment-completion/payment-completion.component';
+import { CanDeactivateGuard } from '../../services/deactivate.guard';
 
 export const AppRoutes: Routes = [
   {
@@ -98,7 +99,8 @@ export const AppRoutes: Routes = [
   {
     path: "builtyreceipt",
     component: BuiltyReceiptComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
       path: "truckownerreport",

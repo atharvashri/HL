@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
                 //set the token to storage
                 //set the role to storage.
                 localStorage.setItem('currentRole', data["role"]);
+                localStorage.setItem('loggedInDomain', data["domain"]);
                 localStorage.setItem('token', data["token"]);
                 this.changeViewOnloggedIn(true);
                 this.router.navigate(['/do']);

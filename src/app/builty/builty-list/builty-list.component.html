@@ -28,45 +28,6 @@
                     (onAngularGridCreated)="onGridReady($event)">
                 </angular-slickgrid>
               </div>
-
-          <!-- <div class="table-responsive" *ngIf="builtylist?.length;else nobuilties">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th><strong>Bilty No.</strong></th>
-                  <th><strong>DO</strong></th>
-                  <th><strong>Bilty Date</strong></th>
-                  <th><strong>Vehicle Number</strong></th>
-                  <th><strong>Net Weight</strong></th>
-                  <th><strong>Party</strong></th>
-                  <th><strong>Destination</strong></th>
-                  <th><strong>Freight</strong></th>
-                  <th><strong>Driver</strong></th>
-                  <th><strong>Mobile</strong></th>
-                  <th *ngIf="canedit()"></th>
-                  <th *ngIf="viewactive"></th>
-                  <th *ngIf="!viewactive"><strong>Reset Payment Instruction</strong></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let builty of builtylist; let i=index">
-                  <td>{{builty.builtyNo}}</td>
-                  <td>{{builty.doDisplay}}</td>
-                  <td>{{builty.builtyDate}}</td>
-                  <td>{{builty.vehicleNo}}</td>
-                  <td>{{builty.netWeight}}</td>
-                  <td>{{builty.party}}</td>
-                  <td>{{builty.destination}}</td>
-                  <td>{{builty.freight}}</td>
-                  <td>{{builty.driverName}}</td>
-                  <td>{{builty.driverMobile}}</td>
-                  <td *ngIf="canedit()"><img class="link" src="/assets/img/edit-icon.png" width="20" height="20" (click)="showupdateform(i)" title="Edit"></td>
-                  <td *ngIf="viewactive"><img class="link" src="/assets/img/delete-icon.png" width="20" height="20" (click)="deletebuilty(i)" title="Delete"></td>
-                  <td *ngIf="!viewactive"><a *ngIf="builty.paymentInstructionDone" [routerLink]="" (click)="resetInstruction(builty.builtyNo)">reset</a></td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
           <ng-template #nobuilties>
             <div class="row">
               <div *ngIf="viewactive" class="col-md-6">

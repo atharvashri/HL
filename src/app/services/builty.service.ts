@@ -1,93 +1,92 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { Subject } from 'rxjs'
-import { HttpHeaders } from '@angular/common/http'
 import { HttpClient } from '@angular/common/http'
 import { AppConfig } from '../app-config';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class BuiltyService {
-    url: string = AppConfig.API_ENDPOINT;
-    private builtyToUpdate: any;
+    url: string = AppConfig.API_ENDPOINT + '/bilty';
+    private biltyToUpdate: any;
     private activeBuilties: Array<any>;
 
     constructor(public http: HttpClient) {
 
     }
 
-    createBuilty(data): any {
-        return this.http.post(this.url + '/builty', data)
+    createBuilty(data): Observable<any> {
+        return this.http.post(this.url, data)
     }
 
-    getActiveBuilties(): any {
+    getActiveBuilties(): Observable<any> {
         // if(this.activeBuilties && this.activeBuilties.length){
         //   return this.activeBuilties;
         // }
-        return this.http.get(this.url + '/builty');
+        return this.http.get(this.url);
     }
 
-    getAllbuilties() {
-        return this.http.get(this.url + '/builty?get=all');
+    getBitiesForUpdateReceipt(): Observable<any> {
+        return this.http.get(this.url + '?get=updateReceipt');
     }
 
-    getSavedbuilties() {
-        return this.http.get(this.url + '/builty/temp');
+    getAllbuilties(): Observable<any> {
+        return this.http.get(this.url + '?get=all');
     }
 
-    getAllVehicleList(){
-        return this.http.get(this.url + '/vehicle');
+    getSavedbuilties(): Observable<any> {
+        return this.http.get(this.url + '/temp');
     }
 
-    savebuilties(data): any {
-        return this.http.put(this.url + '/builty/temp', data);
+    savebuilties(data): Observable<any> {
+        return this.http.put(this.url + '/temp', data);
     }
 
     getCompletedBuilties(): any {
-      return this.http.get(this.url + '/builty?get=completed');
+      return this.http.get(this.url + '?get=completed');
     }
 
-    approveBuilty() {
-      return this.http.delete(this.url + '/builty/temp');
+    approveBuilty(): Observable<any> {
+      return this.http.delete(this.url + '/temp');
     }
 
-    builtyReceipt(builtylist): any {
-      return this.http.put(this.url + '/builty/receipt', builtylist);
+    builtyReceipt(builtylist): Observable<any> {
+      return this.http.put(this.url + '/receipt', builtylist);
     }
 
-    updateBuilty(data) : any {
-      return this.http.put(this.url + '/builty', data);
+    updateBuilty(data) : Observable<any> {
+      return this.http.put(this.url, data);
     }
 
-    deleteBuilty(id): any{
-      return this.http.delete(this.url + '/builty/' + id);
-    }
-    setBuiltyToUpdate(builty){
-      this.builtyToUpdate = builty;
+    deleteBuilty(id): Observable<any> {
+      return this.http.delete(this.url + '/' + id);
     }
 
-    getBuiltyToUpdate(){
-      return this.builtyToUpdate;
+    setbiltyToUpdate(builty){
+      this.biltyToUpdate = builty;
     }
 
-    getReadyForPayments(): any{
-      return this.http.get(this.url + '/builty/readyForPayments');
+    getbiltyToUpdate(): Observable<any>{
+      return this.biltyToUpdate;
     }
 
-    getInitiatedPayments(): any{
-      return this.http.get(this.url + '/builty/initiatedPayments');
-    }
-
-    markComplete(bilties): any{
-      return this.http.put(this.url + '/builty/markComplete', bilties);
-    }
-
-    exportInstructions(bilties): any{
-      return this.http.post(this.url + '/builty/payment/instruction', bilties);
-    }
-
-    resetPaymentInstruction(bilties): any{
-      return this.http.put(this.url + '/builty/resetInstruction', bilties);
-    }
+    // getReadyForPayments(): any{
+    //   return this.http.get(this.url + '/builty/readyForPayments');
+    // }
+    //
+    // getInitiatedPayments(): any{
+    //   return this.http.get(this.url + '/builty/initiatedPayments');
+    // }
+    //
+    // markComplete(bilties): any{
+    //   return this.http.put(this.url + '/builty/markComplete', bilties);
+    // }
+    //
+    // exportInstructions(bilties): any{
+    //   return this.http.post(this.url + '/builty/payment/instruction', bilties);
+    // }
+    //
+    // revertPaymentInstruction(bilties): any{
+    //   return this.http.put(this.url + '/builty/revertPaymentInstruction', bilties);
+    // }
 
     setActiveBuilties(builtylist){
       this.activeBuilties = builtylist;

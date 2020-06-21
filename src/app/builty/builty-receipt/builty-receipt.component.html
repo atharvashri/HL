@@ -8,8 +8,8 @@
       </div>
 
       <div class="custom-control custom-checkbox" *ngFor="let builtys of builtyList">
-        <input id="{{builtys.builtyNo}}-check" class="custom-control-input" type="checkbox" (change)="updatecheckBoxList(builtys, $event)" [(ngModel)] ="builtys.selected">
-        <label class="custom-control-label" for="{{builtys.builtyNo}}-check">{{builtys.builtyNo}}</label>
+        <input id="{{builtys.biltyNo}}-check" class="custom-control-input" type="checkbox" (change)="updatecheckBoxList(builtys, $event)" [(ngModel)] ="builtys.selected">
+        <label class="custom-control-label" for="{{builtys.biltyNo}}-check">{{builtys.biltyNo}}</label>
       </div>
       <div>
       </div>
@@ -26,10 +26,10 @@
             </label>
       </div>
       <div *ngFor="let builtys of builtyList">
-        <label for="{{builtys.builtyNo}}-check" class="checkboxcontainer">
-          <input id="{{builtys.builtyNo}}-check" [checked]="selectAll" type="checkbox" (change) = "updatecheckBoxList(builtys, $event)" [(ngModel)] ="builtys.selected" />
+        <label for="{{builtys.biltyNo}}-check" class="checkboxcontainer">
+          <input id="{{builtys.biltyNo}}-check" [checked]="selectAll" type="checkbox" (change) = "updatecheckBoxList(builtys, $event)" [(ngModel)] ="builtys.selected" />
              <span class="checkmark"></span>
-              {{builtys.builtyNo}}
+              {{builtys.biltyNo}}
             </label>
       </div>
     </div>

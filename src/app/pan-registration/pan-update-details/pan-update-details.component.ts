@@ -98,7 +98,7 @@ addaccountclicked: boolean;
       account.accountHoldername = this.panForm.controls.account['controls'].accountHoldername.value;
       account.branchName = this.panForm.controls.account['controls'].branchName.value;
       if(this.panForm.controls.account['controls'].passbook.value){
-        this.uploaderService.setPanaNo(this.panForm.controls.account['controls'].panNo.value);
+        this.uploaderService.setPanaNo(this.panForm.controls.panNo.value);
         this.fileQueue.push({'name':'passbook', 'accountno': account.accountNo})
         account.passbookLink = this.uploaderService.getFileNameForPassbook(this.panForm.controls.account['controls'].passbook.value, account.accountNo);
       }

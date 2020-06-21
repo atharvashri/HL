@@ -7,6 +7,7 @@ import { AppConfig } from '../app-config';
 @Injectable()
 export class DoService {
     url: string = AppConfig.API_ENDPOINT;
+    cachedDO: Map<string, any> = new Map();
     constructor(public http: HttpClient) {
 
     }
@@ -27,8 +28,12 @@ export class DoService {
         return this.http.get(this.url + '/do?get=completed');
     }
 
-    getDoByID(id): Observable<any> {
+    getDoByID(id): any {
+      if(this.cachedDO.get(id)){
+        return this.cachedDO.get(id);
+      }else{
         return this.http.get(this.url + `/do/${id}`);
+      }
     }
 
     updateDo(data): Observable<any> {
@@ -37,5 +42,9 @@ export class DoService {
 
     getdoRefData() {
         return this.http.get(this.url + '/refdata');
+    }
+
+    getBiltyCompanies(): Observable<any>{
+      return this.http.get(`${this.url}/company/bilty`)
     }
 }

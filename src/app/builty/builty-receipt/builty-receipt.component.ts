@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { BuiltyService } from '../../services/builty.service'
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router } from '../../../../node_modules/@angular/router';
-import { Observable } from '../../../../node_modules/rxjs';
+import { DoService } from '../../services/do.service';
+import { CanComponentDeactivate } from '../../services/deactivate.guard';
 
 export interface Builtys {
-  builtyNo: number;
+  biltyNo: number;
   receivedDate: String;
   receivedQuantity: number;
   selected: boolean
@@ -17,47 +18,42 @@ export interface Builtys {
   templateUrl: './builty-receipt.component.html',
   styleUrls: ['./builty-receipt.component.css']
 })
-export class BuiltyReceiptComponent implements OnInit {
+export class BuiltyReceiptComponent implements OnInit, CanComponentDeactivate {
 
   isbuiltytablevisible: boolean = false;
   runningbuiltiesInTable: Array<any> = [];
   builtiesAddedbyChecks: Array<any> = [];
   selectedAll: boolean;
+  builtyListProperties: string[] = []
+  builtyList = []
 
-  constructor(private builtyService: BuiltyService, private spinner: NgxSpinnerService,
-      private router: Router) { }
+  constructor(private builtyService: BuiltyService, private doService: DoService,
+      private spinner: NgxSpinnerService, private router: Router) { }
 
   ngOnInit() {
     //start spinner
-
-    let _return = this.builtyService.getActiveBuilties();
-    if(_return instanceof Observable){
-      this.spinner.show();
-      _return.subscribe(
-        (res) => {
-          this.builtyList = res['data'];
-          //stop spinner
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500)
-        },
-        (err) => {
-          //stop spinner
-          setTimeout(() => {
-            this.spinner.hide();
-          }, 1500)
+    this.spinner.show();
+    this.builtyService.getBitiesForUpdateReceipt().subscribe(
+      (res) => {
+        if(res.success){
+            this.builtyList = res['data'];
         }
-      );
-    }else{
-      this.builtyList = _return;
-    }
+        //stop spinner
+          this.spinner.hide();
+      },
+      (err) => {
+        //stop spinner
+        this.spinner.hide();
+      }
+
+    );
   }
 
-  builtyListProperties: string[] = [
-
-  ]
-
-  builtyList = []
+  canDeactivate() {
+    console.log('can deactivate triggered');
+    this.doService.cachedDO = new Map();  //empty DO cache while moving away from this route
+    return true;
+  }
 
   showSelectedBuilties() {
 
@@ -102,7 +98,7 @@ export class BuiltyReceiptComponent implements OnInit {
   checkForDuplicateEntry(runningDoForcheck): any {
     return new Promise((resolve, reject) => {
       this.builtiesAddedbyChecks.forEach((element, index, array) => {
-        if (element.builtyNo == runningDoForcheck.builtyNo) {
+        if (element.biltyNo == runningDoForcheck.biltyNo) {
           resolve({
             isPresent: true,
             index: index

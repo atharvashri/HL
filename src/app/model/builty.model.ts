@@ -1,6 +1,6 @@
 
 export class Builty {
-    public builtyNo: number;
+    public biltyNo: number;
     public doId: number;
     public doDisplay: Date;
     public party: {
@@ -11,8 +11,8 @@ export class Builty {
 
     };
     public builtyDate: Date;
-    public otBuiltyCompany: String;
-    public otBuiltyNumber: number;
+    public otBiltyCompany: String;
+    public otBiltyNumber: number;
     public vehicleNo: String;
     public quantity: number;
     public inAdvance: number;

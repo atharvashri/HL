@@ -12,17 +12,17 @@
         </div>
       </div>
       <div *ngIf="updateMode" class="col-md-6">
-        <strong>Bilty Number: &nbsp;&nbsp;</strong>{{builtyToUpdate?.builtyNo}}
+        <strong>Bilty Number: &nbsp;&nbsp;</strong>{{biltyToUpdate?.biltyNo}}
       </div>
     </div>
   </div>
 
   <div class="panel-body fixed-height-divs">
-    <form [formGroup]="builtyForm" autocomplete="off">
+    <form [formGroup]="biltyForm" autocomplete="off">
       <div class="row">
         <div class="col-md-3">
           <div class="form-group">
-            <label for="selectDo">DO</label>
+            <label for="selectDo" id="req">DO</label>
             <select class="form-control" name="selectDo" id="selectDo" formControlName="doId" (change)="showDataAfterDoSelection(true)">
               <option value="0" hidden="true"></option>
               <option *ngFor="let do of doList" [value]="do.id">{{do.doDisplay}}</option>
@@ -34,7 +34,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="builtyDate">Bilty Date</label>
+            <label for="builtyDate" id="req">Bilty Date</label>
             <input type="date" class="form-control" name="builtyDate" id="date" formControlName="builtyDate">
             <div *ngIf="submitted && f.builtyDate.errors" class="invalid-field">
               <div *ngIf="f.builtyDate.errors.required">Bilty Date is required</div>
@@ -43,11 +43,11 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="selectDestinationParty">Party</label>
+            <label for="selectDestinationParty" id="req">Party</label>
             <select class="form-control" id="selectDestinationParty" formControlName="party"
               (change)="onChangeDestinationsParty()">
               <option hidden value=""></option>
-              <option *ngFor="let dest of selectedDo?.destinationparty" [value]="dest.name">{{dest.name}}</option>
+              <option *ngFor="let dest of selectedDo?.destinationParty" [value]="dest.name">{{dest.name}}</option>
             </select>
             <div *ngIf="submitted && f.party.errors" class="invalid-field">
               <div *ngIf="f.party.errors.required">Party is required</div>
@@ -56,7 +56,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="destination">Destination</label>
+            <label for="destination" id="req">Destination</label>
             <select class="form-control" name="destination" id="destination" formControlName="destination"
             (change)="onChangeDestinations()" >
               <option hidden value=""></option>
@@ -67,30 +67,24 @@
             </div>
           </div>
         </div>
-        <div *ngIf="isbuiltyCompanyAdded">
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="otBuiltyCompany">OT Bilty Company</label>
-              <select class="form-control" formControlName="otBuiltyCompany">
-                <option hidden value=""></option>
-                <option *ngFor="let company of selectedDo?.otBuiltyCompany" [value]="company">{{company}}</option>
-              </select>
-              <!-- <input type="text" name="otBuiltyCompany" class="form-control" value="" formControlName="otBuiltyCompany"> -->
-            </div>
+        <div class="col-md-3" *ngIf="biltyCompanies.length">
+          <div class="form-group">
+            <label for="otBiltyCompany">OT Bilty Company</label>
+            <select class="form-control" id="otBiltyCompany" formControlName="otBiltyCompany">
+              <option hidden value=""></option>
+              <option *ngFor="let company of biltyCompanies" [value]="company.uniqueShortName">{{company.companyName}}</option>
+            </select>
           </div>
-          <div class="col-md-3">
-            <div class="form-group">
-              <label for="otBuiltyNumber">OT Bilty Number</label>
-              <input type="number" name="otBuiltyNumber" class="form-control" formControlName="otBuiltyNumber">
-            </div>
+        </div>
+        <div class="col-md-3" *ngIf="biltyCompanies.length">
+          <div class="form-group">
+            <label for="otBiltyNumber">OT Bilty Number</label>
+            <input type="text" id="otBiltyNumber" class="form-control" formControlName="otBiltyNumber">
           </div>
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="vehicleNo">Vehicle No.</label>
-            <!-- <select class="form-control" name="vehicleNo" id="vehicleNo" formControlName="vehicleNo">
-              <option *ngFor="let vh of vehicleList" [value]="vh.vehicleNo">{{vh.vehicleNo}}</option>
-            </select> -->
+            <label for="vehicleNo" id="req">Vehicle No.</label>
             <div *ngIf="submitted && f.vehicleNo.errors" class="invalid-field">
               <div *ngIf="f.vehicleNo.errors.required">Vehicle Number is required</div>
             </div>
@@ -113,7 +107,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="grossWeight">Gross Weight</label>
+            <label for="grossWeight" id="req">Gross Weight</label>
             <input type="number" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" name="grossWeight" class="form-control" formControlName="grossWeight" (keyup)="calculateNetWeight()">
             <div *ngIf="submitted && f.grossWeight.errors" class="invalid-field">
               <div *ngIf="f.grossWeight.errors.required">Gross weight is required</div>
@@ -122,7 +116,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="tierWeight">Tier Weight</label>
+            <label for="tierWeight" id="req">Tier Weight</label>
             <input type="number" name="tierWeight" class="form-control" value="" formControlName="tierWeight" (keyup)="calculateNetWeight()">
             <div *ngIf="submitted && f.tierWeight.errors" class="invalid-field">
               <div *ngIf="f.tierWeight.errors.required">Tier WeightParty is required</div>
@@ -143,7 +137,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="inAdvance">In Advance</label>
+            <label for="inAdvance" id="req">In Advance</label>
             <select class="form-control" formControlName="inAdvance">
               <option hidden value=""></option>
               <option *ngFor="let limit of selectedDo?.inAdvanceLimit" [value]="limit" (change)="calculateTotalCashAdvance()">{{limit}}</option>
@@ -156,7 +150,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="outAdvance">Out Advance</label>
+            <label for="outAdvance" id="req">Out Advance</label>
             <input type="number" name="outAdvance" class="form-control" formControlName="outAdvance" (keyup)="calculateTotalCashAdvance()">
             <div *ngIf="submitted && f.outAdvance.errors" class="invalid-field">
               <div *ngIf="f.outAdvance.errors.required">Out Advance is required</div>
@@ -165,7 +159,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="refund">Refund</label>
+            <label for="refund" id="req">Refund</label>
             <input type="number" name="refund" class="form-control" formControlName="refund" (keyup)="calculateTotalCashAdvance()">
             <div *ngIf="submitted && f.refund.errors" class="invalid-field">
               <div *ngIf="f.refund.errors.required">Refund is required</div>
@@ -181,7 +175,8 @@
         <div class="col-md-3">
           <div class="form-group">
             <label for="diesel">Diesel</label>
-            <input type="number" name="diesel" class="form-control" formControlName="diesel" (keyup)="calculateTotalCashAdvance()">
+            <input type="number" name="diesel" class="form-control" formControlName="diesel" (keyup)="calculateTotalCashAdvance()"
+                min=0 oninput="validity.valid || (value='');">
             <div *ngIf="submitted && f.diesel.errors" class="invalid-field">
               <div *ngIf="f.diesel.errors.required">Diesel is required</div>
             </div>
@@ -189,7 +184,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="pumpName">Pump Name</label>
+            <label for="pumpName" [id]="f.diesel.value > 0 ? 'req' : ''">Pump Name</label>
             <select class="form-control" name="pumpName" id="pumpName" formControlName="pumpName">
               <option hidden="true"></option>
               <option *ngFor="let pump of pumps" [value]="pump.name">{{pump.name}}</option>
@@ -207,7 +202,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="freight">Freight</label>
+            <label for="freight" id="req">Freight</label>
             <select class="form-control" name="freight" id="freight" formControlName="freight">
               <option hidden value=""></option>
               <option *ngFor="let frts of updatedFrights" [value]="frts">{{frts}}</option>
@@ -228,7 +223,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.permitRequired.value">
           <div class="form-group">
-            <label for="permitNo">Permit No</label>
+            <label for="permitNo" id="req">Permit No</label>
             <select class="form-control" formControlName="permitNo" (change)="getPermitDetails()">
               <option hidden value=""></option>
               <option *ngFor="let permit of selectedDo?.permitNos" [value]="permit">{{permit}}</option>
@@ -251,10 +246,36 @@
             <input type="date" name="permitEndDate" class="form-control" formControlName="permitEndDate">
           </div>
         </div>
-
         <div class="col-md-3">
           <div class="form-group">
-            <label for="driverName">Driver Name</label>
+            <label for="party2">Party II</label>
+            <select class="form-control" id="party2" formControlName="party2">
+              <option hidden="true"></option>
+              <option *ngFor="let party of selectedDo?.party2" [value]="party">{{party}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="accountName">Account Name</label>
+            <select class="form-control" id="accountName" formControlName="accountName">
+              <option hidden="true"></option>
+              <option *ngFor="let acocunt of selectedDo?.accountName" [value]="account">{{account}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="code">Code</label>
+            <select class="form-control" id="code" formControlName="code">
+              <option hidden="true"></option>
+              <option *ngFor="let code of selectedDo?.code" [value]="code">{{code}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="form-group">
+            <label for="driverName" id="req">Driver Name</label>
             <input type="text" name="driverName" class="form-control" formControlName="driverName">
             <div *ngIf="submitted && f.driverName.errors" class="invalid-field">
               <div *ngIf="f.driverName.errors.required">Driver Name is required</div>
@@ -263,7 +284,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="driverMobile">Driver Mobile</label>
+            <label for="driverMobile" id="req">Driver Mobile</label>
             <input type="number" placeholder="Do not start with 0" name="driverMobile" class="form-control" formControlName="driverMobile">
             <div *ngIf="submitted && f.driverMobile.errors" class="invalid-field">
               <div *ngIf="f.driverMobile.errors.required">Driver Mobile is required</div>
@@ -291,7 +312,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.waybillRequired.value">
           <div class="form-group">
-            <label for="waybillNo">Waybill No.</label>
+            <label for="waybillNo" id="req">Waybill No.</label>
             <input type="text" name="waybillNo" class="form-control" value="" formControlName="waybillNo">
             <div *ngIf="submitted && f.waybillNo.errors" class="invalid-field">
               <div *ngIf="f.waybillNo.errors.required">Waybill No. is required</div>
@@ -300,7 +321,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.waybillRequired.value">
           <div class="form-group">
-            <label for="invoiceNo">Invoice No.</label>
+            <label for="invoiceNo" id="req">Invoice No.</label>
             <input type="number" name="invoiceNo" class="form-control" formControlName="invoiceNo">
             <div *ngIf="submitted && f.invoiceNo.errors" class="invalid-field">
               <div *ngIf="f.invoiceNo.errors.required">Invoice No. is required</div>
@@ -309,7 +330,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.waybillRequired.value">
           <div class="form-group">
-            <label for="invoiceValue">Invoice Value</label>
+            <label for="invoiceValue" id="req">Invoice Value</label>
             <input type="number" name="invoiceValue" class="form-control" formControlName="invoiceValue">
             <div *ngIf="submitted && f.invoiceValue.errors" class="invalid-field">
               <div *ngIf="f.invoiceValue.errors.required">Invoice Value is required</div>
@@ -318,7 +339,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.waybillRequired.value">
           <div class="form-group">
-            <label for="assesibleValue">Assesible Value</label>
+            <label for="assesibleValue" id="req">Assesible Value</label>
             <input type="number" name="assesibleValue" class="form-control" formControlName="assesibleValue">
             <div *ngIf="submitted && f.assesibleValue.errors" class="invalid-field">
               <div *ngIf="f.assesibleValue.errors.required">Assesible Value is required</div>
@@ -336,7 +357,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.tpRequired.value">
           <div class="form-group">
-            <label for="tpNo">TP No.</label>
+            <label for="tpNo" id="req">TP No.</label>
             <input type="number" name="tpNo" class="form-control" formControlName="tpNo">
             <div *ngIf="submitted && f.tpNo.errors" class="invalid-field">
               <div *ngIf="f.tpNo.errors.required">TP No. is required</div>
@@ -345,7 +366,7 @@
         </div>
         <div class="col-md-3" [hidden]="!f.tpRequired.value">
           <div class="form-group">
-            <label for="igpNo">IGP No</label>
+            <label for="igpNo" id="req">IGP No</label>
             <input type="number" name="igpNo" class="form-control" formControlName="igpNo">
             <div *ngIf="submitted && f.igpNo.errors" class="invalid-field">
               <div *ngIf="f.igpNo.errors.required">IGP No is required</div>
@@ -354,7 +375,7 @@
         </div>
         <div class="col-md-3">
           <div class="form-group">
-            <label for="freightToBePaidBy">Freight To Be Paid By</label>
+            <label for="freightToBePaidBy" id="req">Freight To Be Paid By</label>
             <select class="form-control" formControlName="freightToBePaidBy">
               <option hidden value=""></option>
               <option *ngFor="let paidby of selectedDo?.freightToBePaidBy" [value]="paidby">{{paidby}}</option>
@@ -453,20 +474,18 @@
                 <span id="builtyDate">{{builtyDataforConfirmModel.builtyDate}}</span>
               </div>
             </div>
-            <div *ngIf="isbuiltyCompanyAdded">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="otBuiltyCompany">Bilty Company</label>
-                  <br>
-                  <span id="otBuiltyCompany">{{builtyDataforConfirmModel.otBuiltyCompany}}</span>
-                </div>
+            <div class="col-md-3" *ngIf="biltyCompanies.length">
+              <div class="form-group">
+                <label for="otBiltyCompany">OT Bilty Company</label>
+                <br>
+                <span id="otBiltyCompany">{{builtyDataforConfirmModel.otBiltyCompany}}</span>
               </div>
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label for="otBuiltyNumber"> BuiltyNumber</label>
-                  <br>
-                  <span id="otBuiltyNumber">{{builtyDataforConfirmModel.otBuiltyNumber}}</span>
-                </div>
+            </div>
+            <div class="col-md-3" *ngIf="biltyCompanies.length">
+              <div class="form-group">
+                <label for="otBiltyNumber">OT Bilty Number</label>
+                <br>
+                <span id="otBiltyNumber">{{builtyDataforConfirmModel.otBiltyNumber}}</span>
               </div>
             </div>
             <div class="col-md-3">
@@ -581,12 +600,32 @@
                 <span id="permitEndDate">{{builtyDataforConfirmModel.permitEndDate}}</span>
               </div>
             </div>
-
             <div class="col-md-3">
               <div class="form-group">
-                <label for="driverName">Driver Name</label>
+                <label for="freight">Freight</label>
                 <br>
-                <span id="driverName">{{builtyDataforConfirmModel.driverName}}</span>
+                <span id="freight">{{builtyDataforConfirmModel.freight}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="party2">Party II</label>
+                <br>
+                <span id="party2">{{builtyDataforConfirmModel.party2}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="accountName">Account Name</label>
+                <br>
+                <span id="accountName">{{builtyDataforConfirmModel.accountName}}</span>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="code">Code</label>
+                <br>
+                <span id="code">{{builtyDataforConfirmModel.code}}</span>
               </div>
             </div>
             <div class="col-md-3">

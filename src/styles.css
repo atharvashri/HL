@@ -1,118 +1,125 @@
 /* You can add global styles to this file, and also import other style files */
 @media (min-width: 960px) {
-html,
-body {
-    height: 100%;
-    font-size: 13px;
-}
-/*.container {
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}*/
-div.fixed-height-divs div[class^="col-"]{
-  height: 6.5rem;
-}
-.invalid-field{
-  color: red !important;
-  font-size: 11px !important;
+  html,
+  body {
+      height: 100%;
+      font-size: 13px;
+  }
+  /*.container {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }*/
+  div.fixed-height-divs div[class^="col-"]{
+    height: 6.5rem;
+  }
+  .invalid-field{
+    color: red !important;
+    font-size: 11px !important;
+  }
+
+  .p-spacer-top-20 {
+      margin-top:  20%
+  }
+
+  a{
+    cursor: pointer;
+  }
+
+  img.link{
+    cursor: pointer;
+  }
+
+  .list-options-local{
+    border: 1px solid gray;
+    padding: 15px 15px 0px 15px;
+    margin: 10px 20px 0px;
+    /*background: #A4D3EE;*/
+    box-shadow: 5px 5px 2px #888888;
+    position: relative;
+    display: inline-block;
+
+  }
+  .list-options-local .remove-option {
+      position: absolute;
+      background: #8d8996;
+      color: white;
+      top: -10px;
+      right: -10px;
+  }
+
+  div.centered{
+    text-align: center;
+    vertical-align: middle;
+    align-content: center;
+  }
+
+  button.right{
+    float: right;
+    margin-top: 0 !important;
+  }
+
+  .disabled-row{
+    background-color: lightpink !important;
+  }
+
+  .btn.float-left{
+    margin-left: 0 !important;
+  }
+
+  .btn.float-right{
+    float: right !important;
+  }
+
+  .table tbody tr td, .table thead tr th, .table tfoot tr td{
+    padding: 4px !important;
+  }
+
+  div.ag-overlay{
+    position: relative !important;
+  }
+
+  div.ng2-tag-input{
+    border: 1px solid #E3E3E3 !important;
+    border-radius: 4px !important;
+    padding: 0 !important;
+  }
+  .slick-gridmenu-list{
+    display: inline-grid !important;
+    min-width: 400px !important;
+    grid-template-columns: auto auto auto;
+    grid-gap: 10px 30px
+  }
+  .slickgrid-container .grid-canvas .slick-cell{
+    font-size: 13px !important;
+    font-family: Arial !important;
+  }
+
+  .slickgrid-list-container{
+    padding: 0 !important;
+  }
+
+  .sidebar .nav li > a{
+  	font-size: 0.85em !important;
+    font-weight: bold !important;
+  }
+
+  .slickgrid-container .grid-canvas .slick-cell .slick-group-toggle.expanded:before{
+  	content: "\e114";
+  	font-family: 'Glyphicons Halflings';
+  	transition: all 0.5s;
+  }
+} /* End of media specific styles */
+
+#req:before{
+    content:"*" ;
+    color:red
 }
 
-.p-spacer-top-20 {
-    margin-top:  20%
+hr{
+  color: black;
 }
-
-a{
-  cursor: pointer;
-}
-
-img.link{
-  cursor: pointer;
-}
-
-.list-options-local{
-  border: 1px solid gray;
-  padding: 15px 15px 0px 15px;
-  margin: 10px 20px 0px;
-  /*background: #A4D3EE;*/
-  box-shadow: 5px 5px 2px #888888;
-  position: relative;
-  display: inline-block;
-
-}
-.list-options-local .remove-option {
-    position: absolute;
-    background: #8d8996;
-    color: white;
-    top: -10px;
-    right: -10px;
-}
-
-div.centered{
-  text-align: center;
-  vertical-align: middle;
-  align-content: center;
-}
-
-button.right{
-  float: right;
-  margin-top: 0 !important;
-}
-
-.disabled-row{
-  background-color: lightpink !important;
-}
-
-.btn.float-left{
-  margin-left: 0 !important;
-}
-
-.btn.float-right{
-  float: right !important;
-}
-
-.table tbody tr td, .table thead tr th, .table tfoot tr td{
-  padding: 4px !important;
-}
-
-div.ag-overlay{
-  position: relative !important;
-}
-
-div.ng2-tag-input{
-  border: 1px solid #E3E3E3 !important;
-  border-radius: 4px !important;
-  padding: 0 !important;
-}
-.slick-gridmenu-list{
-  display: inline-grid !important;
-  min-width: 400px !important;
-  grid-template-columns: auto auto auto;
-  grid-gap: 10px 30px
-}
-.slickgrid-container .grid-canvas .slick-cell{
-  font-size: 13px !important;
-  font-family: Arial !important;
-}
-
-.slickgrid-list-container{
-  padding: 0 !important;
-}
-
-.sidebar .nav li > a{
-	font-size: 0.85em !important;
-  font-weight: bold !important;
-}
-
-.slickgrid-container .grid-canvas .slick-cell .slick-group-toggle.expanded:before{
-	content: "\e114";
-	font-family: 'Glyphicons Halflings';
-	transition: all 0.5s;
-}
-
-}
-
 .form-group input[type=file]{
 	opacity: 0.8 !important;
 	cursor: pointer !important;
@@ -264,7 +271,38 @@ div.ng2-tag-input .ng2-tag-input__text-input{
   cursor: pointer;
 }
 
+.slickgrid-container .grid-canvas .slick-row .slick-cell{
+  border-right: 0.5px solid #a29898;
+  border-bottom: 0.5px solid #a29898;
+  border-top: 0 none;
+  border-left: 0 none;
+}
 
+.slickgrid-container .grid-canvas > .slick-row:first-child .slick-cell{
+  border-top: 0.5px solid #a29898;
+}
+
+.slickgrid-container .grid-canvas .slick-row > .slick-cell:first-child{
+  border-left: 0.5px solid #a29898;
+}
+
+.missing-required-details{
+  background-color: #fdc9c9;
+}
+
+.missing-required-details *{
+  pointer-events: none;
+  opacity: 0.7;
+  background-color: inherit !important;
+}
+
+.freight-by-owner{
+  background-color: #afeada8c !important;
+}
+
+.payment-initiated{
+  background-color: #f5bb5f !important;
+}
 /* .icons8-unchecked-checkbox {
 display: inline-block;
 width: 16px;

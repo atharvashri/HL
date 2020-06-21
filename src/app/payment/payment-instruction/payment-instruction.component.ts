@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from '../../../../node_modules/ngx-toastr';
-import { BuiltyService } from '../../services/builty.service';
+import { PaymentService } from '../../services/payment.service';
 import { WindowRef } from '../../utils/window.ref';
 import { AppConfig } from '../../app-config';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -16,19 +16,20 @@ export class PaymentInstructionComponent implements OnInit {
 
 angularGrid: AngularGridInstance;
 gridObj: any;
+dataView: any;
 allColumns: Column[];
 gridOptions: GridOption;
 rowData: Array<any> = [];
 instructionSubmitted: boolean = false;
 
-  constructor(private builtyService: BuiltyService,
+  constructor(private paymentService: PaymentService,
         private toaster: ToastrService,
         private windowRef: WindowRef,
         private spinner: NgxSpinnerService) { }
 
   columnDefs: Column[] = [
         {id:'panNo', field: 'panNo', name: 'PAN', maxWidth: 120, type: FieldType.string, formatter: this.emptyStringFormatter, groupTotalsFormatter: GroupTotalFormatters.avgTotals, params: { groupFormatterPrefix: '<b>Extra Payment</b>: ', groupFormatterSuffix: ' <i>* it would be deducted from total freight</i>'} },
-        {id:'builtyNo', field: 'builtyNo', name: 'Builty No', maxWidth: 120, type: FieldType.string },
+        {id:'biltyNo', field: 'biltyNo', name: 'Builty No', maxWidth: 120, type: FieldType.string },
         {id:'receivedDate', field: 'receivedDate', name: 'Received Date', maxWidth: 120, type: FieldType.dateIso, formatter: CustomFormatters.dateFormatter },
         {id:'receivedQuantity', field: 'receivedQuantity', name: 'Received Quantity', maxWidth: 100, type: FieldType.number },
         {id:'vehicleNo', field: 'vehicleNo', name: 'Vehicle No', maxWidth: 120, type: FieldType.string },
@@ -39,7 +40,7 @@ instructionSubmitted: boolean = false;
 
   ngOnInit() {
     this.spinner.show();
-    this.builtyService.getReadyForPayments().subscribe(
+    this.paymentService.getReadyForPayments().subscribe(
       (res) => {
         this.spinner.hide();
         if(res.success){
@@ -82,7 +83,8 @@ instructionSubmitted: boolean = false;
       enableCheckboxSelector: true,
       checkboxSelector: {
         // you can toggle these 2 properties to show the "select all" checkbox in different location
-        hideInFilterHeaderRow: false
+        hideInFilterHeaderRow: true,
+        selectableOverride: this.disableRows()
       },
       rowSelectionOptions:{
         selectActiveRow: false
@@ -90,6 +92,16 @@ instructionSubmitted: boolean = false;
       minRowBuffer: 1
 
     }
+  }
+
+  disableRows(){
+    return (row: number, dataContext: any, grid: any) =>{
+      if (dataContext && !dataContext.bankDtlsAvailable) {
+        return false;
+      }else{
+        return true;
+      }
+    };
   }
 
   isRowSelectable(rowNode){
@@ -127,13 +139,13 @@ instructionSubmitted: boolean = false;
     this.instructionSubmitted = true;
 
     this.spinner.show();
-    this.builtyService.exportInstructions(rows).subscribe(
+    this.paymentService.exportInstructions(rows).subscribe(
       (res) => {
         this.spinner.hide();
         if(res.success){
           this.updaterows(rows);
           this.gridObj.setSelectedRows([]);
-          this.windowRef.nativeWindow.open(AppConfig.API_ENDPOINT + "/builty/payment/downloadInstruction?key=" + res.data, '_blank');
+          this.windowRef.nativeWindow.open(AppConfig.API_ENDPOINT + "/paymentInstruction/download?key=" + res.data, '_blank');
           this.toaster.success("Payment instructions generated successfully");
         }else{
             this.toaster.error(res.message);

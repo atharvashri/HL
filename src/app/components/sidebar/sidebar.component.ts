@@ -17,8 +17,9 @@ export const ROUTES: RouteInfo[] = [
 		{ path: '/completedo', title: 'Complete DO', icon: 'business_briefcase-24', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE], displayInPanel: true },
 		{ path: '/truckownerreport', title: 'Truck Owner Report', icon: 'shopping_delivery-fast', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_TRUCK_OWNER], displayInPanel: true },
     { path: '/register_truck', title: 'PAN Registration', icon: 'education_paper', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE, AppUtil.ROLE_FIELD], displayInPanel: true },
+    { path: '/builty', title: 'Bilty Generation', icon: 'shopping_delivery-fast', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE, AppUtil.ROLE_FIELD], displayInPanel: true },
 		{ path: '/builtylist', title: 'Bilty report', icon: 'shopping_delivery-fast', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE, AppUtil.ROLE_FIELD], displayInPanel: true },
-		{ path: '/builty', title: 'Bilty Generation', icon: 'shopping_delivery-fast', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE, AppUtil.ROLE_FIELD], displayInPanel: true },
+    { path: '/builtyreceipt', title: 'Update Receipt', icon: 'education_paper', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE], displayInPanel: true },
 		{ path: '/freightPayment', title: 'Payment Instructions', icon: 'education_paper', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE], displayInPanel: true},
     { path: '/updatePaymentStatus', title: 'Update Payment Status', icon: 'education_paper', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE], displayInPanel: true},
 		{ path: '/cashbalance', title: 'Cash Balance', icon: 'education_paper', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_FIELD], displayInPanel: true },
@@ -28,8 +29,7 @@ export const ROUTES: RouteInfo[] = [
 		{ path: '/party', title: 'Party', icon: 'shopping_box', class: '', roles: [AppUtil.ROLE_ADMIN], displayInPanel: true },
 		{ path: '/permit', title: 'Permit', icon: 'shopping_box', class: '', roles: [AppUtil.ROLE_ADMIN], displayInPanel: true },
 		{ path: '/area', title: 'Area', icon: 'shopping_box', class: '', roles: [AppUtil.ROLE_ADMIN], displayInPanel: true },
-		{ path: '/pump', title: 'Pump', icon: 'shopping_box', class: '', roles: [AppUtil.ROLE_ADMIN], displayInPanel: true },
-    { path: '/builtyreceipt', title: 'Update Receipt', icon: '', class: '', roles: [AppUtil.ROLE_ADMIN, AppUtil.ROLE_OFFICE], displayInPanel: false }
+		{ path: '/pump', title: 'Pump', icon: 'shopping_box', class: '', roles: [AppUtil.ROLE_ADMIN], displayInPanel: true }
 	];
 
 @Component({

@@ -5,7 +5,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'bilty-edit-icon',
-  template: '<img class="link" src="/assets/img/delete-icon.png" width="20" id="{{currBilty.builtyNo}}_delete" height="20" (click)="clickHandler($event)" title="Delete">'
+  template: '<img class="link" src="/assets/img/delete-icon.png" width="20" id="{{currBilty.biltyNo}}_delete" height="20" (click)="clickHandler($event)" title="Delete">'
 })
 export class BiltyDeleteActionComponent{
 
@@ -14,7 +14,7 @@ export class BiltyDeleteActionComponent{
   }
   currBilty: any
   clickHandler(){
-    if(confirm("Are you sure to delete the builty " + this.currBilty.builtyNo + "?")){
+    if(confirm("Are you sure to delete the builty " + this.currBilty.biltyNo + "?")){
       this.biltyService.deleteBuilty(this.currBilty.id).subscribe(
         (res) => {
           if(res.success){

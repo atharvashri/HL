@@ -13,7 +13,7 @@ export class DOGridUtil {
       { id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true, filterable: true, maxWidth: 80, type: FieldType.number },
       { id: 'size', name: 'Size', field: 'size', filterable: true, type: FieldType.string},
       { id: 'party', name: 'Party', field: 'party', filterable: true, formatter: Formatters.complexObject, params: {complexFieldLabel: 'party.name'}},
-      { id: 'destinationparty', name: 'Destination Party', field: 'destinationparty', filterable: true, formatter: Formatters.arrayObjectToCsv, params: {propertyNames: ['name']}},
+      { id: 'destinationParty', name: 'Destination Party', field: 'destinationParty', filterable: true, formatter: Formatters.arrayObjectToCsv, params: {propertyNames: ['name']}},
       { id: 'permitNos', name: 'Permit No.', field: 'permitNos', filterable: true, type: FieldType.object},
       { id: 'grade', name: 'Grade', field: 'grade', filterable: true, type: FieldType.string},
       { id: 'by', name: 'By', field: 'by', filterable: true, type: FieldType.string},
@@ -33,7 +33,7 @@ export class DOGridUtil {
       { id: 'inAdvanceLimit', name: 'In Advance Limit', field: 'inAdvanceLimit', filterable: true, type: FieldType.number},
       { id: 'subTransporter', name: 'SubTransporter', field: 'subTransporter', filterable: true, formatter: Formatters.arrayObjectToCsv, params: {propertyNames: ['name']}, exportWithFormatter: true},
       { id: 'freightToBePaidBy', name: 'Freight To Be Paid By', field: 'freightToBePaidBy', filterable: true, type: FieldType.string},
-      { id: 'otBuiltyCompany', name: 'OT Builty Company', field: 'otBuiltyCompany', filterable: true, type: FieldType.string},
+      { id: 'otBiltyCompany', name: 'OT Bilty Company', field: 'otBiltyCompany', filterable: true, type: FieldType.string},
       { id: 'createdBy', name: 'Created By', field: 'createdBy', filterable: true, type: FieldType.string},
       { id: 'createdDateTime', name: 'Created Time', field: 'createdDateTime', filterable: true, type: FieldType.string}
     ]
@@ -46,7 +46,7 @@ export class DOGridUtil {
       { id: 'dueDate', name: 'Due Date', field: 'dueDate', filterable: true, sortable: true, formatter: CustomFormatters.dateFormatter, maxWidth: 100, type: FieldType.dateIso },
       { id: 'quantity', name: 'Quantity', field: 'quantity', sortable: true, filterable: true, maxWidth: 80, type: FieldType.number },
       { id: 'party', name: 'Party', field: 'party', filterable: true, formatter: Formatters.complexObject, params: {complexFieldLabel: 'party.name'}, exportWithFormatter: true},
-      { id: 'destinationparty', name: 'Destination Party', field: 'destinationparty', filterable: true, formatter: Formatters.arrayObjectToCsv, params: {propertyNames: ['name']}, exportWithFormatter: true}
+      { id: 'destinationParty', name: 'Destination Party', field: 'destinationParty', filterable: true, formatter: Formatters.arrayObjectToCsv, params: {propertyNames: ['name']}, exportWithFormatter: true}
     ]
 
     static getVisibleColumnsForCompletedDO(){

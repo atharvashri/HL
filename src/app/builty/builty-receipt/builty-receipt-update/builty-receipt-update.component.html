@@ -1,12 +1,5 @@
-<div class="container-fluid">
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="row">
-                <div class="col-md-6">
-                    <strong>Selected Bilties</strong>
-                </div>
-            </div>
-        </div>
+      <div class="container-fluid">
         <div class="panel-body">
           <form [formGroup]="receiptForm">
           <div class="table-responsive" formArrayName="builtyitems">
@@ -27,28 +20,26 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let builty of receiptForm.get('builtyitems')['controls']; let i=index" [formGroupName]="i">
-                    <td>{{builty.controls.builtyNo?.value}}</td>
+                <tr *ngFor="let builty of receiptForm.get('builtyitems')['controls']; let i=index" [formGroupName]="i" [ngClass]="eligibleForUpdate[i] ? '' : 'missing-required-details'">
+                    <td>{{builty.controls.biltyNo?.value}}</td>
                     <td>{{builty.controls.vehicleNo?.value}}</td>
                     <td>{{builty.controls.quantity?.value}}</td>
-                    <td><input type="date" class="form-control" formControlName="receivedDate"></td>
-                    <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
+                    <td><input type="date" class="form-control" formControlName="receivedDate" [readonly]="!eligibleForUpdate[i]"></td>
+                    <td><input type="number" class="form-control" formControlName="receivedQuantity" [readonly]="!eligibleForUpdate[i]"
+                      min=0 [max]="builty.controls.quantity.value + extraReceivedQuantityLimit" oninput="validity.valid ? '' : ((alert(`Received quantity can't be much beyond net quantity`))(value=''));"></td>
                     <td>
                       <select class="form-control" name="allowedShortage" id="allowedShortage" formControlName="allowedShortage">
-                        <option *ngFor="let limit of shortageLimits" [value]="limit.value" [selected]="limit.defaultValue">{{limit.value}}</option>
+                        <option *ngFor="let limit of shortageLimits[i]" [value]="limit">{{limit}}</option>
                       </select>
                     </td>
                     <td>
                       <select class="form-control" name="deductionRate" id="deductionRate" formControlName="deductionRate">
-                        <option *ngFor="let rate of deductionRates" [value]="rate.value" [selected]="rate.defaultValue">{{rate.value}}</option>
-                        <!-- <option selected=false>7</option>
-                        <option selected=false>7.5</option>
-                        <option selected=true>8</option> -->
+                        <option *ngFor="let rate of deductionRates[i]" [value]="rate">{{rate}}</option>
                       </select>
                     </td>
                     <td>
                       <select class="form-control" name="commission" id="commission" formControlName="commission">
-                        <option *ngFor="let commission of commissions" [value]="commission.value">{{commission.value}}</option>
+                        <option *ngFor="let commission of commissions[i]" [value]="commission">{{commission}}</option>
                       </select>
                     </td>
                     <td>{{builty.controls.totalAdvance?.value}}</td>
@@ -80,7 +71,7 @@
         <!-- <div *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index">
           <div class="row" [formGroupName]="i">
             <div class="col-md-3 right">
-              <input type="text" class="form-control" formControlName="builtyNo">
+              <input type="text" class="form-control" formControlName="biltyNo">
             </div>
             <div class="col-md-3 right">
               <input type="date" class="form-control" formControlName="receivedDate">
@@ -108,7 +99,7 @@
             </thead>
             <tbody>
                 <tr *ngFor="let builty of receiptForm.get('builtyitems').controls; let i=index" [formGroupName]="i">
-                    <td>{{builty.controls.builtyNo?.value}}</td>
+                    <td>{{builty.controls.biltyNo?.value}}</td>
                     <td>{{builty.controls.vehicleNo?.value}}</td>
                     <td>{{builty.controls.quantity?.value}}</td>
                     <td><input type="date" class="form-control" formControlName="receivedDate"></td>
@@ -152,7 +143,7 @@
             <tbody>
               <div *ngFor="let builty of receiptForm.controls.builtyitems.controls; let i=index" class="form-group" [formGroupName]="i">
                 <tr >
-                    <td> <input type="text" class="form-control" formControlName="builtyNo"></td>
+                    <td> <input type="text" class="form-control" formControlName="biltyNo"></td>
                     <td><input type="date" class="form-control" formControlName="receivedDate"></td>
                     <td><input type="number" class="form-control" formControlName="receivedQuantity"></td>
                 </tr>

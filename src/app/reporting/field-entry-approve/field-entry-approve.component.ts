@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 export interface FieldEntries {
-    builtyNo: number;
+    biltyNo: number;
     Do_no: number;
     vehicleNo: string;
     freightRate: number;
@@ -34,7 +34,7 @@ export class FieldEntryApproveComponent implements OnInit {
 
     fieldReportsProperties: FieldEntries[] =
     [
-        { builtyNo: 1234, Do_no: 9780, vehicleNo: "MH12AC1231", freightRate: 100, advance: 1000, diesel: 20, quantity: 200 }
+        { biltyNo: 1234, Do_no: 9780, vehicleNo: "MH12AC1231", freightRate: 100, advance: 1000, diesel: 20, quantity: 200 }
     ]
 
 }
