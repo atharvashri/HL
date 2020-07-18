@@ -26,7 +26,7 @@
                     <td>{{builty.controls.quantity?.value}}</td>
                     <td><input type="date" class="form-control" formControlName="receivedDate" [readonly]="!eligibleForUpdate[i]"></td>
                     <td><input type="number" class="form-control" formControlName="receivedQuantity" [readonly]="!eligibleForUpdate[i]"
-                      min=0 [max]="builty.controls.quantity.value + extraReceivedQuantityLimit" oninput="validity.valid ? '' : ((alert(`Received quantity can't be much beyond net quantity`))(value=''));"></td>
+                      min=0 [max]="builty.controls.quantity.value + extraReceivedQuantityLimit" step="0.001" oninput="validity.valid ? '' : ((alert(`Received quantity can't be much beyond net quantity`))(value=''));"></td>
                     <td>
                       <select class="form-control" name="allowedShortage" id="allowedShortage" formControlName="allowedShortage">
                         <option *ngFor="let limit of shortageLimits[i]" [value]="limit">{{limit}}</option>
